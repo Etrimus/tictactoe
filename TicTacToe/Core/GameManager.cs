@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Core.Models;
 
 namespace Core
@@ -14,7 +15,7 @@ namespace Core
             {
                 for (var j = 0; j < gridSize; j++)
                 {
-                    result.Cells[i, j] = new Cell { Number = num };
+                    result.Cells[i, j] = new Cell(num);
                     num++;
                 }
             }
@@ -48,7 +49,8 @@ namespace Core
             }
             catch (IndexOutOfRangeException e)
             {
-                throw new TicTacToeException($"Ячейка с координатами {point.X + 1}:{point.Y + 1} не найдена на игровом поле.", e);
+                throw new TicTacToeException(
+                    $"Ячейка с координатами {point.X + 1}:{point.Y + 1} не найдена на игровом поле.", e);
             }
         }
 
@@ -70,10 +72,56 @@ namespace Core
         {
             var size = cells.GetLength(0);
 
-            for (var i = 0; i < size; i += size)
-            { }
+            var horizontal = new CellType[size][];
+            var vertical = new CellType[size][];
+            var diagonal1 = new CellType[size];
+            var diagonal2 = new CellType[size];
 
-            return CellType.Cross;
+            for (var i = 0; i < size; i++)
+            {
+                horizontal[i] = new CellType[size];
+
+                for (var j = 0; j < size; j++)
+                {
+                    horizontal[i][j] = cells[i, j].State;
+
+                    if (i == 0)
+                    {
+                        vertical[j] = new CellType[size];
+                    }
+
+                    vertical[j][i] = cells[i, j].State;
+                }
+
+                diagonal1[i] = cells[i, i].State;
+                diagonal2[i] = cells[i, size - i - 1].State;
+            }
+
+            static bool Predicate(CellType[] x) => x[0] != CellType.Empty && x.Distinct().Count() == 1;
+
+            var horizontalWinner = horizontal.FirstOrDefault(Predicate);
+            if (horizontalWinner != null)
+            {
+                return horizontalWinner[0];
+            }
+
+            var verticalWinner = horizontal.FirstOrDefault(Predicate);
+            if (verticalWinner != null)
+            {
+                return verticalWinner[0];
+            }
+
+            if (Predicate(diagonal1))
+            {
+                return diagonal1[0];
+            }
+
+            if (Predicate(diagonal2))
+            {
+                return diagonal2[0];
+            }
+
+            return CellType.Empty;
         }
     }
 }

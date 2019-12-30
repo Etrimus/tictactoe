@@ -7,56 +7,68 @@ namespace LocalConsole
 {
     class Program
     {
-        private const ushort BOARD_SIZE = 3;
+        private const ushort BoardSize = 3;
 
-        static void Main(string[] args)
+        private static void Main()
         {
-            var board = GameManager.NewGame(BOARD_SIZE);
-
-            Console.WriteLine("Вводите координаты хода в формате двух чисел через пробел.\n");
-
-            while (board.Winner == CellType.Empty)
+            while (true)
             {
-                _printBoard(board);
-                _printHeader(board);
+                var board = GameManager.NewGame(BoardSize);
 
-                ushort[] coords;
-                try
+                Console.WriteLine("Вводите координаты хода в формате двух чисел через пробел.\n");
+
+                while (board.Winner == CellType.Empty)
                 {
-                    coords = Console.ReadLine()
-                        .Trim()
-                        .Split(' ')
-                        .Select(x => Convert.ToUInt16(x))
-                        .ToArray();
+                    _printBoard(board);
+                    _printHeader(board);
 
-                    if (coords.Length != 2)
+                    ushort[] coords;
+                    try
                     {
-                        throw new Exception();
+                        coords = Console.ReadLine()
+                            .Trim()
+                            .Split(' ')
+                            .Select(x => Convert.ToUInt16(x))
+                            .ToArray();
+
+                        if (coords.Length != 2)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    catch
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Не удалось распознать введенные координаты хода.\n");
+                        Console.ResetColor();
+
+                        continue;
+                    }
+
+                    try
+                    {
+                        GameManager.Turn(board, new Point((ushort) (coords[0] - 1), (ushort) (coords[1] - 1)));
+                    }
+                    catch (TicTacToeException e)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(e.Message);
+                        Console.ResetColor();
+                    }
+                    finally
+                    {
+                        Console.WriteLine();
                     }
                 }
-                catch
-                {
-                    Console.WriteLine("Не удалось распознать введенные координаты хода.\n");
-                    continue;
-                }
 
-                try
-                {
-                    GameManager.Turn(board, new Point((ushort)(coords[0] - 1), (ushort)(coords[1] - 1)));
-                }
-                catch (TicTacToeException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                finally
-                {
-                    Console.WriteLine();
-                }
+                _printBoard(board);
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"Победили {_cellTypeToString(board.Winner)}.");
+                Console.ResetColor();
+
+                Console.ReadLine();
             }
-
-            Console.WriteLine($"Победили {_cellTypeToString(board.Winner)}.");
-
-            Console.ReadLine();
         }
 
         private static void _printHeader(Board board)
@@ -66,12 +78,11 @@ namespace LocalConsole
 
         private static void _printBoard(Board board)
         {
-            for (var i = 0; i < BOARD_SIZE; i++)
+            for (var i = 0; i < BoardSize; i++)
             {
-                for (var j = 0; j < BOARD_SIZE; j++)
+                for (var j = 0; j < BoardSize; j++)
                 {
-                    //Console.Write($"[{_cellTypeToSymbol(board.Cells[i, j].State)}]");
-                    Console.Write($"[{board.Cells[i, j].Number}]");
+                    Console.Write($"[{_cellTypeToSymbol(board.Cells[i, j].State)}]");
                 }
 
                 Console.WriteLine();
