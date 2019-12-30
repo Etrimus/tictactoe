@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core;
 using Core.Models;
 
@@ -10,31 +7,63 @@ namespace LocalConsole
 {
     class Program
     {
-        private static ushort _boardSize;
+        private const ushort BOARD_SIZE = 3;
 
         static void Main(string[] args)
         {
-            Console.WriteLine($"Введите размерность игрового поля в виде числа от {ushort.MinValue} до {ushort.MaxValue}...");
-            _boardSize = Convert.ToUInt16(Console.ReadLine());
+            var board = GameManager.NewGame(BOARD_SIZE);
 
-            var board = GameManager.NewGame(_boardSize);
-            GameManager.AdjustPlayerTypes(board, CellType.Zero, CellType.Cross);
+            Console.WriteLine("Вводите координаты хода в формате двух чисел через пробел.\n");
 
-            _printBoard(board);
+            while (board.Winner == CellType.Empty)
+            {
+                _printBoard(board);
+                _printHeader(board);
+
+                ushort[] coords;
+                try
+                {
+                    coords = Console.ReadLine().Trim().Split(' ').Select(x => Convert.ToUInt16(x)).ToArray();
+                    if (coords.Length != 2)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Не удалось распознать введенные координаты хода.\n");
+                    continue;
+                }
+
+                try
+                {
+                    GameManager.Turn(board, new Point((ushort)(coords[0] - 1), (ushort)(coords[1] - 1)));
+                }
+                catch (TicTacToeException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                finally
+                {
+                    Console.WriteLine();
+                }
+            }
+
+            Console.WriteLine($"Победили {_cellTypeToString(board.Winner)}.");
 
             Console.ReadLine();
         }
 
+        private static void _printHeader(Board board)
+        {
+            Console.WriteLine($"Ходят {_cellTypeToString(board.NextTurn)}.");
+        }
+
         private static void _printBoard(Board board)
         {
-            Console.WriteLine();
-            Console.WriteLine($"Игрок 1: {_cellTypeToString(board.Player1.CellType)}, {board.Player1.State}");
-            Console.WriteLine($"Игрок 2: {_cellTypeToString(board.Player2.CellType)}, {board.Player2.State}");
-            Console.WriteLine();
-
-            for (var i = 0; i < _boardSize; i++)
+            for (var i = 0; i < BOARD_SIZE; i++)
             {
-                for (var j = 0; j < _boardSize; j++)
+                for (var j = 0; j < BOARD_SIZE; j++)
                 {
                     Console.Write($"[{_cellTypeToSymbol(board.Cells[i, j].State)}]");
                 }

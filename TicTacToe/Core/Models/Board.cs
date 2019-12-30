@@ -9,16 +9,8 @@
 
         public Cell[,] Cells { get; }
 
-        public Player Player1 { get; internal set; }
+        public CellType NextTurn { get; internal set; } = CellType.Cross;
 
-        public Player Player2 { get; internal set; }
-    }
-
-    public enum BoardState
-    {
-        Undefined = 0,
-        SetPlayers = 1,
-        InGame = 2,
-        End = 3
+        public CellType Winner { get; }
     }
 }
