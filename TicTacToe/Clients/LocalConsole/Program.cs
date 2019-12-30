@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Core;
 using Core.Models;
+using RandomTurnBot;
 
 namespace LocalConsole
 {
@@ -13,47 +16,37 @@ namespace LocalConsole
         {
             while (true)
             {
-                var board = GameManager.NewGame(BoardSize);
+                Board board;
+                Dictionary<CellType, Func<Board, Point>> players;
 
-                Console.WriteLine("Вводите координаты хода в формате двух чисел через пробел.\n");
+                try
+                {
+                    players = _setPlayers();
+
+                    Console.WriteLine("\nВводите координаты хода в формате двух чисел через пробел.\n");
+                    board = GameManager.NewGame(BoardSize);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
 
                 while (board.Winner == CellType.Empty)
                 {
-                    _printBoard(board);
-                    _printHeader(board);
-
-                    ushort[] coords;
                     try
                     {
-                        coords = Console.ReadLine()
-                            .Trim()
-                            .Split(' ')
-                            .Select(x => Convert.ToUInt16(x))
-                            .ToArray();
+                        _printBoard(board);
+                        _printHeader(board);
 
-                        if (coords.Length != 2)
-                        {
-                            throw new Exception();
-                        }
+                        GameManager.Turn(board, players[board.NextTurn](board));
                     }
-                    catch
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Не удалось распознать введенные координаты хода.\n");
-                        Console.ResetColor();
-
-                        continue;
-                    }
-
-                    try
-                    {
-                        GameManager.Turn(board, new Point((ushort) (coords[0] - 1), (ushort) (coords[1] - 1)));
-                    }
-                    catch (TicTacToeException e)
+                    catch (Exception e)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(e.Message);
                         Console.ResetColor();
+                        continue;
                     }
                     finally
                     {
@@ -69,6 +62,49 @@ namespace LocalConsole
 
                 Console.ReadLine();
             }
+        }
+
+        private static Dictionary<CellType, Func<Board, Point>> _setPlayers()
+        {
+            var result = new Dictionary<CellType, Func<Board, Point>>
+            {
+                {CellType.Zero, null},
+                {CellType.Cross, null}
+            };
+
+            Console.WriteLine(
+                $"\nВыберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
+            Console.WriteLine($"{_cellTypeToString(CellType.Cross)} - {(int) CellType.Cross}");
+            Console.WriteLine($"{_cellTypeToString(CellType.Zero)} - {(int) CellType.Zero}");
+
+            var selectedType = (CellType) Convert.ToInt32(Console.ReadLine());
+            if (selectedType == CellType.Empty || !Enum.IsDefined(typeof(CellType), selectedType))
+            {
+                throw new ArgumentException("Введенное значение некорректно.");
+            }
+
+
+            result[selectedType] = _getPlayerTurn;
+            result[result.First(x => x.Value == null).Key] = _getBotTurn;
+
+            return result;
+        }
+
+        private static Point _getBotTurn(Board board)
+        {
+            Thread.Sleep(2000);
+            return Bot.Turn(board.Cells);
+        }
+
+        private static Point _getPlayerTurn(Board board)
+        {
+            var coords = Console.ReadLine()
+                .Trim()
+                .Split(' ')
+                .Select(x => Convert.ToUInt16(x))
+                .ToArray();
+
+            return new Point((ushort) (coords[0] - 1), (ushort) (coords[1] - 1));
         }
 
         private static void _printHeader(Board board)

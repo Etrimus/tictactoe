@@ -105,7 +105,7 @@ namespace Core
                 return horizontalWinner[0];
             }
 
-            var verticalWinner = horizontal.FirstOrDefault(Predicate);
+            var verticalWinner = vertical.FirstOrDefault(Predicate);
             if (verticalWinner != null)
             {
                 return verticalWinner[0];
