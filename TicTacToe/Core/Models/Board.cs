@@ -11,6 +11,6 @@
 
         public CellType NextTurn { get; internal set; } = CellType.Cross;
 
-        public CellType Winner { get; }
+        public CellType Winner { get; internal set; }
     }
 }

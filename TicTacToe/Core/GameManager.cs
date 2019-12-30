@@ -8,12 +8,14 @@ namespace Core
         public static Board NewGame(ushort gridSize)
         {
             var result = new Board(gridSize);
+            var num = 0;
 
             for (var i = 0; i < gridSize; i++)
             {
                 for (var j = 0; j < gridSize; j++)
                 {
-                    result.Cells[i, j] = new Cell();
+                    result.Cells[i, j] = new Cell { Number = num };
+                    num++;
                 }
             }
 
@@ -30,7 +32,12 @@ namespace Core
             }
 
             cell.State = board.NextTurn;
-            board.NextTurn = _getNextTurn(board.NextTurn);
+
+            board.Winner = _findWinner(board.Cells);
+
+            board.NextTurn = board.Winner == CellType.Empty
+                ? _getNextTurn(board.NextTurn)
+                : CellType.Empty;
         }
 
         private static Cell _findCell(Cell[,] cells, Point point)
@@ -59,10 +66,14 @@ namespace Core
             }
         }
 
-        private static void _checkCells(Cell[,] cells)
+        private static CellType _findWinner(Cell[,] cells)
         {
-            foreach (var cell in cells)
+            var size = cells.GetLength(0);
+
+            for (var i = 0; i < size; i += size)
             { }
+
+            return CellType.Cross;
         }
     }
 }

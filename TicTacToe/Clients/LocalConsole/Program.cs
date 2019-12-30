@@ -23,7 +23,12 @@ namespace LocalConsole
                 ushort[] coords;
                 try
                 {
-                    coords = Console.ReadLine().Trim().Split(' ').Select(x => Convert.ToUInt16(x)).ToArray();
+                    coords = Console.ReadLine()
+                        .Trim()
+                        .Split(' ')
+                        .Select(x => Convert.ToUInt16(x))
+                        .ToArray();
+
                     if (coords.Length != 2)
                     {
                         throw new Exception();
@@ -65,7 +70,8 @@ namespace LocalConsole
             {
                 for (var j = 0; j < BOARD_SIZE; j++)
                 {
-                    Console.Write($"[{_cellTypeToSymbol(board.Cells[i, j].State)}]");
+                    //Console.Write($"[{_cellTypeToSymbol(board.Cells[i, j].State)}]");
+                    Console.Write($"[{board.Cells[i, j].Number}]");
                 }
 
                 Console.WriteLine();
