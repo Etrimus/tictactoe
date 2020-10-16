@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using TicTacToe.Core.Models;
 using TicTacToe.Core.Services;
 using Xunit;
@@ -40,9 +41,12 @@ namespace TicTacToe.Core.Tests.Unit
         {
             var cellsArray = _boardManager.CreateCells(3);
 
-            foreach (var cell in cellsArray)
+            using (new AssertionScope())
             {
-                cell.State.Should().Be(CellType.None);
+                foreach (var cell in cellsArray)
+                {
+                    cell.State.Should().Be(CellType.None);
+                }
             }
         }
 
