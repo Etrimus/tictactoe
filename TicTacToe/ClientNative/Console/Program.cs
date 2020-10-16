@@ -17,7 +17,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
             while (true)
             {
                 Board board;
-                Dictionary<CellType, Func<ReadOnlyTwoDimentionalCollection<Cell>, ushort>> players;
+                Dictionary<CellType, Func<ReadOnlyTwoDimensionalCollection<Cell>, ushort>> players;
 
                 try
                 {
@@ -62,9 +62,9 @@ namespace TicTacToe.ClientNative.ConsoleClient
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static Dictionary<CellType, Func<ReadOnlyTwoDimentionalCollection<Cell>, ushort>> _setPlayers()
+        private static Dictionary<CellType, Func<ReadOnlyTwoDimensionalCollection<Cell>, ushort>> _setPlayers()
         {
-            var result = new Dictionary<CellType, Func<ReadOnlyTwoDimentionalCollection<Cell>, ushort>>
+            var result = new Dictionary<CellType, Func<ReadOnlyTwoDimensionalCollection<Cell>, ushort>>
             {
                 { CellType.Zero, null },
                 { CellType.Cross, null }
@@ -86,7 +86,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
             return result;
         }
 
-        private static ushort _getBotTurn(ReadOnlyTwoDimentionalCollection<Cell> cells)
+        private static ushort _getBotTurn(ReadOnlyTwoDimensionalCollection<Cell> cells)
         {
             Thread.Sleep(1000);
             var result = Bot.RandomTurn.Bot.Turn(cells);
@@ -94,7 +94,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
             return result;
         }
 
-        private static ushort _getPlayerTurn(ReadOnlyTwoDimentionalCollection<Cell> cells)
+        private static ushort _getPlayerTurn(ReadOnlyTwoDimensionalCollection<Cell> cells)
         {
             var input = Console.ReadLine();
 

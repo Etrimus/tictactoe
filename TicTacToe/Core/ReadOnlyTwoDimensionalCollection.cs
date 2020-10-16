@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace TicTacToe.Core
 {
-    public class ReadOnlyTwoDimentionalCollection<T> : ICollection<T>, ICollection
+    public class ReadOnlyTwoDimensionalCollection<T> : ICollection<T>, ICollection
     {
         private readonly T[,] _array;
         private readonly IEnumerable<T> _collection;
 
-        public ReadOnlyTwoDimentionalCollection(T[,] source)
+        public ReadOnlyTwoDimensionalCollection(T[,] source)
         {
             _array = source;
             _collection = _array.Cast<T>();

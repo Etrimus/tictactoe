@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TicTacToe.Core.Models;
 
 namespace TicTacToe.Core.Services
@@ -25,6 +26,8 @@ namespace TicTacToe.Core.Services
 
         public bool TryTurn(Board board, ushort cellNumber, out string error)
         {
+            if (board == null) throw new ArgumentNullException(nameof(board));
+
             var cell = board.Cells.FirstOrDefault(x => x.Number == cellNumber);
 
             if (cell == null)
@@ -61,7 +64,7 @@ namespace TicTacToe.Core.Services
             };
         }
 
-        private static void _inspectCells(ReadOnlyTwoDimentionalCollection<Cell> cells, out CellType winner, out bool isNextTurnAvailable)
+        private static void _inspectCells(ReadOnlyTwoDimensionalCollection<Cell> cells, out CellType winner, out bool isNextTurnAvailable)
         {
             winner = CellType.None;
             isNextTurnAvailable = false;

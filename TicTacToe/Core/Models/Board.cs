@@ -12,10 +12,10 @@ namespace TicTacToe.Core.Models
         {
             _boardManager = new BoardManager();
 
-            Cells = new ReadOnlyTwoDimentionalCollection<Cell>(_boardManager.CreateCells(gridSize));
+            Cells = new ReadOnlyTwoDimensionalCollection<Cell>(_boardManager.CreateCells(gridSize));
         }
 
-        public ReadOnlyTwoDimentionalCollection<Cell> Cells { get; }
+        public ReadOnlyTwoDimensionalCollection<Cell> Cells { get; }
 
         public CellType NextTurn { get; internal set; } = CellType.Cross;
 
