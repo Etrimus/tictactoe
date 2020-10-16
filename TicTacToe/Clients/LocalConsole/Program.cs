@@ -17,13 +17,14 @@ namespace LocalConsole
             while (true)
             {
                 Board board;
-                Dictionary<CellType, Func<Board, ushort>> players;
+                Dictionary<CellType, Func<ReadOnlyTwoDimentionalCollection<Cell>, ushort>> players;
 
                 try
                 {
                     players = _setPlayers();
 
                     Console.WriteLine("\nВводите координаты хода в формате двух чисел через пробел.\n");
+
                     board = new Board(BOARD_SIZE);
                 }
                 catch (Exception e)
@@ -37,7 +38,7 @@ namespace LocalConsole
                     _printBoard(board);
                     _printHeader(board);
 
-                    var playerTurnCellNumber = players[board.NextTurn].Invoke(board) - 1;
+                    var playerTurnCellNumber = players[board.NextTurn].Invoke(board.Cells) - 1;
 
                     if (!board.TryTurn((ushort)playerTurnCellNumber, out var result))
                     {
@@ -52,16 +53,18 @@ namespace LocalConsole
 
                 _printBoard(board);
 
+                Console.ForegroundColor = _cellTypeToColor(board.Winner);
                 Console.WriteLine(board.Winner != CellType.None ? $"Победили {_cellTypeToString(board.Winner)}." : "Ничья.");
+                Console.ResetColor();
                 Console.ReadLine();
             }
 
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static Dictionary<CellType, Func<Board, ushort>> _setPlayers()
+        private static Dictionary<CellType, Func<ReadOnlyTwoDimentionalCollection<Cell>, ushort>> _setPlayers()
         {
-            var result = new Dictionary<CellType, Func<Board, ushort>>
+            var result = new Dictionary<CellType, Func<ReadOnlyTwoDimentionalCollection<Cell>, ushort>>
             {
                 { CellType.Zero, null },
                 { CellType.Cross, null }
@@ -83,13 +86,13 @@ namespace LocalConsole
             return result;
         }
 
-        private static ushort _getBotTurn(Board board)
+        private static ushort _getBotTurn(ReadOnlyTwoDimentionalCollection<Cell> cells)
         {
             //Thread.Sleep(2000);
-            return Bot.Turn(board.Cells);
+            return Bot.Turn(cells);
         }
 
-        private static ushort _getPlayerTurn(Board board)
+        private static ushort _getPlayerTurn(ReadOnlyTwoDimentionalCollection<Cell> cells)
         {
             var input = Console.ReadLine();
 
@@ -180,6 +183,21 @@ namespace LocalConsole
                     return "Крестики";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
+            }
+        }
+
+        private static ConsoleColor _cellTypeToColor(CellType cellType)
+        {
+            switch (cellType)
+            {
+                case CellType.None:
+                    return ConsoleColor.White;
+                case CellType.Zero:
+                    return ConsoleColor.Cyan;
+                case CellType.Cross:
+                    return ConsoleColor.Yellow;
+                default:
+                    return ConsoleColor.White;
             }
         }
     }

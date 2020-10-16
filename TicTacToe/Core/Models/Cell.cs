@@ -5,7 +5,7 @@ namespace Core.Models
     [DebuggerDisplay("{Number} - {State}")]
     public class Cell
     {
-        public Cell(ushort number)
+        internal Cell(ushort number)
         {
             Number = number;
         }

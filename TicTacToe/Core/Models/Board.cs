@@ -12,10 +12,10 @@ namespace Core.Models
         {
             _boardManager = new BoardManager();
 
-            Cells = _boardManager.CreateCells(gridSize);
+            Cells = new ReadOnlyTwoDimentionalCollection<Cell>(_boardManager.CreateCells(gridSize));
         }
 
-        public Cell[,] Cells { get; }
+        public ReadOnlyTwoDimentionalCollection<Cell> Cells { get; }
 
         public CellType NextTurn { get; internal set; } = CellType.Cross;
 

@@ -25,7 +25,7 @@ namespace Core.Services
 
         public bool TryTurn(Board board, ushort cellNumber, out string error)
         {
-            var cell = board.Cells.Cast<Cell>().FirstOrDefault(x => x.Number == cellNumber);
+            var cell = board.Cells.FirstOrDefault(x => x.Number == cellNumber);
 
             if (cell == null)
             {
@@ -61,7 +61,7 @@ namespace Core.Services
             };
         }
 
-        private static void _inspectCells(Cell[,] cells, out CellType winner, out bool isNextTurnAvailable)
+        private static void _inspectCells(ReadOnlyTwoDimentionalCollection<Cell> cells, out CellType winner, out bool isNextTurnAvailable)
         {
             winner = CellType.None;
             isNextTurnAvailable = false;
@@ -121,6 +121,8 @@ namespace Core.Services
             {
                 winner = diagonal2[0];
             }
+
+            isNextTurnAvailable = isNextTurnAvailable && winner == CellType.None;
         }
     }
 }
