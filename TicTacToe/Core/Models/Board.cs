@@ -1,7 +1,7 @@
-﻿using Core.Services;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using TicTacToe.Core.Services;
 
-namespace Core.Models
+namespace TicTacToe.Core.Models
 {
     [UsedImplicitly]
     public class Board

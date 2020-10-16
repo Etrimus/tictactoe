@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Core
+namespace TicTacToe.Core
 {
     public class ReadOnlyTwoDimentionalCollection<T> : ICollection<T>, ICollection
     {

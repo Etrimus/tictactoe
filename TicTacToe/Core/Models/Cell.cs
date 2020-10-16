@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Core.Models
+namespace TicTacToe.Core.Models
 {
     [DebuggerDisplay("{Number} - {State}")]
     public class Cell

@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace TicTacToe.Core
 {
     public enum CellType
     {

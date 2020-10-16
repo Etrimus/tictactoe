@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D7BDAB9F-B92E-4D73-9AEC-29DF4E5EBA0A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>LocalConsole</RootNamespace>
-    <AssemblyName>LocalConsole</AssemblyName>
+    <RootNamespace>TicTacToe.ClientNative.ConsoleClient</RootNamespace>
+    <AssemblyName>TicTacToe.ClientNative.ConsoleClient</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -52,13 +52,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
-      <Project>{2c79afba-b8d6-49e7-9cef-fef511e38272}</Project>
-      <Name>Core</Name>
+    <ProjectReference Include="..\..\Bot\RandomTurn\TicTacToe.Bot.RandomTurn.csproj">
+      <Project>{117a7bb4-32c4-4698-a265-5942d555432f}</Project>
+      <Name>TicTacToe.Bot.RandomTurn</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\RandomTurnBot\RandomTurnBot.csproj">
-      <Project>{0e167846-1015-4505-8dbe-a2258bc4f814}</Project>
-      <Name>RandomTurnBot</Name>
+    <ProjectReference Include="..\..\Core\TicTacToe.Core.csproj">
+      <Project>{2c79afba-b8d6-49e7-9cef-fef511e38272}</Project>
+      <Name>TicTacToe.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

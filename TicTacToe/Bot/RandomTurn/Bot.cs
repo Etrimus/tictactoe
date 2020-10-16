@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core;
-using Core.Models;
+using TicTacToe.Core;
+using TicTacToe.Core.Models;
 
-namespace RandomTurnBot
+namespace TicTacToe.Bot.RandomTurn
 {
     public static class Bot
     {

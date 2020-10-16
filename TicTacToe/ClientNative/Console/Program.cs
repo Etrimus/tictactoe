@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Core;
-using Core.Models;
-using RandomTurnBot;
+using System.Threading;
+using TicTacToe.Core;
+using TicTacToe.Core.Models;
 
-namespace LocalConsole
+namespace TicTacToe.ClientNative.ConsoleClient
 {
     public static class Program
     {
@@ -23,7 +23,7 @@ namespace LocalConsole
                 {
                     players = _setPlayers();
 
-                    Console.WriteLine("\nВводите координаты хода в формате двух чисел через пробел.\n");
+                    Console.WriteLine($"{Environment.NewLine}Вводите номер свободной ячейки для совершения хода.{Environment.NewLine}");
 
                     board = new Board(BOARD_SIZE);
                 }
@@ -70,7 +70,7 @@ namespace LocalConsole
                 { CellType.Cross, null }
             };
 
-            Console.WriteLine($"\nВыберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
+            Console.WriteLine($"{Environment.NewLine}Выберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
             Console.WriteLine($"{_cellTypeToString(CellType.Cross)} - {(int)CellType.Cross}");
             Console.WriteLine($"{_cellTypeToString(CellType.Zero)} - {(int)CellType.Zero}");
 
@@ -88,8 +88,10 @@ namespace LocalConsole
 
         private static ushort _getBotTurn(ReadOnlyTwoDimentionalCollection<Cell> cells)
         {
-            //Thread.Sleep(2000);
-            return Bot.Turn(cells);
+            Thread.Sleep(1000);
+            var result = Bot.RandomTurn.Bot.Turn(cells);
+            Console.WriteLine(result);
+            return result;
         }
 
         private static ushort _getPlayerTurn(ReadOnlyTwoDimentionalCollection<Cell> cells)
@@ -113,7 +115,10 @@ namespace LocalConsole
 
         private static void _printHeader(Board board)
         {
-            Console.WriteLine($"Ходят {_cellTypeToString(board.NextTurn)}.");
+            Console.Write("Ходят ");
+            Console.ForegroundColor = _cellTypeToColor(board.NextTurn);
+            Console.Write($"{_cellTypeToString(board.NextTurn)}{Environment.NewLine}");
+            Console.ResetColor();
         }
 
         private static void _printBoard(Board board)

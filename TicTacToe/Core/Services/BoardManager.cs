@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Core.Models;
+using TicTacToe.Core.Models;
 
-namespace Core.Services
+namespace TicTacToe.Core.Services
 {
     internal class BoardManager
     {
