@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Text.RegularExpressions;
 using Core;
 using Core.Models;
 using RandomTurnBot;
 
 namespace LocalConsole
 {
-    class Program
+    public static class Program
     {
-        private const ushort BoardSize = 3;
+        private const ushort BOARD_SIZE = 3;
 
         private static void Main()
         {
             while (true)
             {
                 Board board;
-                Dictionary<CellType, Func<Board, Point>> players;
+                Dictionary<CellType, Func<Board, ushort>> players;
 
                 try
                 {
                     players = _setPlayers();
 
                     Console.WriteLine("\nВводите координаты хода в формате двух чисел через пробел.\n");
-                    board = GameManager.NewGame(BoardSize);
+                    board = new Board(BOARD_SIZE);
                 }
                 catch (Exception e)
                 {
@@ -32,57 +32,50 @@ namespace LocalConsole
                     continue;
                 }
 
-                while (board.Winner == CellType.Empty)
+                while (board.NextTurn != CellType.None)
                 {
-                    try
-                    {
-                        _printBoard(board);
-                        _printHeader(board);
+                    _printBoard(board);
+                    _printHeader(board);
 
-                        GameManager.Turn(board, players[board.NextTurn](board));
-                    }
-                    catch (Exception e)
+                    var playerTurnCellNumber = players[board.NextTurn].Invoke(board) - 1;
+
+                    if (!board.TryTurn((ushort)playerTurnCellNumber, out var result))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine(result);
                         Console.ResetColor();
                         continue;
                     }
-                    finally
-                    {
-                        Console.WriteLine();
-                    }
+
+                    Console.WriteLine();
                 }
 
                 _printBoard(board);
 
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"Победили {_cellTypeToString(board.Winner)}.");
-                Console.ResetColor();
-
+                Console.WriteLine(board.Winner != CellType.None ? $"Победили {_cellTypeToString(board.Winner)}." : "Ничья.");
                 Console.ReadLine();
             }
+
+            // ReSharper disable once FunctionNeverReturns
         }
 
-        private static Dictionary<CellType, Func<Board, Point>> _setPlayers()
+        private static Dictionary<CellType, Func<Board, ushort>> _setPlayers()
         {
-            var result = new Dictionary<CellType, Func<Board, Point>>
+            var result = new Dictionary<CellType, Func<Board, ushort>>
             {
-                {CellType.Zero, null},
-                {CellType.Cross, null}
+                { CellType.Zero, null },
+                { CellType.Cross, null }
             };
 
-            Console.WriteLine(
-                $"\nВыберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
-            Console.WriteLine($"{_cellTypeToString(CellType.Cross)} - {(int) CellType.Cross}");
-            Console.WriteLine($"{_cellTypeToString(CellType.Zero)} - {(int) CellType.Zero}");
+            Console.WriteLine($"\nВыберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
+            Console.WriteLine($"{_cellTypeToString(CellType.Cross)} - {(int)CellType.Cross}");
+            Console.WriteLine($"{_cellTypeToString(CellType.Zero)} - {(int)CellType.Zero}");
 
-            var selectedType = (CellType) Convert.ToInt32(Console.ReadLine());
-            if (selectedType == CellType.Empty || !Enum.IsDefined(typeof(CellType), selectedType))
+            var selectedType = (CellType)Convert.ToInt32(Console.ReadLine());
+            if (selectedType == CellType.None || !Enum.IsDefined(typeof(CellType), selectedType))
             {
                 throw new ArgumentException("Введенное значение некорректно.");
             }
-
 
             result[selectedType] = _getPlayerTurn;
             result[result.First(x => x.Value == null).Key] = _getBotTurn;
@@ -90,21 +83,29 @@ namespace LocalConsole
             return result;
         }
 
-        private static Point _getBotTurn(Board board)
+        private static ushort _getBotTurn(Board board)
         {
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
             return Bot.Turn(board.Cells);
         }
 
-        private static Point _getPlayerTurn(Board board)
+        private static ushort _getPlayerTurn(Board board)
         {
-            var coords = Console.ReadLine()
-                .Trim()
-                .Split(' ')
-                .Select(x => Convert.ToUInt16(x))
-                .ToArray();
+            var input = Console.ReadLine();
 
-            return new Point((ushort) (coords[0] - 1), (ushort) (coords[1] - 1));
+            if (input == null)
+            {
+                throw new ArgumentException("Введите номер ячейки.");
+            }
+
+            var match = Regex.Match(input.Trim(), "^\\d+$");
+
+            if (!match.Success)
+            {
+                throw new ArgumentException("Введите номер ячейки в корректном формате.");
+            }
+
+            return Convert.ToUInt16(match.Groups[0].Value);
         }
 
         private static void _printHeader(Board board)
@@ -114,14 +115,41 @@ namespace LocalConsole
 
         private static void _printBoard(Board board)
         {
-            for (var i = 0; i < BoardSize; i++)
+            for (var x = 0; x < BOARD_SIZE; x++)
             {
-                for (var j = 0; j < BoardSize; j++)
+                for (var y = 0; y < BOARD_SIZE; y++)
                 {
-                    Console.Write($"[{_cellTypeToSymbol(board.Cells[i, j].State)}]");
+                    _getCellText(board.Cells[x, y], out var text, out var color);
+
+                    Console.Write("[");
+                    Console.ForegroundColor = color;
+                    Console.Write(text);
+                    Console.ResetColor();
+                    Console.Write("]");
                 }
 
                 Console.WriteLine();
+            }
+        }
+
+        private static void _getCellText(Cell cell, out string cellText, out ConsoleColor color)
+        {
+            switch (cell.State)
+            {
+                case CellType.None:
+                    cellText = (cell.Number + 1).ToString();
+                    color = ConsoleColor.DarkGray;
+                    return;
+                case CellType.Zero:
+                    cellText = _cellTypeToSymbol(cell.State);
+                    color = ConsoleColor.Cyan;
+                    return;
+                case CellType.Cross:
+                    cellText = _cellTypeToSymbol(cell.State);
+                    color = ConsoleColor.Yellow;
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -129,7 +157,7 @@ namespace LocalConsole
         {
             switch (cellType)
             {
-                case CellType.Empty:
+                case CellType.None:
                     return " ";
                 case CellType.Zero:
                     return "o";
@@ -144,7 +172,7 @@ namespace LocalConsole
         {
             switch (cellType)
             {
-                case CellType.Empty:
+                case CellType.None:
                     return "Не выбрано";
                 case CellType.Zero:
                     return "Нолики";

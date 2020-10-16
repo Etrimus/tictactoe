@@ -2,7 +2,7 @@
 {
     public enum CellType
     {
-        Empty = 0,
+        None = 0,
         Zero = 1,
         Cross = 2
     }

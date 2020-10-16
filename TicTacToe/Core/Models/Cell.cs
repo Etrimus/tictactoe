@@ -5,13 +5,13 @@ namespace Core.Models
     [DebuggerDisplay("{Number} - {State}")]
     public class Cell
     {
-        public Cell(int number)
+        public Cell(ushort number)
         {
             Number = number;
         }
 
-        public int Number { get; }
+        public ushort Number { get; }
 
-        public CellType State { get; set; }
+        public CellType State { get; internal set; }
     }
 }
