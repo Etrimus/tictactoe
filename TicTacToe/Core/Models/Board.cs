@@ -6,13 +6,9 @@ namespace TicTacToe.Core.Models
     [UsedImplicitly]
     public class Board
     {
-        private readonly BoardManager _boardManager;
-
         public Board(ushort gridSize)
         {
-            _boardManager = new BoardManager();
-
-            Cells = new ReadOnlyTwoDimensionalCollection<Cell>(_boardManager.CreateCells(gridSize));
+            Cells = new ReadOnlyTwoDimensionalCollection<Cell>(BoardManager.CreateCells(gridSize));
         }
 
         public ReadOnlyTwoDimensionalCollection<Cell> Cells { get; }
@@ -21,9 +17,9 @@ namespace TicTacToe.Core.Models
 
         public CellType Winner { get; internal set; } = CellType.None;
 
-        public bool TryTurn(ushort cellNumber, out string result)
+        public bool TryTurn(ushort cellNumber, out TurnResult result)
         {
-            return _boardManager.TryTurn(this, cellNumber, out result);
+            return BoardManager.TryTurn(this, cellNumber, out result);
         }
     }
 }

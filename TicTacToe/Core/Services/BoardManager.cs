@@ -6,7 +6,7 @@ namespace TicTacToe.Core.Services
 {
     internal class BoardManager
     {
-        public Cell[,] CreateCells(ushort gridSize)
+        public static Cell[,] CreateCells(ushort gridSize)
         {
             var result = new Cell[gridSize, gridSize];
 
@@ -24,7 +24,7 @@ namespace TicTacToe.Core.Services
             return result;
         }
 
-        public bool TryTurn(Board board, ushort cellNumber, out string error)
+        public static bool TryTurn(Board board, ushort cellNumber, out TurnResult result)
         {
             if (board == null) throw new ArgumentNullException(nameof(board));
 
@@ -32,13 +32,13 @@ namespace TicTacToe.Core.Services
 
             if (cell == null)
             {
-                error = $"Ячейка с номером {cellNumber + 1} не существуют на поле.";
+                result = TurnResult.CellDoesNotExist;
                 return false;
             }
 
             if (cell.State != CellType.None)
             {
-                error = "Выбранная для хода ячейка уже занята.";
+                result = TurnResult.CellIsAlreadyTaken;
                 return false;
             }
 
@@ -51,7 +51,7 @@ namespace TicTacToe.Core.Services
                 ? _getNextTurnCellType(board.NextTurn)
                 : CellType.None;
 
-            error = null;
+            result = TurnResult.Success;
             return true;
         }
 

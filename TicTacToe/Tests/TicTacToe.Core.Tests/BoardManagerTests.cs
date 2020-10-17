@@ -20,7 +20,7 @@ namespace TicTacToe.Core.Tests
         {
             const int expected = 2;
 
-            var cellsArray = _boardManager.CreateCells(0);
+            var cellsArray = BoardManager.CreateCells(0);
 
             cellsArray.Rank.Should().Be(expected);
         }
@@ -30,7 +30,7 @@ namespace TicTacToe.Core.Tests
         [InlineData(10)]
         public void CreateCells_CorrectDimensionsSize(ushort expected)
         {
-            var cellsArray = _boardManager.CreateCells(expected);
+            var cellsArray = BoardManager.CreateCells(expected);
 
             cellsArray.GetLength(0).Should().Be(expected);
             cellsArray.GetLength(1).Should().Be(expected);
@@ -39,7 +39,7 @@ namespace TicTacToe.Core.Tests
         [Fact]
         public void CreateCells_CorrectCellState()
         {
-            var cellsArray = _boardManager.CreateCells(3);
+            var cellsArray = BoardManager.CreateCells(3);
 
             using (new AssertionScope())
             {
@@ -55,7 +55,7 @@ namespace TicTacToe.Core.Tests
         {
             const ushort gridSize = 3;
 
-            var cellsArray = _boardManager.CreateCells(gridSize).Cast<Cell>().Select(x => x.Number).ToArray();
+            var cellsArray = BoardManager.CreateCells(gridSize).Cast<Cell>().Select(x => x.Number).ToArray();
 
             cellsArray.Should().Contain(new ushort[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 });
         }
@@ -63,7 +63,7 @@ namespace TicTacToe.Core.Tests
         [Fact]
         public void TryTurn_BoardIsNull_ThrowArgumentNullException()
         {
-            _boardManager.Invoking(x => x.TryTurn(null, 0, out _))
+            _boardManager.Invoking(x => BoardManager.TryTurn(null, 0, out _))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
