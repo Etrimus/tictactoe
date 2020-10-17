@@ -7,7 +7,7 @@ using TicTacToe.Core.Models;
 using TicTacToe.Core.Services;
 using Xunit;
 
-namespace TicTacToe.Core.Tests.Unit
+namespace TicTacToe.Core.Tests
 {
     public class BoardManagerTests
     {

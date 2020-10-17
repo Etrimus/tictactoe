@@ -57,7 +57,7 @@
       <Name>TicTacToe.Bot.RandomTurn</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\TicTacToe.Core.csproj">
-      <Project>{2c79afba-b8d6-49e7-9cef-fef511e38272}</Project>
+      <Project>{1c4f0d98-a6f7-4f12-94be-04fa64172ccc}</Project>
       <Name>TicTacToe.Core</Name>
     </ProjectReference>
   </ItemGroup>
