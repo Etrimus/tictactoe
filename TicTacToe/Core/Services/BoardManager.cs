@@ -44,10 +44,10 @@ namespace TicTacToe.Core.Services
 
             cell.State = board.NextTurn;
 
-            _inspectCells(board.Cells, out var winner, out var isNextTurnAvailable);
+            _inspectCells(board.Cells, out var winner, out var isAnyFreeCells);
 
             board.Winner = winner;
-            board.NextTurn = isNextTurnAvailable
+            board.NextTurn = winner == CellType.None && isAnyFreeCells
                 ? _getNextTurnCellType(board.NextTurn)
                 : CellType.None;
 
@@ -64,10 +64,10 @@ namespace TicTacToe.Core.Services
             };
         }
 
-        private static void _inspectCells(ReadOnlyTwoDimensionalCollection<Cell> cells, out CellType winner, out bool isNextTurnAvailable)
+        private static void _inspectCells(ReadOnlyTwoDimensionalCollection<Cell> cells, out CellType winner, out bool isAnyFreeCells)
         {
             winner = CellType.None;
-            isNextTurnAvailable = false;
+            isAnyFreeCells = false;
 
             var size = cells.GetLength(0);
 
@@ -84,7 +84,7 @@ namespace TicTacToe.Core.Services
                 {
                     if (cells[i, j].State == CellType.None)
                     {
-                        isNextTurnAvailable = true;
+                        isAnyFreeCells = true;
                     }
 
                     horizontal[i][j] = cells[i, j].State;
@@ -124,8 +124,6 @@ namespace TicTacToe.Core.Services
             {
                 winner = diagonal2[0];
             }
-
-            isNextTurnAvailable = isNextTurnAvailable && winner == CellType.None;
         }
     }
 }
