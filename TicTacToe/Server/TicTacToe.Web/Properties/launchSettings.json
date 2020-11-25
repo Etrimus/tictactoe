@@ -3,18 +3,11 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:58273",
-      "sslPort": 44382
+      "applicationUrl": "http://localhost:51801",
+      "sslPort": 44343
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "TicTacToe.Server": {
       "commandName": "Project",
       "environmentVariables": {
