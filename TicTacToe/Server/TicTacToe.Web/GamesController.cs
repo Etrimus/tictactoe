@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.App.Games;
@@ -8,6 +9,7 @@ namespace TicTacToe.Web
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class GamesController : ControllerBase
     {
         private readonly GameService _gameService;
@@ -42,6 +44,7 @@ namespace TicTacToe.Web
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public Task<Guid> Add()
         {
             return _gameService.AddAsync(new Game()).ContinueWith(x => x.Result.Id.Value);

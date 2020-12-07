@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TicTacToe.App;
 using TicTacToe.Dal;
+using TicTacToe.Web.Authentication;
 
 namespace TicTacToe.Web
 {
@@ -12,10 +12,14 @@ namespace TicTacToe.Web
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication().AddJwtBearer();
+
             services
                 .AddDal()
                 .AddApp()
-                .AddControllers();
+                .AddTicTacToeAuthentication();
+
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -29,7 +33,9 @@ namespace TicTacToe.Web
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app
+                .UseAuthentication()
+                .UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
