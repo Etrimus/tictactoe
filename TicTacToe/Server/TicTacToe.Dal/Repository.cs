@@ -15,6 +15,12 @@ namespace TicTacToe.Dal
             _context = context;
         }
 
+        public Task<bool> ExistAsync(Guid id)
+        {
+            return _context
+                .Set<T>().AnyAsync(x => x.Id == id);
+        }
+
         public Task<T> GetAsync(Guid id)
         {
             return _context

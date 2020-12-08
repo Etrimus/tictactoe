@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -6,23 +7,20 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 
 namespace TicTacToe.Web.Authentication
 {
-    internal class TicTacToeAuthenticationHandler : AuthenticationHandler<TicTacToeAutSchemeOptions>
+    // ReSharper disable once ClassNeverInstantiated.Global
+    internal class TicTacToeAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>, IAuthenticationSignInHandler
     {
-        private const string AUTH_HEADER = "TicTacToeAuthorization";
-        private const string GAME_ID_CLAIM_NAME = "GameId";
-
-        private readonly IAuthenticationService _authService;
+        private readonly AuthService _authService;
 
         public TicTacToeAuthenticationHandler(
-            [NotNull] IOptionsMonitor<TicTacToeAutSchemeOptions> options,
+            [NotNull] IOptionsMonitor<AuthenticationSchemeOptions> options,
             [NotNull] ILoggerFactory logger,
             [NotNull] UrlEncoder encoder,
             [NotNull] ISystemClock clock,
-            IAuthenticationService authService
+            AuthService authService
         ) : base(options, logger, encoder, clock)
         {
             _authService = authService;
@@ -30,36 +28,55 @@ namespace TicTacToe.Web.Authentication
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            //if (!Request.Headers.ContainsKey(AUTH_HEADER))
-            //{
-            //    return AuthenticateResult.NoResult();
-            //}
+            if (!Request.Headers.TryGetValue(TicTacToeAuthDefaults.AuthHeader, out var header))
+            {
+                return AuthenticateResult.Fail($"No '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
+            }
 
-            var gameId = Guid.NewGuid();
-            var playerId = Guid.NewGuid();
+            var guids = header[0].Split(';').Select(x =>
+                    Guid.TryParse(x, out var guid)
+                        ? guid
+                        : throw new ArgumentException($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided."))
+                .ToArray();
+
+            if (guids.Length != 2)
+            {
+                throw new ArgumentException($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
+            }
+
+            var playerId = guids[0];
+            var gameId = guids[1];
 
             if (await _authService.IsValidUserAsync(gameId, playerId))
             {
-                return AuthenticateResult.Success(
-                    new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity(new[]
-                    {
-                        new Claim(ClaimTypes.Name, gameId.ToString()),
-                        new Claim(GAME_ID_CLAIM_NAME, gameId.ToString())
-                    })), Scheme.Name));
+                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(gameId, playerId), TicTacToeAuthDefaults.AuthenticationScheme));
             }
 
             return AuthenticateResult.Fail("Invalid game id or player id.");
         }
 
-        protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+        public Task SignInAsync(ClaimsPrincipal user, AuthenticationProperties properties)
         {
-            Response.Headers[HeaderNames.WWWAuthenticate] = TicTacToeAuthDefaults.AuthenticationScheme;
-            return base.HandleChallengeAsync(properties);
+            var playerId = user.FindFirstValue(ClaimTypes.Name);
+            if (playerId == null)
+            {
+                throw new ArgumentException($"No claim '{ClaimTypes.Name}' was presented in {nameof(user)}.");
+            }
+
+            var gameId = user.FindFirstValue(TicTacToeAuthDefaults.ClaimGameId);
+            if (gameId == null)
+            {
+                throw new ArgumentException($"No claim '{TicTacToeAuthDefaults.ClaimGameId}' was presented in {nameof(user)}.");
+            }
+
+            Context.Response.Headers.Add(TicTacToeAuthDefaults.AuthHeader, $"{playerId};{gameId}");
+
+            return Task.CompletedTask;
         }
 
-        //protected override Task HandleForbiddenAsync(AuthenticationProperties properties)
-        //{
-        //    return base.HandleForbiddenAsync(properties);
-        //}
+        public Task SignOutAsync(AuthenticationProperties properties)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

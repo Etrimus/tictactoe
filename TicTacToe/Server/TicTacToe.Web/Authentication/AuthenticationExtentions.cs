@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TicTacToe.Web.Authentication
 {
@@ -9,11 +9,10 @@ namespace TicTacToe.Web.Authentication
         {
             serviceCollection
                 .AddAuthentication(TicTacToeAuthDefaults.AuthenticationScheme)
-                .AddScheme<TicTacToeAutSchemeOptions, TicTacToeAuthenticationHandler>(TicTacToeAuthDefaults.AuthenticationScheme, opt => { });
+                .AddScheme<AuthenticationSchemeOptions, TicTacToeAuthenticationHandler>(TicTacToeAuthDefaults.AuthenticationScheme, opt => { });
 
             return serviceCollection
-                .AddSingleton<IPostConfigureOptions<TicTacToeAutSchemeOptions>, TicTacToePostConfigureOptions>()
-                .AddScoped<IAuthenticationService, AuthenticationService>();
+                .AddScoped<AuthService, AuthService>();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TicTacToe.Web
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication().AddJwtBearer();
+            services.AddAuthentication();
 
             services
                 .AddDal()
