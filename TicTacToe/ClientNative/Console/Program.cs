@@ -10,7 +10,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
 {
     public static class Program
     {
-        private const ushort BOARD_SIZE = 3;
+        private const ushort BoardSize = 3;
 
         private static void Main()
         {
@@ -25,7 +25,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
                     Console.WriteLine($"{Environment.NewLine}Вводите номер свободной ячейки для совершения хода.{Environment.NewLine}");
 
-                    board = new Board(BOARD_SIZE);
+                    board = new Board(BoardSize);
                 }
                 catch (Exception e)
                 {
@@ -66,8 +66,8 @@ namespace TicTacToe.ClientNative.ConsoleClient
         {
             var result = new Dictionary<CellType, Func<ReadOnlyTwoDimensionalCollection<Cell>, ushort>>
             {
-                { CellType.Zero, null },
-                { CellType.Cross, null }
+                {CellType.Zero, null},
+                {CellType.Cross, null}
             };
 
             Console.WriteLine($"{Environment.NewLine}Выберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
@@ -89,7 +89,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
         private static ushort _getBotTurn(ReadOnlyTwoDimensionalCollection<Cell> cells)
         {
             Thread.Sleep(1000);
-            var result = Bot.RandomTurn.Bot.Turn(cells);
+            var result = Bot.RandomTurn.RandomTurnBot.Turn(cells);
             Console.WriteLine(result);
             return result;
         }
@@ -123,9 +123,9 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
         private static void _printBoard(Board board)
         {
-            for (var x = 0; x < BOARD_SIZE; x++)
+            for (var x = 0; x < BoardSize; x++)
             {
-                for (var y = 0; y < BOARD_SIZE; y++)
+                for (var y = 0; y < BoardSize; y++)
                 {
                     _getCellText(board.Cells[x, y], out var text, out var color);
 
@@ -157,7 +157,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
                     color = ConsoleColor.Yellow;
                     return;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException($"{nameof(cell)}.{nameof(cell.State)}");
             }
         }
 

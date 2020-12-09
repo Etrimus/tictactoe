@@ -34,6 +34,15 @@ namespace TicTacToe.App.Games
                 .ProjectTo<Game>(_mapper.ConfigurationProvider);
         }
 
+        public IQueryable<Game> GetFreeAsync()
+        {
+            return _repository
+                .GetAllAsync()
+                .Where(x => !x.ZeroId.HasValue || !x.CrossId.HasValue)
+                .Select(x => _mapper.Map<GameEntity, Game>(x));
+            //.ProjectTo<Game>(_mapper.ConfigurationProvider);
+        }
+
         public Task UpdateAsync(Game game)
         {
             return _repository.UpdateAsync(_mapper.Map<Game, GameEntity>(game));

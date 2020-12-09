@@ -6,7 +6,7 @@ using TicTacToe.Core.Models;
 
 namespace TicTacToe.Bot.RandomTurn
 {
-    public static class Bot
+    public static class RandomTurnBot
     {
         public static ushort Turn(IEnumerable<Cell> cells)
         {

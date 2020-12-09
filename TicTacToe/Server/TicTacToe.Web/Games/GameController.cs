@@ -28,6 +28,12 @@ namespace TicTacToe.Web.Games
             return _gameService.GetAllAsync().ToArrayAsync();
         }
 
+        [HttpGet("free")]
+        public Task<Game[]> GetFree()
+        {
+            return _gameService.GetFreeAsync().ToArrayAsync();
+        }
+
         [HttpGet("{id}")]
         [Authorize]
         public Task<Game> Get([FromRoute] Guid id)
