@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using TicTacToe.App;
 using TicTacToe.Dal;
 using TicTacToe.Web.Authentication;
+using TicTacToe.Web.Games;
 
 namespace TicTacToe.Web
 {
@@ -15,6 +16,7 @@ namespace TicTacToe.Web
             services.AddAuthentication();
 
             services
+                .AddTransient<InjectGameIdMiddleware>()
                 .AddDal()
                 .AddApp()
                 .AddTicTacToeAuthentication();
@@ -29,9 +31,12 @@ namespace TicTacToe.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app
+                .UseHttpsRedirection()
+                .UseRouting();
 
-            app.UseRouting();
+            app
+                .UseMiddleware<InjectGameIdMiddleware>();
 
             app
                 .UseAuthentication()

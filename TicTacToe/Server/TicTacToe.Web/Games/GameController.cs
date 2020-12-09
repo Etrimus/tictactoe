@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using TicTacToe.App.Games;
 using TicTacToe.Web.Authentication;
 
-namespace TicTacToe.Web
+namespace TicTacToe.Web.Games
 {
     [ApiController]
     [Route("[controller]")]
-    public class GamesController : ControllerBase
+    public class GameController : ControllerBase
     {
         private readonly GameService _gameService;
         private readonly AuthService _authService;
 
-        public GamesController(GameService gameService, AuthService authService)
+        public GameController(GameService gameService, AuthService authService)
         {
             _gameService = gameService;
             _authService = authService;
@@ -58,7 +58,7 @@ namespace TicTacToe.Web
         [HttpPost]
         public Task<Guid> Add()
         {
-            return _gameService.AddAsync(new Game())
+            return _gameService.CreateNewAsync()
                 .ContinueWith(x => x.Result.Id);
         }
     }

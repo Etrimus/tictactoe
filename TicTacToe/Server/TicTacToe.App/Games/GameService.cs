@@ -39,10 +39,10 @@ namespace TicTacToe.App.Games
             return _repository.UpdateAsync(_mapper.Map<Game, GameEntity>(game));
         }
 
-        public Task<Game> AddAsync(Game game)
+        public Task<Game> CreateNewAsync()
         {
             return _repository
-                .AddAsync(_mapper.Map<Game, GameEntity>(game))
+                .AddAsync(_mapper.Map<Game, GameEntity>(new Game()))
                 .ContinueWith(x => _mapper.Map<GameEntity, Game>(x.Result));
         }
 

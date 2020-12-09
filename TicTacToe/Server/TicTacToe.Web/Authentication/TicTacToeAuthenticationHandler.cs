@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TicTacToe.Web.Games;
 
 namespace TicTacToe.Web.Authentication
 {
@@ -33,23 +34,19 @@ namespace TicTacToe.Web.Authentication
                 return AuthenticateResult.Fail($"No '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
             }
 
-            var guids = header[0].Split(';').Select(x =>
-                    Guid.TryParse(x, out var guid)
-                        ? guid
-                        : throw new ArgumentException($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided."))
-                .ToArray();
-
-            if (guids.Length != 2)
+            if (!Guid.TryParse(header[0], out var playerId))
             {
-                throw new ArgumentException($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
+                return AuthenticateResult.Fail($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
             }
 
-            var playerId = guids[0];
-            var gameId = guids[1];
-
-            if (await _authService.IsValidUserAsync(gameId, playerId))
+            if (!Context.Items.TryGetValue(InjectGameIdMiddleware.GameIdName, out var gameId))
             {
-                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(gameId, playerId), TicTacToeAuthDefaults.AuthenticationScheme));
+                throw new Exception($"No '{InjectGameIdMiddleware.GameIdName}' item in {nameof(Context)}.{nameof(Context.Items)}.");
+            }
+
+            if (await _authService.IsValidUserAsync((Guid)gameId, playerId))
+            {
+                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal((Guid)gameId, playerId), TicTacToeAuthDefaults.AuthenticationScheme));
             }
 
             return AuthenticateResult.Fail("Invalid game id or player id.");
