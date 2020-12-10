@@ -1,25 +1,18 @@
-﻿using JetBrains.Annotations;
-using TicTacToe.Core.Services;
-
-namespace TicTacToe.Core.Models
+﻿namespace TicTacToe.Core.Models
 {
-    [UsedImplicitly]
     public class Board
     {
-        public Board(ushort gridSize)
+        internal Board(Cell[,] cells, CellType nextTurn = CellType.Cross, CellType winner = CellType.None)
         {
-            Cells = new ReadOnlyTwoDimensionalCollection<Cell>(BoardManager.CreateCells(gridSize));
+            Cells = new ReadOnlyTwoDimensionalCollection<Cell>(cells);
+            NextTurn = nextTurn;
+            Winner = winner;
         }
 
         public ReadOnlyTwoDimensionalCollection<Cell> Cells { get; }
 
-        public CellType NextTurn { get; internal set; } = CellType.Cross;
+        public CellType NextTurn { get; internal set; }
 
-        public CellType Winner { get; internal set; } = CellType.None;
-
-        public bool TryTurn(ushort cellNumber, out TurnResult result)
-        {
-            return BoardManager.TryTurn(this, cellNumber, out result);
-        }
+        public CellType Winner { get; internal set; }
     }
 }

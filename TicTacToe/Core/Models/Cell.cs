@@ -5,9 +5,10 @@ namespace TicTacToe.Core.Models
     [DebuggerDisplay("{Number} - {State}")]
     public class Cell
     {
-        public Cell(ushort number)
+        internal Cell(ushort number, CellType state = CellType.None)
         {
             Number = number;
+            State = state;
         }
 
         public ushort Number { get; }

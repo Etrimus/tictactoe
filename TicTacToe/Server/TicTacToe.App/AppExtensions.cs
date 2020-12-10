@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using TicTacToe.App.Games;
+using TicTacToe.App.Game;
 
 namespace TicTacToe.App
 {

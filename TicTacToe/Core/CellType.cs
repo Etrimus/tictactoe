@@ -1,6 +1,6 @@
 ﻿namespace TicTacToe.Core
 {
-    public enum CellType
+    public enum CellType : byte
     {
         None = 0,
         Zero = 1,

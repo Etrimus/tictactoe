@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using TicTacToe.Core;
 using TicTacToe.Core.Models;
 
-namespace TicTacToe.App.Games
+namespace TicTacToe.App.Game
 {
-    public class Game : ModelBase
+    public class GameModel : ModelBase
     {
         public Guid? CrossId { get; set; }
 
@@ -15,6 +14,6 @@ namespace TicTacToe.App.Games
 
         public CellType Winner { get; set; }
 
-        public ReadOnlyTwoDimensionalCollection<Cell> Cells { get; } = new ReadOnlyTwoDimensionalCollection<Cell>(new Cell[0, 0]);
+        public Cell[,] Cells { get; set; }
     }
 }

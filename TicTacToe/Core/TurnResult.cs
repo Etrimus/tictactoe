@@ -1,6 +1,6 @@
 ﻿namespace TicTacToe.Core
 {
-    public enum TurnResult
+    public enum TurnResult : byte
     {
         Success = 0,
 

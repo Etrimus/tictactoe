@@ -7,7 +7,7 @@ using TicTacToe.Core;
 using TicTacToe.Dal.Games;
 using TicTacToe.Domain;
 
-namespace TicTacToe.App.Games
+namespace TicTacToe.App.Game
 {
     public class GameService
     {
@@ -20,39 +20,39 @@ namespace TicTacToe.App.Games
             _mapper = mapper;
         }
 
-        public Task<Game> GetAsync(Guid id)
+        public Task<GameModel> GetAsync(Guid id)
         {
             return _repository
                 .GetAsync(id)
-                .ContinueWith(x => _mapper.Map<GameEntity, Game>(x.Result));
+                .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
-        public IQueryable<Game> GetAllAsync()
+        public IQueryable<GameModel> GetAllAsync()
         {
             return _repository
                 .GetAllAsync()
-                .ProjectTo<Game>(_mapper.ConfigurationProvider);
+                .ProjectTo<GameModel>(_mapper.ConfigurationProvider);
         }
 
-        public IQueryable<Game> GetFreeAsync()
+        public IQueryable<GameModel> GetFreeAsync()
         {
             return _repository
                 .GetAllAsync()
                 .Where(x => !x.ZeroId.HasValue || !x.CrossId.HasValue)
-                .Select(x => _mapper.Map<GameEntity, Game>(x));
+                .Select(x => _mapper.Map<GameEntity, GameModel>(x));
             //.ProjectTo<Game>(_mapper.ConfigurationProvider);
         }
 
-        public Task UpdateAsync(Game game)
+        public Task UpdateAsync(GameModel game)
         {
-            return _repository.UpdateAsync(_mapper.Map<Game, GameEntity>(game));
+            return _repository.UpdateAsync(_mapper.Map<GameModel, GameEntity>(game));
         }
 
-        public Task<Game> CreateNewAsync()
+        public Task<GameModel> CreateNewAsync()
         {
             return _repository
-                .AddAsync(_mapper.Map<Game, GameEntity>(new Game()))
-                .ContinueWith(x => _mapper.Map<GameEntity, Game>(x.Result));
+                .AddAsync(_mapper.Map<GameModel, GameEntity>(new GameModel()))
+                .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
         public Task<Guid> SetCrossPlayer(Guid gameId)

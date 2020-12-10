@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using TicTacToe.Core;
 using TicTacToe.Core.Models;
+using TicTacToe.Core.Services;
 
 namespace TicTacToe.ClientNative.ConsoleClient
 {
@@ -14,6 +16,8 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
         private static void Main()
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
             while (true)
             {
                 Board board;
@@ -23,9 +27,9 @@ namespace TicTacToe.ClientNative.ConsoleClient
                 {
                     players = _setPlayers();
 
-                    Console.WriteLine($"{Environment.NewLine}Вводите номер свободной ячейки для совершения хода.{Environment.NewLine}");
+                    Console.WriteLine($"{Environment.NewLine}Введите номер ячейки для хода.{Environment.NewLine}");
 
-                    board = new Board(BoardSize);
+                    board = BoardManager.CreateBoard(BoardSize);
                 }
                 catch (Exception e)
                 {
@@ -40,7 +44,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
                     var playerTurnCellNumber = players[board.NextTurn].Invoke(board.Cells) - 1;
 
-                    if (!board.TryTurn((ushort)playerTurnCellNumber, out var result))
+                    if (!BoardManager.TryTurn(board, (ushort)playerTurnCellNumber, out var result))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(result);

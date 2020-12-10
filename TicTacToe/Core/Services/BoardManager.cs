@@ -4,24 +4,16 @@ using TicTacToe.Core.Models;
 
 namespace TicTacToe.Core.Services
 {
-    internal class BoardManager
+    public static class BoardManager
     {
-        public static Cell[,] CreateCells(ushort gridSize)
+        public static Board CreateBoard(ushort gridSize)
         {
-            var result = new Cell[gridSize, gridSize];
+            return new Board(_createCells(gridSize));
+        }
 
-            ushort cellNumber = 0;
-
-            for (var i = 0; i < gridSize; i++)
-            {
-                for (var j = 0; j < gridSize; j++)
-                {
-                    result[i, j] = new Cell(cellNumber);
-                    cellNumber++;
-                }
-            }
-
-            return result;
+        public static Board CreateBoard(CellType nextTurn, CellType winner, CellType[,] cells)
+        {
+            return new Board(_createCells(cells), nextTurn, winner);
         }
 
         public static bool TryTurn(Board board, ushort cellNumber, out TurnResult result)
@@ -48,14 +40,58 @@ namespace TicTacToe.Core.Services
 
             board.Winner = winner;
             board.NextTurn = winner == CellType.None && isAnyFreeCells
-                ? _getNextTurnCellType(board.NextTurn)
+                ? _getNextTurn(board.NextTurn)
                 : CellType.None;
 
             result = TurnResult.Success;
             return true;
         }
 
-        private static CellType _getNextTurnCellType(CellType currentTurn)
+        private static Cell[,] _createCells(ushort gridSize)
+        {
+            var result = new Cell[gridSize, gridSize];
+
+            ushort cellNumber = 0;
+
+            for (var i = 0; i < gridSize; i++)
+            {
+                for (var j = 0; j < gridSize; j++)
+                {
+                    result[i, j] = new Cell(cellNumber);
+                    cellNumber++;
+                }
+            }
+
+            return result;
+        }
+
+        private static Cell[,] _createCells(CellType[,] source)
+        {
+            var firstDimensionLength = source.GetLength(0);
+            var secondDimensionLength = source.GetLength(1);
+
+            if (firstDimensionLength != secondDimensionLength)
+            {
+                throw new ArgumentException($"Lengths of dimensions of array not equals.", nameof(source));
+            }
+
+            var result = new Cell[firstDimensionLength, secondDimensionLength];
+
+            ushort cellNumber = 0;
+
+            for (var i = 0; i < firstDimensionLength; i++)
+            {
+                for (var j = 0; j < secondDimensionLength; j++)
+                {
+                    result[i, j] = new Cell(cellNumber, source[i, j]);
+                    cellNumber++;
+                }
+            }
+
+            return result;
+        }
+
+        private static CellType _getNextTurn(CellType currentTurn)
         {
             return currentTurn switch
             {
