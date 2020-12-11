@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using TicTacToe.Core;
+using TicTacToe.Core.Services;
 using TicTacToe.Dal.Games;
 using TicTacToe.Domain;
 
@@ -13,11 +14,13 @@ namespace TicTacToe.App.Game
     {
         private readonly GameRepository _repository;
         private readonly IMapper _mapper;
+        private readonly BoardManager _boardManager;
 
-        public GameService(GameRepository repository, IMapper mapper)
+        public GameService(GameRepository repository, IMapper mapper, BoardManager boardManager)
         {
             _repository = repository;
             _mapper = mapper;
+            _boardManager = boardManager;
         }
 
         public Task<GameModel> GetAsync(Guid id)
@@ -39,8 +42,7 @@ namespace TicTacToe.App.Game
             return _repository
                 .GetAllAsync()
                 .Where(x => !x.ZeroId.HasValue || !x.CrossId.HasValue)
-                .Select(x => _mapper.Map<GameEntity, GameModel>(x));
-            //.ProjectTo<Game>(_mapper.ConfigurationProvider);
+                .ProjectTo<GameModel>(_mapper.ConfigurationProvider);
         }
 
         public Task UpdateAsync(GameModel game)
@@ -51,7 +53,7 @@ namespace TicTacToe.App.Game
         public Task<GameModel> CreateNewAsync()
         {
             return _repository
-                .AddAsync(_mapper.Map<GameModel, GameEntity>(new GameModel()))
+                .AddAsync(_mapper.Map<GameModel, GameEntity>(new GameModel(_boardManager.CreateBoard(3))))
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
@@ -63,6 +65,44 @@ namespace TicTacToe.App.Game
         public Task<Guid> SetZeroPlayer(Guid gameId)
         {
             return _setPlayer(gameId, CellType.Zero);
+        }
+
+        public async Task MakeTurn(Guid gameId, Guid playerId, ushort cellNumber)
+        {
+            var game = await GetAsync(gameId);
+
+            if (!game.ZeroId.HasValue || !game.CrossId.HasValue)
+            {
+                throw new ArgumentException($"Couldn't make a turn for the game id {gameId}. The game don't have all player.");
+            }
+
+            Guid? expectedPlayerId;
+
+            switch (game.Board.NextTurn)
+            {
+                case CellType.Zero:
+                    expectedPlayerId = game.ZeroId;
+                    break;
+                case CellType.Cross:
+                    expectedPlayerId = game.CrossId;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"The game has an invalid {nameof(game.Board.NextTurn)} value.");
+            }
+
+            if (expectedPlayerId != playerId)
+            {
+                throw new ArgumentException($"The given {nameof(playerId)} can't make a turn.");
+            }
+
+            if (_boardManager.TryTurn(game.Board, cellNumber, out var turnResult) && turnResult == TurnResult.Success)
+            {
+                await UpdateAsync(game);
+            }
+            else
+            {
+                throw new Exception($"Unsuccess turn. {turnResult}");
+            }
         }
 
         private async Task<Guid> _setPlayer(Guid gameId, CellType cellType)

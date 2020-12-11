@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TicTacToe.Web.Games;
+using TicTacToe.Web.Game;
 
 namespace TicTacToe.Web.Authentication
 {
@@ -39,14 +39,14 @@ namespace TicTacToe.Web.Authentication
                 return AuthenticateResult.Fail($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
             }
 
-            if (!Context.Items.TryGetValue(InjectGameIdMiddleware.GameIdName, out var gameId))
+            if (!Context.TryGetGameId(out var gameId))
             {
-                throw new Exception($"No '{InjectGameIdMiddleware.GameIdName}' item in {nameof(Context)}.{nameof(Context.Items)}.");
+                throw new Exception($"No valid '{InjectGameIdMiddleware.GameIdName}' item in {nameof(Context)}.{nameof(Context.Items)}.");
             }
 
-            if (await _authService.IsValidUserAsync((Guid)gameId, playerId))
+            if (await _authService.IsValidUserAsync(gameId, playerId))
             {
-                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal((Guid)gameId, playerId), TicTacToeAuthDefaults.AuthenticationScheme));
+                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(gameId, playerId), TicTacToeAuthDefaults.AuthenticationScheme));
             }
 
             return AuthenticateResult.Fail("Invalid game id or player id.");
@@ -60,13 +60,7 @@ namespace TicTacToe.Web.Authentication
                 throw new ArgumentException($"No claim '{ClaimTypes.Name}' was presented in {nameof(user)}.");
             }
 
-            var gameId = user.FindFirstValue(TicTacToeAuthDefaults.ClaimGameId);
-            if (gameId == null)
-            {
-                throw new ArgumentException($"No claim '{TicTacToeAuthDefaults.ClaimGameId}' was presented in {nameof(user)}.");
-            }
-
-            Context.Response.Headers.Add(TicTacToeAuthDefaults.AuthHeader, $"{playerId};{gameId}");
+            Context.Response.Headers.Add(TicTacToeAuthDefaults.AuthHeader, playerId);
 
             return Task.CompletedTask;
         }

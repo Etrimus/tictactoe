@@ -3,11 +3,11 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using TicTacToe.App;
 using TicTacToe.Dal;
 using TicTacToe.Web.Authentication;
-using TicTacToe.Web.Games;
+using TicTacToe.Web.Error;
+using TicTacToe.Web.Game;
 
 namespace TicTacToe.Web
 {
@@ -29,9 +29,8 @@ namespace TicTacToe.Web
         [UsedImplicitly]
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
-            if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler(builder => { builder.Run(ExceptionHandler.HandleAsync); });
             }
 
             mapper.ConfigurationProvider.AssertConfigurationIsValid();

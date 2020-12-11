@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TicTacToe.App.Game;
 using TicTacToe.Web.Authentication;
 
-namespace TicTacToe.Web.Games
+namespace TicTacToe.Web.Game
 {
     [ApiController]
     [Route("[controller]")]
@@ -41,6 +41,13 @@ namespace TicTacToe.Web.Games
             return _gameService.GetAsync(id);
         }
 
+        [HttpPost]
+        public Task<Guid> Add()
+        {
+            return _gameService.CreateNewAsync()
+                .ContinueWith(x => x.Result.Id);
+        }
+
         [HttpPut("{id}/crossPlayer")]
         public async Task<Guid> SetCrossPlayer([FromRoute] Guid id)
         {
@@ -61,11 +68,11 @@ namespace TicTacToe.Web.Games
             return playerId;
         }
 
-        [HttpPost]
-        public Task<Guid> Add()
+        [HttpPut("{id}/turn/{cellNumber}")]
+        [Authorize]
+        public Task Turn([FromRoute] Guid id, [FromRoute] ushort cellNumber)
         {
-            return _gameService.CreateNewAsync()
-                .ContinueWith(x => x.Result.Id);
+            return _gameService.MakeTurn(id, Guid.Parse(HttpContext.User.Identity.Name), cellNumber);
         }
     }
 }

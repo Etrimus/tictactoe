@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace TicTacToe.Web.Games
+namespace TicTacToe.Web.Game
 {
     public class InjectGameIdMiddleware : IMiddleware
     {

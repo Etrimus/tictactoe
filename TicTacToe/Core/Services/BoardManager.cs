@@ -4,19 +4,19 @@ using TicTacToe.Core.Models;
 
 namespace TicTacToe.Core.Services
 {
-    public static class BoardManager
+    public class BoardManager
     {
-        public static Board CreateBoard(ushort gridSize)
+        public Board CreateBoard(ushort gridSize)
         {
             return new Board(_createCells(gridSize));
         }
 
-        public static Board CreateBoard(CellType nextTurn, CellType winner, CellType[,] cells)
+        public Board CreateBoard(CellType nextTurn, CellType winner, CellType[,] cells)
         {
             return new Board(_createCells(cells), nextTurn, winner);
         }
 
-        public static bool TryTurn(Board board, ushort cellNumber, out TurnResult result)
+        public bool TryTurn(Board board, ushort cellNumber, out TurnResult result)
         {
             if (board == null) throw new ArgumentNullException(nameof(board));
 

@@ -18,6 +18,8 @@ namespace TicTacToe.ClientNative.ConsoleClient
         {
             Console.OutputEncoding = Encoding.UTF8;
 
+            var boardManager = new BoardManager();
+
             while (true)
             {
                 Board board;
@@ -29,7 +31,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
                     Console.WriteLine($"{Environment.NewLine}Введите номер ячейки для хода.{Environment.NewLine}");
 
-                    board = BoardManager.CreateBoard(BoardSize);
+                    board = boardManager.CreateBoard(BoardSize);
                 }
                 catch (Exception e)
                 {
@@ -44,7 +46,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
                     var playerTurnCellNumber = players[board.NextTurn].Invoke(board.Cells) - 1;
 
-                    if (!BoardManager.TryTurn(board, (ushort)playerTurnCellNumber, out var result))
+                    if (!boardManager.TryTurn(board, (ushort)playerTurnCellNumber, out var result))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(result);

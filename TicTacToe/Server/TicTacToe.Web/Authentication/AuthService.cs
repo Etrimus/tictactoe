@@ -23,9 +23,7 @@ namespace TicTacToe.Web.Authentication
 
         public ClaimsPrincipal CreateClaimsPrincipal(Guid gameId, Guid playerId)
         {
-            return new ClaimsPrincipal(new ClaimsIdentity(
-                new[] {new Claim(ClaimTypes.Name, playerId.ToString()), new Claim(TicTacToeAuthDefaults.ClaimGameId, gameId.ToString())},
-                TicTacToeAuthDefaults.AuthenticationScheme));
+            return new ClaimsPrincipal(new ClaimsIdentity(new[] {new Claim(ClaimTypes.Name, playerId.ToString())}, TicTacToeAuthDefaults.AuthenticationScheme));
         }
     }
 }
