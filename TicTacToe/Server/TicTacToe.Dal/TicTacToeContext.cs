@@ -12,6 +12,7 @@ namespace TicTacToe.Dal
             opt
                 //.UseInMemoryDatabase("TicTacToe")
                 .UseSqlite("Data Source=TicTacToe.sqlite")
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         }

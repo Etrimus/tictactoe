@@ -46,10 +46,11 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
                     var playerTurnCellNumber = players[board.NextTurn].Invoke(board.Cells) - 1;
 
-                    if (!boardManager.TryTurn(board, (ushort)playerTurnCellNumber, out var result))
+                    var turnResult = boardManager.Turn(board, (ushort)playerTurnCellNumber);
+                    if (turnResult != TurnResult.Success)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(result);
+                        Console.WriteLine(turnResult);
                         Console.ResetColor();
                         continue;
                     }
@@ -83,7 +84,7 @@ namespace TicTacToe.ClientNative.ConsoleClient
             var selectedType = (CellType)Convert.ToInt32(Console.ReadLine());
             if (selectedType == CellType.None || !Enum.IsDefined(typeof(CellType), selectedType))
             {
-                throw new ArgumentException("Введенное значение некорректно.");
+                throw new TicTacToeException("Введенное значение некорректно.");
             }
 
             result[selectedType] = _getPlayerTurn;
@@ -106,14 +107,14 @@ namespace TicTacToe.ClientNative.ConsoleClient
 
             if (input == null)
             {
-                throw new ArgumentException("Введите номер ячейки.");
+                throw new TicTacToeException("Введите номер ячейки.");
             }
 
             var match = Regex.Match(input.Trim(), "^\\d+$");
 
             if (!match.Success)
             {
-                throw new ArgumentException("Введите номер ячейки в корректном формате.");
+                throw new TicTacToeException("Введите номер ячейки в корректном формате.");
             }
 
             return Convert.ToUInt16(match.Groups[0].Value);

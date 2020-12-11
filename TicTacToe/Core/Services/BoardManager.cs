@@ -16,22 +16,26 @@ namespace TicTacToe.Core.Services
             return new Board(_createCells(cells), nextTurn, winner);
         }
 
-        public bool TryTurn(Board board, ushort cellNumber, out TurnResult result)
+        public TurnResult Turn(Board board, ushort cellNumber)
         {
-            if (board == null) throw new ArgumentNullException(nameof(board));
+            if (board == null)
+                throw new ArgumentNullException(nameof(board));
+
+            if (board.Winner != CellType.None)
+            {
+                return TurnResult.AlreadeyHaveWinner;
+            }
 
             var cell = board.Cells.FirstOrDefault(x => x.Number == cellNumber);
 
             if (cell == null)
             {
-                result = TurnResult.CellDoesNotExist;
-                return false;
+                return TurnResult.CellDoesNotExist;
             }
 
             if (cell.State != CellType.None)
             {
-                result = TurnResult.CellIsAlreadyTaken;
-                return false;
+                return TurnResult.CellIsAlreadyTaken;
             }
 
             cell.State = board.NextTurn;
@@ -43,8 +47,7 @@ namespace TicTacToe.Core.Services
                 ? _getNextTurn(board.NextTurn)
                 : CellType.None;
 
-            result = TurnResult.Success;
-            return true;
+            return TurnResult.Success;
         }
 
         private static Cell[,] _createCells(ushort gridSize)
@@ -72,7 +75,7 @@ namespace TicTacToe.Core.Services
 
             if (firstDimensionLength != secondDimensionLength)
             {
-                throw new ArgumentException($"Lengths of dimensions of array not equals.", nameof(source));
+                throw new ArgumentException("Lengths of dimensions of array not equals.", nameof(source));
             }
 
             var result = new Cell[firstDimensionLength, secondDimensionLength];

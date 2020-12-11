@@ -71,37 +71,47 @@ namespace TicTacToe.App.Game
         {
             var game = await GetAsync(gameId);
 
+            if (game.Board.Winner != CellType.None)
+            {
+                throw new TicTacToeException("The game already has a winner.");
+            }
+
             if (!game.ZeroId.HasValue || !game.CrossId.HasValue)
             {
-                throw new ArgumentException($"Couldn't make a turn for the game id {gameId}. The game don't have all player.");
+                throw new TicTacToeException($"Couldn't make a turn for the game id {gameId}. The game doesn't have all players.");
             }
 
-            Guid? expectedPlayerId;
+            var givenPlayerCellType = playerId == game.ZeroId.Value
+                ? CellType.Zero
+                : playerId == game.CrossId.Value
+                    ? CellType.Cross
+                    : CellType.None;
 
-            switch (game.Board.NextTurn)
+            if (givenPlayerCellType == CellType.None)
             {
-                case CellType.Zero:
-                    expectedPlayerId = game.ZeroId;
-                    break;
-                case CellType.Cross:
-                    expectedPlayerId = game.CrossId;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException($"The game has an invalid {nameof(game.Board.NextTurn)} value.");
+                throw new TicTacToeException($"The given {playerId} doesn't belongs to the game.");
             }
+
+            var expectedPlayerId = game.Board.NextTurn switch
+            {
+                CellType.Zero => game.ZeroId.Value,
+                CellType.Cross => game.CrossId.Value,
+                _ => throw new TicTacToeException($"The game has an invalid {nameof(game.Board.NextTurn)} value.")
+            };
 
             if (expectedPlayerId != playerId)
             {
-                throw new ArgumentException($"The given {nameof(playerId)} can't make a turn.");
+                throw new TicTacToeException($"The given player can't make a turn. The player belongs to {givenPlayerCellType}. The game awaits a {game.Board.NextTurn} turn.");
             }
 
-            if (_boardManager.TryTurn(game.Board, cellNumber, out var turnResult) && turnResult == TurnResult.Success)
+            var turnResult = _boardManager.Turn(game.Board, cellNumber);
+            if (turnResult == TurnResult.Success)
             {
                 await UpdateAsync(game);
             }
             else
             {
-                throw new Exception($"Unsuccess turn. {turnResult}");
+                throw new TicTacToeException($"Unsuccessful turn. {turnResult}.");
             }
         }
 
@@ -128,7 +138,7 @@ namespace TicTacToe.App.Game
 
             if (getPlayerFn().HasValue)
             {
-                throw new ArgumentException($"A game already have a {cellType} player.");
+                throw new TicTacToeException($"A game already have a {cellType} player.");
             }
 
             setPlayerAction(Guid.NewGuid());
