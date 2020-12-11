@@ -38,6 +38,7 @@ namespace TicTacToe.Web
 
             app
                 .UseHttpsRedirection()
+                .UseStaticFiles()
                 .UseRouting();
 
             app
