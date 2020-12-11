@@ -1,8 +1,10 @@
+using System.IO;
 using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using TicTacToe.App;
 using TicTacToe.Dal;
 using TicTacToe.Web.Authentication;
@@ -38,7 +40,10 @@ namespace TicTacToe.Web
 
             app
                 .UseHttpsRedirection()
-                .UseStaticFiles()
+                .UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider($"{env.ContentRootPath}/wwwroot/tic-tac-toe/dist/tic-tac-toe")
+                })
                 .UseRouting();
 
             app

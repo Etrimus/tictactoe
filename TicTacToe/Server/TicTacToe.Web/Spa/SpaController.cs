@@ -10,7 +10,7 @@ namespace TicTacToe.Web.Spa
         [HttpGet]
         public IActionResult Index()
         {
-            return Redirect("/src/index.html");
+            return Redirect("index.html");
         }
     }
 }
