@@ -1,3 +1,5 @@
+import { GameModel, Board, Cell, CellType, ModelBase } from './dto';
+
 /* tslint:disable */
 /* eslint-disable */
 //----------------------
