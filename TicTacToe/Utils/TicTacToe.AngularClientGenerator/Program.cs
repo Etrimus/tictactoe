@@ -51,28 +51,6 @@ namespace TicTacToe.AngularClientGenerator
         private static string AddDtoImports(OpenApiDocument document, string code)
         {
             return $"import {{ {string.Join(", ", document.Definitions.Keys)} }} from './{DtoClassName}';{Environment.NewLine}{Environment.NewLine}{code}";
-
-            //var builder = new StringBuilder();
-            //var importAdded = false;
-            //foreach (var line in code.Split('\n').Select(l => l.TrimEnd('\r')))
-            //{
-            //    if (!importAdded && line.StartsWith("export const BASE_URL = "))
-            //    {
-            //        builder.AppendLine("import {");
-            //        foreach (var dtoClass in document.Definitions.Keys)
-            //        {
-            //            builder.AppendLine($"    {dtoClass},");
-            //        }
-
-            //        builder.AppendLine("} from './dto';");
-            //        builder.AppendLine();
-            //        importAdded = true;
-            //    }
-
-            //    builder.AppendLine(line);
-            //}
-
-            //return builder.ToString();
         }
 
         private static TypeScriptClientGeneratorSettings CreateTypeScriptSettings()
