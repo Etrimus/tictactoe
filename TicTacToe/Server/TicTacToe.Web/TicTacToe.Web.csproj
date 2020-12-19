@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\tic-tac-toe\**" />
-    <Content Remove="wwwroot\tic-tac-toe\**" />
-    <EmbeddedResource Remove="wwwroot\tic-tac-toe\**" />
-    <None Remove="wwwroot\tic-tac-toe\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe.App\TicTacToe.App.csproj" />
     <ProjectReference Include="..\TicTacToe.Dal\TicTacToe.Dal.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
