@@ -1,18 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TicTacToe.Domain;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace TicTacToe.Dal
 {
     public class TicTacToeContext : DbContext
     {
-        public DbSet<GameEntity> Game { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder opt)
         {
             opt
-                //.UseInMemoryDatabase("TicTacToe")
                 .UseSqlite("Data Source=TicTacToe.sqlite")
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .LogTo(x => Debug.WriteLine(x), new[] { RelationalEventId.CommandExecuted })
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         }

@@ -6,7 +6,10 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.Dal
 {
-    public abstract class Repository<T> where T : DbEntityBase
+    public abstract class Repository
+    { }
+
+    public abstract class Repository<T> : Repository where T : DbEntityBase
     {
         private readonly TicTacToeContext _context;
 

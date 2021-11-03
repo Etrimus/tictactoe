@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TicTacToe.App.Game;
 using TicTacToe.Web.Authentication;
 
@@ -25,13 +24,13 @@ namespace TicTacToe.Web.Game
         [HttpGet]
         public Task<GameModel[]> GetAll()
         {
-            return _gameService.GetAllAsync().ToArrayAsync();
+            return _gameService.GetAllAsync();
         }
 
         [HttpGet("free")]
         public Task<GameModel[]> GetFree()
         {
-            return _gameService.GetFreeAsync().ToArrayAsync();
+            return _gameService.GetFreeAsync();
         }
 
         [HttpGet("{id}")]

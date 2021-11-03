@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TicTacToe.Core;
 using TicTacToe.Core.Services;
 using TicTacToe.Dal.Games;
@@ -30,19 +31,21 @@ namespace TicTacToe.App.Game
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
-        public IQueryable<GameModel> GetAllAsync()
+        public Task<GameModel[]> GetAllAsync()
         {
             return _repository
                 .GetAllAsync()
-                .ProjectTo<GameModel>(_mapper.ConfigurationProvider);
+                .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
         }
 
-        public IQueryable<GameModel> GetFreeAsync()
+        public Task<GameModel[]> GetFreeAsync()
         {
             return _repository
                 .GetAllAsync()
                 .Where(x => !x.ZeroId.HasValue || !x.CrossId.HasValue)
-                .ProjectTo<GameModel>(_mapper.ConfigurationProvider);
+                .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
         }
 
         public Task UpdateAsync(GameModel game)
