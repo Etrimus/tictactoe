@@ -2,31 +2,26 @@
   "name": "tic-tac-toe",
   "version": "0.0.1",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build"
+    "watch": "ng build --configuration development --progress --watch",
+    "prod": "ng build --configuration production --progress"
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "11.0",
-    "@angular/compiler": "11.0",
-    "@angular/core": "11.0",
-    "@angular/forms": "11.0",
-    "@angular/platform-browser": "11.0",
-    "@angular/platform-browser-dynamic": "11.0",
-    "@angular/router": "11.0",
-    "rxjs": "6.6",
-    "tslib": "2.0",
-    "zone.js": "0.10"
+    "@angular/common": "12",
+    "@angular/compiler": "12",
+    "@angular/core": "12",
+    "@angular/forms": "12",
+    "@angular/platform-browser": "12",
+    "@angular/platform-browser-dynamic": "12",
+    "@angular/router": "12",
+    "rxjs": "6",
+    "zone.js": "0.11"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1100",
-    "@angular/cli": "11.0",
-    "@angular/compiler-cli": "11.0",
-    "@types/node": "12",
-    "codelyzer": "6.0",
-    "ts-node": "8.3",
-    "tslint": "6.1",
+    "@angular-devkit/build-angular": "12",
+    "@angular/cli": "12",
+    "@angular/compiler-cli": "12",
+    "@types/node": "16",
     "typescript": "4"
   }
 }
