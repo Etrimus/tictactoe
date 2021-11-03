@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="13.10.8" />
-    <PackageReference Include="NSwag.Generation.WebApi" Version="13.10.8" />
+    <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="13.13.2" />
+    <PackageReference Include="NSwag.Generation.WebApi" Version="13.13.2" />
   </ItemGroup>
 
   <ItemGroup>

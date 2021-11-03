@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NJsonSchema.CodeGeneration.TypeScript;
@@ -14,8 +13,8 @@ namespace TicTacToe.AngularClientGenerator
 {
     internal static class Program
     {
-        private const string OutputPath = "../../../../../Server/TicTacToe.Web/wwwroot/tic-tac-toe/src/app/generated";
-        private const string DtoClassName = "dto";
+        private const string OUTPUT_PATH = "../../../../../Server/TicTacToe.Web/wwwroot/tic-tac-toe/src/app/generated";
+        private const string DTO_CLASS_NAME = "dto";
 
         public static async Task Main()
         {
@@ -44,13 +43,24 @@ namespace TicTacToe.AngularClientGenerator
             var clients = GetCode(document, clientSettings);
             clients = AddDtoImports(document, clients);
 
-            await File.WriteAllTextAsync($"{OutputPath}/{DtoClassName}.ts", dto);
-            await File.WriteAllTextAsync($"{OutputPath}/clients.ts", clients);
+            await File.WriteAllTextAsync($"{OUTPUT_PATH}/{DTO_CLASS_NAME}.ts", dto);
+            await File.WriteAllTextAsync($"{OUTPUT_PATH}/clients.ts", clients);
         }
 
-        private static string AddDtoImports(OpenApiDocument document, string code)
+        private static void RecreateDirectory()
         {
-            return $"import {{ {string.Join(", ", document.Definitions.Keys)} }} from './{DtoClassName}';{Environment.NewLine}{Environment.NewLine}{code}";
+            if (!Directory.Exists(OUTPUT_PATH))
+            {
+                Directory.CreateDirectory(OUTPUT_PATH);
+            }
+            else
+            {
+                var directory = new DirectoryInfo(OUTPUT_PATH);
+                foreach (var file in directory.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
         }
 
         private static TypeScriptClientGeneratorSettings CreateTypeScriptSettings()
@@ -83,20 +93,9 @@ namespace TicTacToe.AngularClientGenerator
             return clientGenerator.GenerateFile();
         }
 
-        private static void RecreateDirectory()
+        private static string AddDtoImports(OpenApiDocument document, string code)
         {
-            if (!Directory.Exists(OutputPath))
-            {
-                Directory.CreateDirectory(OutputPath);
-            }
-            else
-            {
-                var directory = new DirectoryInfo(OutputPath);
-                foreach (var file in directory.GetFiles())
-                {
-                    file.Delete();
-                }
-            }
+            return $"import {{ {string.Join(", ", document.Definitions.Keys)} }} from './{DTO_CLASS_NAME}';{Environment.NewLine}{Environment.NewLine}{code}";
         }
     }
 }
