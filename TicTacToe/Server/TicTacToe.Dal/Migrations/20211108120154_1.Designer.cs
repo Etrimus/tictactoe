@@ -9,14 +9,14 @@ using TicTacToe.Dal;
 namespace TicTacToe.Dal.Migrations
 {
     [DbContext(typeof(TicTacToeContext))]
-    [Migration("20201209190608_1")]
+    [Migration("20211108120154_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.11");
 
             modelBuilder.Entity("TicTacToe.Domain.GameEntity", b =>
                 {
@@ -30,10 +30,10 @@ namespace TicTacToe.Dal.Migrations
                     b.Property<Guid?>("CrossId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("NextTurn")
+                    b.Property<byte>("NextTurn")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Winner")
+                    b.Property<byte>("Winner")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ZeroId")

@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
-  styles: []
+  templateUrl: './app.component.html',
+  styleUrls: []
 })
-export class AppComponent {
-  title = 'tic-tac-toe';
-}
+export class AppComponent { }

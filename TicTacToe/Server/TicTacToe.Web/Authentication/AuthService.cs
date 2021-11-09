@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TicTacToe.Core;
 using TicTacToe.Dal.Games;
 
 namespace TicTacToe.Web.Authentication
@@ -18,12 +19,23 @@ namespace TicTacToe.Web.Authentication
         {
             var game = await _gameRepository.GetAsync(gameId);
 
-            return game != null && (game.CrossId == playerId || game.ZeroId == playerId);
+            if (game == null)
+            {
+                throw new TicTacToeException("Игра с указанным Id не существует.");
+            }
+
+
+            if (!game.CrossId.HasValue && !game.ZeroId.HasValue)
+            {
+                throw new TicTacToeException("У игры не назначен ни игрок крестики, ни игрок нолики.");
+            }
+
+            return game.CrossId == playerId || game.ZeroId == playerId;
         }
 
         public ClaimsPrincipal CreateClaimsPrincipal(Guid gameId, Guid playerId)
         {
-            return new ClaimsPrincipal(new ClaimsIdentity(new[] {new Claim(ClaimTypes.Name, playerId.ToString())}, TicTacToeAuthDefaults.AuthenticationScheme));
+            return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, playerId.ToString()) }, TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
         }
     }
 }

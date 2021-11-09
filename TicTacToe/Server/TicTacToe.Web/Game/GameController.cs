@@ -52,7 +52,7 @@ namespace TicTacToe.Web.Game
         {
             var playerId = await _gameService.SetCrossPlayer(id);
 
-            await HttpContext.SignInAsync(TicTacToeAuthDefaults.AuthenticationScheme, _authService.CreateClaimsPrincipal(id, playerId));
+            await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(id, playerId));
 
             return playerId;
         }
@@ -62,7 +62,7 @@ namespace TicTacToe.Web.Game
         {
             var playerId = await _gameService.SetZeroPlayer(id);
 
-            await HttpContext.SignInAsync(TicTacToeAuthDefaults.AuthenticationScheme, _authService.CreateClaimsPrincipal(id, playerId));
+            await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(id, playerId));
 
             return playerId;
         }

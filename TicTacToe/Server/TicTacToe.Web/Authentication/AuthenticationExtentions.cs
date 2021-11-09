@@ -8,8 +8,8 @@ namespace TicTacToe.Web.Authentication
         public static IServiceCollection AddTicTacToeAuthentication(this IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddAuthentication(TicTacToeAuthDefaults.AuthenticationScheme)
-                .AddScheme<AuthenticationSchemeOptions, TicTacToeAuthenticationHandler>(TicTacToeAuthDefaults.AuthenticationScheme, opt => { });
+                .AddAuthentication(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME)
+                .AddScheme<AuthenticationSchemeOptions, TicTacToeAuthenticationHandler>(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, opt => { });
 
             return serviceCollection
                 .AddScoped<AuthService, AuthService>();

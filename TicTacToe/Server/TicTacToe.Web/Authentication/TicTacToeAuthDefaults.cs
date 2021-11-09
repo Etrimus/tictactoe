@@ -2,7 +2,7 @@
 {
     internal static class TicTacToeAuthDefaults
     {
-        public const string AuthenticationScheme = "TicTacToeAuthenticationScheme";
-        public const string AuthHeader = "token";
+        public const string AUTHENTICATION_SCHEME = "TicTacToeAuthenticationScheme";
+        public const string AUTH_HEADER = "token";
     }
 }

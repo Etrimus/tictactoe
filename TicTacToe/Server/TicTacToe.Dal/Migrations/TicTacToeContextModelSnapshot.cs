@@ -14,7 +14,7 @@ namespace TicTacToe.Dal.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.11");
 
             modelBuilder.Entity("TicTacToe.Domain.GameEntity", b =>
                 {
@@ -28,10 +28,10 @@ namespace TicTacToe.Dal.Migrations
                     b.Property<Guid?>("CrossId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("NextTurn")
+                    b.Property<byte>("NextTurn")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Winner")
+                    b.Property<byte>("Winner")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ZeroId")

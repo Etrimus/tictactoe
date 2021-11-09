@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TicTacToe.Dal.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class _1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,10 @@ namespace TicTacToe.Dal.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CrossId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ZeroId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    ZeroId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    NextTurn = table.Column<byte>(type: "INTEGER", nullable: false),
+                    Winner = table.Column<byte>(type: "INTEGER", nullable: false),
+                    Cells = table.Column<byte[]>(type: "BLOB", nullable: true)
                 },
                 constraints: table =>
                 {

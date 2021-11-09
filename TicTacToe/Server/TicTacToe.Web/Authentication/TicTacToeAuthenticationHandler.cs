@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using TicTacToe.Web.Game;
 
 namespace TicTacToe.Web.Authentication
 {
-    // ReSharper disable once ClassNeverInstantiated.Global
     internal class TicTacToeAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>, IAuthenticationSignInHandler
     {
         private readonly AuthService _authService;
@@ -29,24 +27,24 @@ namespace TicTacToe.Web.Authentication
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Request.Headers.TryGetValue(TicTacToeAuthDefaults.AuthHeader, out var header))
+            if (!Request.Headers.TryGetValue(TicTacToeAuthDefaults.AUTH_HEADER, out var header))
             {
-                return AuthenticateResult.Fail($"No '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
+                return AuthenticateResult.Fail($"No '{TicTacToeAuthDefaults.AUTH_HEADER}' header was provided.");
             }
 
             if (!Guid.TryParse(header[0], out var playerId))
             {
-                return AuthenticateResult.Fail($"Invalid '{TicTacToeAuthDefaults.AuthHeader}' header was provided.");
+                return AuthenticateResult.Fail($"Invalid '{TicTacToeAuthDefaults.AUTH_HEADER}' header was provided.");
             }
 
             if (!Context.TryGetGameId(out var gameId))
             {
-                throw new Exception($"No valid '{InjectGameIdMiddleware.GameIdName}' item in {nameof(Context)}.{nameof(Context.Items)}.");
+                throw new Exception($"No valid '{InjectGameIdMiddleware.GAME_ID_NAME}' item in {nameof(Context)}.{nameof(Context.Items)}.");
             }
 
             if (await _authService.IsValidUserAsync(gameId, playerId))
             {
-                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(gameId, playerId), TicTacToeAuthDefaults.AuthenticationScheme));
+                return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(gameId, playerId), TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
             }
 
             return AuthenticateResult.Fail("Invalid game id or player id.");
@@ -60,7 +58,7 @@ namespace TicTacToe.Web.Authentication
                 throw new ArgumentException($"No claim '{ClaimTypes.Name}' was presented in {nameof(user)}.");
             }
 
-            Context.Response.Headers.Add(TicTacToeAuthDefaults.AuthHeader, playerId);
+            Context.Response.Headers.Add(TicTacToeAuthDefaults.AUTH_HEADER, playerId);
 
             return Task.CompletedTask;
         }
