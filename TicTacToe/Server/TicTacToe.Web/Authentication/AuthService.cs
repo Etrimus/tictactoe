@@ -31,7 +31,7 @@ namespace TicTacToe.Web.Authentication
             return game.CrossId == playerId || game.ZeroId == playerId;
         }
 
-        public ClaimsPrincipal CreateClaimsPrincipal(Guid gameId, Guid playerId)
+        public ClaimsPrincipal CreateClaimsPrincipal(Guid playerId)
         {
             return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, playerId.ToString()) }, TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
         }

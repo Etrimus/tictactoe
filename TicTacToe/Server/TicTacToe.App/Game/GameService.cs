@@ -45,6 +45,15 @@ namespace TicTacToe.App.Game
                 .ToArrayAsync();
         }
 
+        public Task<GameModel[]> GetMyAsync(Guid playerId)
+        {
+            return _repository
+                .GetAllAsync()
+                .Where(x => x.ZeroId == playerId || x.CrossId == playerId)
+                .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+        }
+
         public Task UpdateAsync(GameModel game)
         {
             return _repository.UpdateAsync(_mapper.Map<GameModel, GameEntity>(game));
@@ -57,14 +66,37 @@ namespace TicTacToe.App.Game
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
-        public Task<Guid> SetCrossPlayer(Guid gameId)
+        public async Task<Guid> SetPlayerAsync(Guid gameId, CellType cellType)
         {
-            return _setPlayer(gameId, CellType.Cross);
-        }
+            var game = await _repository.GetAsync(gameId);
 
-        public Task<Guid> SetZeroPlayer(Guid gameId)
-        {
-            return _setPlayer(gameId, CellType.Zero);
+            Func<Guid?> getPlayerFn;
+            Action<Guid> setPlayerAction;
+
+            switch (cellType)
+            {
+                case CellType.Zero:
+                    getPlayerFn = () => game.ZeroId;
+                    setPlayerAction = guid => game.ZeroId = guid;
+                    break;
+                case CellType.Cross:
+                    getPlayerFn = () => game.CrossId;
+                    setPlayerAction = guid => game.CrossId = guid;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
+            }
+
+            if (getPlayerFn().HasValue)
+            {
+                throw new TicTacToeException($"A game already have a {cellType} player.");
+            }
+
+            setPlayerAction(Guid.NewGuid());
+
+            await _repository.UpdateAsync(game);
+
+            return getPlayerFn().Value;
         }
 
         public async Task MakeTurn(Guid gameId, Guid playerId, ushort cellNumber)
@@ -113,39 +145,6 @@ namespace TicTacToe.App.Game
             {
                 throw new TicTacToeException($"Unsuccessful turn. {turnResult}.");
             }
-        }
-
-        private async Task<Guid> _setPlayer(Guid gameId, CellType cellType)
-        {
-            var game = await _repository.GetAsync(gameId);
-
-            Func<Guid?> getPlayerFn;
-            Action<Guid> setPlayerAction;
-
-            switch (cellType)
-            {
-                case CellType.Zero:
-                    getPlayerFn = () => game.ZeroId;
-                    setPlayerAction = guid => game.ZeroId = guid;
-                    break;
-                case CellType.Cross:
-                    getPlayerFn = () => game.CrossId;
-                    setPlayerAction = guid => game.CrossId = guid;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
-            }
-
-            if (getPlayerFn().HasValue)
-            {
-                throw new TicTacToeException($"A game already have a {cellType} player.");
-            }
-
-            setPlayerAction(Guid.NewGuid());
-
-            await _repository.UpdateAsync(game);
-
-            return getPlayerFn().Value;
         }
     }
 }

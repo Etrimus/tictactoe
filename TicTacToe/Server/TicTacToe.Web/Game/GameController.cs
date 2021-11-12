@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicTacToe.App.Game;
+using TicTacToe.Core;
 using TicTacToe.Web.Authentication;
 
 namespace TicTacToe.Web.Game;
@@ -39,18 +40,22 @@ public class GameController : ControllerBase
     }
 
     [HttpPost]
-    public Task<Guid> Add()
+    public async Task<Guid> Add([FromForm] CellType cellType)
     {
-        return _gameService.CreateNewAsync()
-            .ContinueWith(x => x.Result.Id);
+        var game = await _gameService.CreateNewAsync();
+        var playerId = await _gameService.SetPlayerAsync(game.Id, cellType);
+
+        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
+
+        return playerId;
     }
 
     [HttpPut("{id}/crossPlayer")]
     public async Task<Guid> SetCrossPlayer([FromRoute] Guid id)
     {
-        var playerId = await _gameService.SetCrossPlayer(id);
+        var playerId = await _gameService.SetPlayerAsync(id, CellType.Cross);
 
-        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(id, playerId));
+        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
 
         return playerId;
     }
@@ -58,9 +63,9 @@ public class GameController : ControllerBase
     [HttpPut("{id}/zeroPlayer")]
     public async Task<Guid> SetZeroPlayer([FromRoute] Guid id)
     {
-        var playerId = await _gameService.SetZeroPlayer(id);
+        var playerId = await _gameService.SetPlayerAsync(id, CellType.Zero);
 
-        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(id, playerId));
+        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
 
         return playerId;
     }

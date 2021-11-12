@@ -26,25 +26,25 @@ internal class TicTacToeAuthenticationHandler : AuthenticationHandler<Authentica
     {
         if (!Request.Headers.TryGetValue(TicTacToeAuthDefaults.AUTH_HEADER, out var header))
         {
-            return AuthenticateResult.Fail($"No '{TicTacToeAuthDefaults.AUTH_HEADER}' header was provided.");
+            return AuthenticateResult.Fail($"http-заголовок '{TicTacToeAuthDefaults.AUTH_HEADER}' отсутствует в запросе.");
         }
 
         if (!Guid.TryParse(header[0], out var playerId))
         {
-            return AuthenticateResult.Fail($"Invalid '{TicTacToeAuthDefaults.AUTH_HEADER}' header was provided.");
+            return AuthenticateResult.Fail($"Неправильный http-заголовок '{TicTacToeAuthDefaults.AUTH_HEADER}' в запросе.");
         }
 
         if (!Context.TryGetGameId(out var gameId))
         {
-            throw new Exception($"No valid '{InjectGameIdMiddleware.GAME_ID_NAME}' item in {nameof(Context)}.{nameof(Context.Items)}.");
+            throw new Exception($"Нет правильного '{InjectGameIdMiddleware.GAME_ID_NAME}' в {nameof(Context)}.{nameof(Context.Items)}.");
         }
 
         if (await _authService.IsValidUserAsync(gameId, playerId))
         {
-            return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(gameId, playerId), TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
+            return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(playerId), TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
         }
 
-        return AuthenticateResult.Fail("Invalid game id or player id.");
+        return AuthenticateResult.Fail($"Неправильный {nameof(gameId)} или идентификатор игрока.");
     }
 
     public Task SignInAsync(ClaimsPrincipal user, AuthenticationProperties properties)
@@ -52,7 +52,7 @@ internal class TicTacToeAuthenticationHandler : AuthenticationHandler<Authentica
         var playerId = user.FindFirstValue(ClaimTypes.Name);
         if (playerId == null)
         {
-            throw new ArgumentException($"No claim '{ClaimTypes.Name}' was presented in {nameof(user)}.");
+            throw new ArgumentException($"claim '{ClaimTypes.Name}' отсутствует в {nameof(ClaimsPrincipal)} {nameof(user)}.");
         }
 
         Context.Response.Headers.Add(TicTacToeAuthDefaults.AUTH_HEADER, playerId);
