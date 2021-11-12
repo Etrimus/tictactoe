@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TicTacToe.Domain
+﻿namespace TicTacToe.Domain
 {
     public class DbEntityBase
     {

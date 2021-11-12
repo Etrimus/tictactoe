@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TicTacToe.App
+﻿namespace TicTacToe.App
 {
     public abstract class ModelBase
     {

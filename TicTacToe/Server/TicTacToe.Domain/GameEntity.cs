@@ -1,5 +1,4 @@
-﻿using System;
-using TicTacToe.Core;
+﻿using TicTacToe.Core;
 
 namespace TicTacToe.Domain
 {

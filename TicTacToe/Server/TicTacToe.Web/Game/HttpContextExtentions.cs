@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
-
-namespace TicTacToe.Web.Game
+﻿namespace TicTacToe.Web.Game
 {
     public static class HttpContextExtentions
     {

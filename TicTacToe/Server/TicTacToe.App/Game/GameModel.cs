@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using TicTacToe.Core.Models;
 
 namespace TicTacToe.App.Game

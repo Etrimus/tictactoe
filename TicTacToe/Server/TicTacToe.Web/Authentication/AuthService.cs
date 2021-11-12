@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using TicTacToe.Core;
 using TicTacToe.Dal.Games;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using JetBrains.Annotations;
 using TicTacToe.Core;
 using TicTacToe.Core.Models;

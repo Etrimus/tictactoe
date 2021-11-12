@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using TicTacToe.Core.Models;
+﻿using TicTacToe.Core.Models;
 
 namespace TicTacToe.Core.Services
 {
