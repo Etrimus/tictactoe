@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TicTacToe.App.Game;
+using TicTacToe.App.User;
 using TicTacToe.Core.Services;
 
 namespace TicTacToe.App
@@ -11,7 +12,8 @@ namespace TicTacToe.App
             return serviceCollection
                 .AddAutoMapper(typeof(AppExtensions))
                 .AddScoped<BoardManager>()
-                .AddScoped<GameService>();
+                .AddScoped<GameService>()
+                .AddScoped<UserService>();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace TicTacToe.Dal
     {
         public DbSet<GameEntity> Game { get; set; }
 
+        public DbSet<UserEntity> User { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder opt)
         {
             opt

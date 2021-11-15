@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Core;
 using TicTacToe.Core.Services;
-using TicTacToe.Dal.Games;
+using TicTacToe.Dal.Game;
 using TicTacToe.Domain;
 
 namespace TicTacToe.App.Game

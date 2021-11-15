@@ -45,7 +45,7 @@ public class GameController : ControllerBase
         var game = await _gameService.CreateNewAsync();
         var playerId = await _gameService.SetPlayerAsync(game.Id, cellType);
 
-        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
+        //await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
 
         return playerId;
     }
@@ -55,7 +55,7 @@ public class GameController : ControllerBase
     {
         var playerId = await _gameService.SetPlayerAsync(id, CellType.Cross);
 
-        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
+        //await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
 
         return playerId;
     }
@@ -65,7 +65,7 @@ public class GameController : ControllerBase
     {
         var playerId = await _gameService.SetPlayerAsync(id, CellType.Zero);
 
-        await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
+        //await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
 
         return playerId;
     }

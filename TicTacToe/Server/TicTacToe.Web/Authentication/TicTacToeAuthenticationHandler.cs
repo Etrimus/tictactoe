@@ -29,33 +29,26 @@ internal class TicTacToeAuthenticationHandler : AuthenticationHandler<Authentica
             return AuthenticateResult.Fail($"http-заголовок '{TicTacToeAuthDefaults.AUTH_HEADER}' отсутствует в запросе.");
         }
 
-        if (!Guid.TryParse(header[0], out var playerId))
+        var user = await _authService.GetUserAsync(header[0]);
+        if (user != null)
         {
-            return AuthenticateResult.Fail($"Неправильный http-заголовок '{TicTacToeAuthDefaults.AUTH_HEADER}' в запросе.");
+            return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(user), TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
         }
 
-        if (!Context.TryGetGameId(out var gameId))
-        {
-            throw new Exception($"Нет правильного '{InjectGameIdMiddleware.GAME_ID_NAME}' в {nameof(Context)}.{nameof(Context.Items)}.");
-        }
-
-        if (await _authService.IsValidUserAsync(gameId, playerId))
-        {
-            return AuthenticateResult.Success(new AuthenticationTicket(_authService.CreateClaimsPrincipal(playerId), TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
-        }
-
-        return AuthenticateResult.Fail($"Неправильный {nameof(gameId)} или идентификатор игрока.");
+        return AuthenticateResult.Fail($"Неправильный идентификатор игрока.");
     }
 
-    public Task SignInAsync(ClaimsPrincipal user, AuthenticationProperties properties)
+    public Task SignInAsync(ClaimsPrincipal userClaims, AuthenticationProperties properties)
     {
-        var playerId = user.FindFirstValue(ClaimTypes.Name);
-        if (playerId == null)
+        return Task.CompletedTask;
+
+        var userName = userClaims.FindFirstValue(ClaimTypes.Name);
+        if (userName == null)
         {
-            throw new ArgumentException($"claim '{ClaimTypes.Name}' отсутствует в {nameof(ClaimsPrincipal)} {nameof(user)}.");
+            throw new ArgumentException($"Claim '{ClaimTypes.Name}' отсутствует в {nameof(ClaimsPrincipal)} {nameof(userClaims)}.");
         }
 
-        Context.Response.Headers.Add(TicTacToeAuthDefaults.AUTH_HEADER, playerId);
+        Context.Response.Headers.Add(TicTacToeAuthDefaults.AUTH_HEADER, userName);
 
         return Task.CompletedTask;
     }

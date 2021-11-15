@@ -1,39 +1,25 @@
 ﻿using System.Security.Claims;
-using TicTacToe.Core;
-using TicTacToe.Dal.Games;
+using System.Text;
+using TicTacToe.App.User;
 
-namespace TicTacToe.Web.Authentication
+namespace TicTacToe.Web.Authentication;
+
+public class AuthService
 {
-    public class AuthService
+    private readonly UserService _userService;
+
+    public AuthService(UserService userService)
     {
-        private readonly GameRepository _gameRepository;
+        _userService = userService;
+    }
 
-        public AuthService(GameRepository gameRepository)
-        {
-            _gameRepository = gameRepository;
-        }
+    public Task<UserModel> GetUserAsync(string token)
+    {
+        return _userService.GetAsync(Encoding.UTF8.GetString(Convert.FromBase64String(token)));
+    }
 
-        public async Task<bool> IsValidUserAsync(Guid gameId, Guid playerId)
-        {
-            var game = await _gameRepository.GetAsync(gameId);
-
-            if (game == null)
-            {
-                throw new TicTacToeException("Игра с указанным Id не существует.");
-            }
-
-
-            if (!game.CrossId.HasValue && !game.ZeroId.HasValue)
-            {
-                throw new TicTacToeException("У игры не назначен ни игрок крестики, ни игрок нолики.");
-            }
-
-            return game.CrossId == playerId || game.ZeroId == playerId;
-        }
-
-        public ClaimsPrincipal CreateClaimsPrincipal(Guid playerId)
-        {
-            return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, playerId.ToString()) }, TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
-        }
+    public ClaimsPrincipal CreateClaimsPrincipal(UserModel user)
+    {
+        return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, user.Name) }, TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
     }
 }

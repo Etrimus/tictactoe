@@ -15,6 +15,11 @@ namespace TicTacToe.Dal
             _context = context;
         }
 
+        protected IQueryable<T> QueryAsync()
+        {
+            return _context.Set<T>();
+        }
+
         public Task<bool> ExistAsync(Guid id)
         {
             return _context
