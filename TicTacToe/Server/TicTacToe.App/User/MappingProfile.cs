@@ -7,10 +7,7 @@ namespace TicTacToe.App.User
     {
         public MappingProfile()
         {
-            CreateMap<UserEntity, UserModel>()
-                .ReverseMap()
-                .Ignore(x => x.Name)
-                .Ignore(x => x.Password);
+            CreateMap<UserEntity, UserModel>();
         }
     }
 }

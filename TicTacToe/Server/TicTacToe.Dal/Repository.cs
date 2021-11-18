@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TicTacToe.Domain;
 
 namespace TicTacToe.Dal
@@ -15,16 +16,29 @@ namespace TicTacToe.Dal
         protected Repository(TicTacToeContext context)
         {
             _context = context;
+
+            _context.ChangeTracker.Tracked += (object sender, EntityTrackedEventArgs e) =>
+            {
+
+            };
         }
 
-        protected IQueryable<T> Query()
+        protected IQueryable<T> Query(bool asNoTracking = false)
         {
-            return _context.Set<T>();
+            var dbSet = DbSetToQuery(_context.Set<T>());
+
+            if (asNoTracking)
+            {
+                dbSet = dbSet.AsNoTracking();
+            }
+
+            return dbSet;
         }
 
         public Task<bool> ExistAsync(Guid id)
         {
             return _context.Set<T>()
+                .AsNoTracking()
                 .AnyAsync(x => x.Id == id);
         }
 

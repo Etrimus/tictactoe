@@ -1,5 +1,4 @@
 ﻿using TicTacToe.App.User;
-using TicTacToe.Web.Game;
 
 namespace TicTacToe.Web;
 

@@ -27,9 +27,9 @@ public class UserService
         return null;
     }
 
-    public async Task<UserModel> GetAsync(string userName)
+    public async Task<UserModel> GetAsync(string userName, bool asNoTracking = false)
     {
-        var result = await _userRepository.GetAsync(userName);
+        var result = await _userRepository.GetAsync(userName, asNoTracking);
         if (result != null)
         {
             return _mapper.Map<UserModel>(result);
@@ -45,7 +45,7 @@ public class UserService
             throw new TicTacToeException("Имя пользователя и пароль не должны быть пустыми.");
         }
 
-        if (await _userRepository.GetAsync(userName) != null)
+        if (await _userRepository.GetAsync(userName, false) != null)
         {
             throw new TicTacToeException("Пользователь с указанным именем уже существует.");
         }

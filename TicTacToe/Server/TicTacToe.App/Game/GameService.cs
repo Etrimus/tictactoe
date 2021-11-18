@@ -78,7 +78,7 @@ namespace TicTacToe.App.Game
                 throw new TicTacToeException("Указанная игра не существует.");
             }
 
-            var playerEntity = await _userRepository.GetAsync(player.Name);
+            var playerEntity = await _userRepository.GetAsync(player.Name, true);
 
             Func<UserEntity> getPlayerFn;
             Action<UserEntity> setPlayerAction;
@@ -87,11 +87,11 @@ namespace TicTacToe.App.Game
             {
                 case CellType.Zero:
                     getPlayerFn = () => game.ZeroPlayer;
-                    setPlayerAction = userEntity => game.ZeroPlayer = userEntity;
+                    setPlayerAction = userEntity => game.ZeroPlayerId = userEntity.Id;
                     break;
                 case CellType.Cross:
                     getPlayerFn = () => game.CrossPlayer;
-                    setPlayerAction = userEntity => game.CrossPlayer = userEntity;
+                    setPlayerAction = userEntity => game.CrossPlayerId = userEntity.Id;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
@@ -121,15 +121,9 @@ namespace TicTacToe.App.Game
                 throw new TicTacToeException($"К игре не присоединились оба участника.");
             }
 
-            var givenPlayerCellType = player.Id == game.ZeroPlayer.Id
-                ? CellType.Zero
-                : player.Id == game.CrossPlayer.Id
-                    ? CellType.Cross
-                    : CellType.None;
-
-            if (givenPlayerCellType == CellType.None)
+            if (player.Id != game.ZeroPlayer.Id && player.Id != game.CrossPlayer.Id)
             {
-                throw new TicTacToeException($"Игрок не участвует в данной игре.");
+                throw new TicTacToeException($"Пользователь не участвует в данной игре и не может совершать ходы.");
             }
 
             var expectedPlayer = game.Board.NextTurn switch
@@ -141,7 +135,7 @@ namespace TicTacToe.App.Game
 
             if (expectedPlayer.Id != player.Id)
             {
-                throw new TicTacToeException($"Участник игры не может совершить ход. Участник играет за {givenPlayerCellType}. Ожидается ход {game.Board.NextTurn}.");
+                throw new TicTacToeException($"Ирок не может совершить ход, сейчас очередь другого игрока.");
             }
 
             var turnResult = _boardManager.Turn(game.Board, cellNumber);

@@ -1,6 +1,6 @@
 ﻿using TicTacToe.App.User;
 
-namespace TicTacToe.Web.Game
+namespace TicTacToe.Web
 {
     internal class InjectUserMiddleware : IMiddleware
     {
@@ -17,7 +17,7 @@ namespace TicTacToe.Web.Game
         {
             if (context.User.Identity.Name != null)
             {
-                context.Items.Add(USER_ITEM_KEY, await _userService.GetAsync(context.User.Identity.Name));
+                context.Items.Add(USER_ITEM_KEY, await _userService.GetAsync(context.User.Identity.Name, true));
             }
 
             await next(context);

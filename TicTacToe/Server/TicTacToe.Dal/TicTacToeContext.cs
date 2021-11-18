@@ -15,6 +15,7 @@ namespace TicTacToe.Dal
                 .UseSqlite("Data Source=TicTacToe.sqlite")
                 .LogTo(x => Debug.WriteLine(x), new[] { RelationalEventId.CommandExecuted })
                 .EnableSensitiveDataLogging()
+                //.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .EnableDetailedErrors();
         }
 
@@ -30,12 +31,6 @@ namespace TicTacToe.Dal
             builder.Entity<UserEntity>()
                 .Property(x => x.Password)
                 .IsRequired(true);
-
-            //builder.Entity<GameEntity>()
-            //    .HasOne(x => x.ZeroPlayer);
-
-            //builder.Entity<GameEntity>()
-            //    .HasOne(x => x.CrossPlayer);
         }
     }
 }

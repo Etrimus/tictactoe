@@ -15,8 +15,8 @@ public class UserRepository : Repository<UserEntity>
         return Query().FirstOrDefaultAsync(x => x.Name == userName && x.Password == password);
     }
 
-    public Task<UserEntity> GetAsync(string userName)
+    public Task<UserEntity> GetAsync(string userName, bool asNoTracking)
     {
-        return Query().FirstOrDefaultAsync(x => x.Name == userName);
+        return Query(asNoTracking).FirstOrDefaultAsync(x => x.Name == userName);
     }
 }

@@ -4,9 +4,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using TicTacToe.App;
 using TicTacToe.Dal;
+using TicTacToe.Web;
 using TicTacToe.Web.Authentication;
 using TicTacToe.Web.Error;
-using TicTacToe.Web.Game;
 
 var builder = WebApplication.CreateBuilder(args);
 
