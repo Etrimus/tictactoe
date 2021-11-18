@@ -1,26 +1,23 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicTacToe.App.Game;
 using TicTacToe.Core;
-using TicTacToe.Web.Authentication;
 
 namespace TicTacToe.Web.Game;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class GameController : ControllerBase
 {
     private readonly GameService _gameService;
-    private readonly AuthService _authService;
 
-    public GameController(GameService gameService, AuthService authService)
+    public GameController(GameService gameService)
     {
         _gameService = gameService;
-        _authService = authService;
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     public Task<GameModel[]> GetAll()
     {
         return _gameService.GetAllAsync();
@@ -33,47 +30,32 @@ public class GameController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
     public Task<GameModel> Get([FromRoute] Guid id)
     {
-        return _gameService.GetAsync(id);
+        return _gameService.GetAsync(id, true);
     }
 
     [HttpPost]
-    public async Task<Guid> Add([FromForm] CellType cellType)
+    public Task<Guid> Add()
     {
-        var game = await _gameService.CreateNewAsync();
-        var playerId = await _gameService.SetPlayerAsync(game.Id, cellType);
-
-        //await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
-
-        return playerId;
+        return _gameService.CreateNewAsync().ContinueWith(x => x.Result.Id);
     }
 
     [HttpPut("{id}/crossPlayer")]
-    public async Task<Guid> SetCrossPlayer([FromRoute] Guid id)
+    public Task SetCrossPlayer([FromRoute] Guid id)
     {
-        var playerId = await _gameService.SetPlayerAsync(id, CellType.Cross);
-
-        //await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
-
-        return playerId;
+        return _gameService.SetPlayerAsync(id, CellType.Cross, HttpContext.GetUser());
     }
 
     [HttpPut("{id}/zeroPlayer")]
-    public async Task<Guid> SetZeroPlayer([FromRoute] Guid id)
+    public Task SetZeroPlayer([FromRoute] Guid id)
     {
-        var playerId = await _gameService.SetPlayerAsync(id, CellType.Zero);
-
-        //await HttpContext.SignInAsync(TicTacToeAuthDefaults.AUTHENTICATION_SCHEME, _authService.CreateClaimsPrincipal(playerId));
-
-        return playerId;
+        return _gameService.SetPlayerAsync(id, CellType.Zero, HttpContext.GetUser());
     }
 
     [HttpPut("{id}/turn/{cellNumber}")]
-    [Authorize]
     public Task Turn([FromRoute] Guid id, [FromRoute] ushort cellNumber)
     {
-        return _gameService.MakeTurn(id, Guid.Parse(HttpContext.User.Identity.Name), cellNumber);
+        return _gameService.MakeTurn(id, HttpContext.GetUser(), cellNumber);
     }
 }

@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿using TicTacToe.App.User;
 using TicTacToe.Core.Models;
 
 namespace TicTacToe.App.Game
@@ -6,7 +6,6 @@ namespace TicTacToe.App.Game
     public class GameModel : ModelBase
     {
         [Obsolete("For Automapper only.", true)]
-        [UsedImplicitly]
         public GameModel()
         { }
 
@@ -15,9 +14,9 @@ namespace TicTacToe.App.Game
             Board = board;
         }
 
-        public Guid? CrossId { get; set; }
+        public UserModel CrossPlayer { get; set; }
 
-        public Guid? ZeroId { get; set; }
+        public UserModel ZeroPlayer { get; set; }
 
         public Board Board { get; set; }
     }

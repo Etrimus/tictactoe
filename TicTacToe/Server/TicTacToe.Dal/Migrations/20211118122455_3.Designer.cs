@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicTacToe.Dal;
 
@@ -10,9 +11,10 @@ using TicTacToe.Dal;
 namespace TicTacToe.Dal.Migrations
 {
     [DbContext(typeof(TicTacToeContext))]
-    partial class TicTacToeContextModelSnapshot : ModelSnapshot
+    [Migration("20211118122455_3")]
+    partial class _3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -26,7 +28,7 @@ namespace TicTacToe.Dal.Migrations
                     b.Property<byte[]>("Cells")
                         .HasColumnType("BLOB");
 
-                    b.Property<Guid?>("CrossPlayerId")
+                    b.Property<Guid?>("CrossId")
                         .HasColumnType("TEXT");
 
                     b.Property<byte>("NextTurn")
@@ -35,14 +37,10 @@ namespace TicTacToe.Dal.Migrations
                     b.Property<byte>("Winner")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("ZeroPlayerId")
+                    b.Property<Guid?>("ZeroId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CrossPlayerId");
-
-                    b.HasIndex("ZeroPlayerId");
 
                     b.ToTable("Game");
                 });
@@ -54,11 +52,9 @@ namespace TicTacToe.Dal.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -67,21 +63,6 @@ namespace TicTacToe.Dal.Migrations
                         .IsUnique();
 
                     b.ToTable("UserEntity");
-                });
-
-            modelBuilder.Entity("TicTacToe.Domain.GameEntity", b =>
-                {
-                    b.HasOne("TicTacToe.Domain.UserEntity", "CrossPlayer")
-                        .WithMany()
-                        .HasForeignKey("CrossPlayerId");
-
-                    b.HasOne("TicTacToe.Domain.UserEntity", "ZeroPlayer")
-                        .WithMany()
-                        .HasForeignKey("ZeroPlayerId");
-
-                    b.Navigation("CrossPlayer");
-
-                    b.Navigation("ZeroPlayer");
                 });
 #pragma warning restore 612, 618
         }

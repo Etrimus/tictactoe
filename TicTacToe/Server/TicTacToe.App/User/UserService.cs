@@ -1,5 +1,7 @@
 ﻿using TicTacToe.Dal.User;
 using AutoMapper;
+using TicTacToe.Domain;
+using TicTacToe.Core;
 
 namespace TicTacToe.App.User;
 
@@ -34,5 +36,24 @@ public class UserService
         }
 
         return null;
+    }
+
+    public async Task CreateAsync(string userName, string password)
+    {
+        if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+        {
+            throw new TicTacToeException("Имя пользователя и пароль не должны быть пустыми.");
+        }
+
+        if (await _userRepository.GetAsync(userName) != null)
+        {
+            throw new TicTacToeException("Пользователь с указанным именем уже существует.");
+        }
+
+        await _userRepository.AddAsync(new UserEntity
+        {
+            Name = userName.Trim(),
+            Password = password.Trim()
+        });
     }
 }

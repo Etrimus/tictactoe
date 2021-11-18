@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using JetBrains.Annotations;
 using TicTacToe.Core;
 using TicTacToe.Core.Models;
 using TicTacToe.Core.Services;
@@ -7,7 +6,6 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.App.Game
 {
-    [UsedImplicitly]
     public class MappingProfile : Profile
     {
         public MappingProfile()

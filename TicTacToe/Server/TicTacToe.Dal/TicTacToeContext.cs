@@ -9,8 +9,6 @@ namespace TicTacToe.Dal
     {
         public DbSet<GameEntity> Game { get; set; }
 
-        public DbSet<UserEntity> User { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder opt)
         {
             opt
@@ -18,6 +16,26 @@ namespace TicTacToe.Dal
                 .LogTo(x => Debug.WriteLine(x), new[] { RelationalEventId.CommandExecuted })
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<UserEntity>()
+                .HasIndex(x => x.Name).IsUnique(true);
+
+            builder.Entity<UserEntity>()
+                .Property(x => x.Name)
+                .IsRequired(true);
+
+            builder.Entity<UserEntity>()
+                .Property(x => x.Password)
+                .IsRequired(true);
+
+            //builder.Entity<GameEntity>()
+            //    .HasOne(x => x.ZeroPlayer);
+
+            //builder.Entity<GameEntity>()
+            //    .HasOne(x => x.CrossPlayer);
         }
     }
 }

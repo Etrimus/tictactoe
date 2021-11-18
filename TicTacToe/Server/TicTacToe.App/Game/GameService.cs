@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using TicTacToe.App.User;
 using TicTacToe.Core;
 using TicTacToe.Core.Services;
 using TicTacToe.Dal.Game;
+using TicTacToe.Dal.User;
 using TicTacToe.Domain;
 
 namespace TicTacToe.App.Game
@@ -11,20 +13,22 @@ namespace TicTacToe.App.Game
     public class GameService
     {
         private readonly GameRepository _repository;
+        private readonly UserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly BoardManager _boardManager;
 
-        public GameService(GameRepository repository, IMapper mapper, BoardManager boardManager)
+        public GameService(GameRepository repository, UserRepository userRepository, IMapper mapper, BoardManager boardManager)
         {
             _repository = repository;
+            _userRepository = userRepository;
             _mapper = mapper;
             _boardManager = boardManager;
         }
 
-        public Task<GameModel> GetAsync(Guid id)
+        public Task<GameModel> GetAsync(Guid id, bool asNoTracking)
         {
             return _repository
-                .GetAsync(id)
+                .GetAsync(id, asNoTracking)
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
@@ -40,16 +44,16 @@ namespace TicTacToe.App.Game
         {
             return _repository
                 .GetAllAsync()
-                .Where(x => !x.ZeroId.HasValue || !x.CrossId.HasValue)
+                .Where(x => x.ZeroPlayer == null || x.CrossPlayer == null)
                 .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
 
-        public Task<GameModel[]> GetMyAsync(Guid playerId)
+        public Task<GameModel[]> GetByUserAsync(Guid playerId)
         {
             return _repository
                 .GetAllAsync()
-                .Where(x => x.ZeroId == playerId || x.CrossId == playerId)
+                .Where(x => x.ZeroPlayer.Id == playerId || x.CrossPlayer.Id == playerId)
                 .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
@@ -66,74 +70,78 @@ namespace TicTacToe.App.Game
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
-        public async Task<Guid> SetPlayerAsync(Guid gameId, CellType cellType)
+        public async Task SetPlayerAsync(Guid gameId, CellType cellType, UserModel player)
         {
             var game = await _repository.GetAsync(gameId);
+            if (game == null)
+            {
+                throw new TicTacToeException("Указанная игра не существует.");
+            }
 
-            Func<Guid?> getPlayerFn;
-            Action<Guid> setPlayerAction;
+            var playerEntity = await _userRepository.GetAsync(player.Name);
+
+            Func<UserEntity> getPlayerFn;
+            Action<UserEntity> setPlayerAction;
 
             switch (cellType)
             {
                 case CellType.Zero:
-                    getPlayerFn = () => game.ZeroId;
-                    setPlayerAction = guid => game.ZeroId = guid;
+                    getPlayerFn = () => game.ZeroPlayer;
+                    setPlayerAction = userEntity => game.ZeroPlayer = userEntity;
                     break;
                 case CellType.Cross:
-                    getPlayerFn = () => game.CrossId;
-                    setPlayerAction = guid => game.CrossId = guid;
+                    getPlayerFn = () => game.CrossPlayer;
+                    setPlayerAction = userEntity => game.CrossPlayer = userEntity;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
             }
 
-            if (getPlayerFn().HasValue)
+            if (getPlayerFn() != null)
             {
-                throw new TicTacToeException($"A game already have a {cellType} player.");
+                throw new TicTacToeException($"К игре уже присоединился {cellType}-участник.");
             }
 
-            setPlayerAction(Guid.NewGuid());
+            setPlayerAction(playerEntity);
 
             await _repository.UpdateAsync(game);
-
-            return getPlayerFn().Value;
         }
 
-        public async Task MakeTurn(Guid gameId, Guid playerId, ushort cellNumber)
+        public async Task MakeTurn(Guid gameId, UserModel player, ushort cellNumber)
         {
-            var game = await GetAsync(gameId);
+            var game = await GetAsync(gameId, true);
 
             if (game.Board.Winner != CellType.None)
             {
-                throw new TicTacToeException("The game already has a winner.");
+                throw new TicTacToeException("Игра уже закончилась.");
             }
 
-            if (!game.ZeroId.HasValue || !game.CrossId.HasValue)
+            if (game.ZeroPlayer == null || game.CrossPlayer == null)
             {
-                throw new TicTacToeException($"Couldn't make a turn for the game id {gameId}. The game doesn't have all players.");
+                throw new TicTacToeException($"К игре не присоединились оба участника.");
             }
 
-            var givenPlayerCellType = playerId == game.ZeroId.Value
+            var givenPlayerCellType = player.Id == game.ZeroPlayer.Id
                 ? CellType.Zero
-                : playerId == game.CrossId.Value
+                : player.Id == game.CrossPlayer.Id
                     ? CellType.Cross
                     : CellType.None;
 
             if (givenPlayerCellType == CellType.None)
             {
-                throw new TicTacToeException($"The given {playerId} doesn't belongs to the game.");
+                throw new TicTacToeException($"Игрок не участвует в данной игре.");
             }
 
-            var expectedPlayerId = game.Board.NextTurn switch
+            var expectedPlayer = game.Board.NextTurn switch
             {
-                CellType.Zero => game.ZeroId.Value,
-                CellType.Cross => game.CrossId.Value,
-                _ => throw new TicTacToeException($"The game has an invalid {nameof(game.Board.NextTurn)} value.")
+                CellType.Zero => game.ZeroPlayer,
+                CellType.Cross => game.CrossPlayer,
+                _ => throw new TicTacToeException($"Игра имеет некорректное значение {nameof(game.Board.NextTurn)}.")
             };
 
-            if (expectedPlayerId != playerId)
+            if (expectedPlayer.Id != player.Id)
             {
-                throw new TicTacToeException($"The given player can't make a turn. The player belongs to {givenPlayerCellType}. The game awaits a {game.Board.NextTurn} turn.");
+                throw new TicTacToeException($"Участник игры не может совершить ход. Участник играет за {givenPlayerCellType}. Ожидается ход {game.Board.NextTurn}.");
             }
 
             var turnResult = _boardManager.Turn(game.Board, cellNumber);
@@ -143,7 +151,7 @@ namespace TicTacToe.App.Game
             }
             else
             {
-                throw new TicTacToeException($"Unsuccessful turn. {turnResult}.");
+                throw new TicTacToeException($"Неудавшийся ход - {turnResult}.");
             }
         }
     }

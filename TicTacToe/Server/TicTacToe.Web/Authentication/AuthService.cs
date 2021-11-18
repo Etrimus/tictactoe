@@ -1,25 +1,25 @@
-﻿using System.Security.Claims;
-using System.Text;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 using TicTacToe.App.User;
 
 namespace TicTacToe.Web.Authentication;
 
 public class AuthService
 {
-    private readonly UserService _userService;
-
-    public AuthService(UserService userService)
+    public string GetJwtToken(UserModel user)
     {
-        _userService = userService;
-    }
+        var now = DateTime.UtcNow;
 
-    public Task<UserModel> GetUserAsync(string token)
-    {
-        return _userService.GetAsync(Encoding.UTF8.GetString(Convert.FromBase64String(token)));
-    }
+        var jwt = new JwtSecurityToken(
+                issuer: JwtOptions.ISSUER,
+                audience: JwtOptions.AUDIENCE,
+                notBefore: now,
+                claims: new[] { new Claim(ClaimTypes.Name, user.Name) },
+                expires: now.Add(TimeSpan.FromMinutes(JwtOptions.LIFETIME_IN_MINUTES)),
+                signingCredentials: new SigningCredentials(JwtOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
+                );
 
-    public ClaimsPrincipal CreateClaimsPrincipal(UserModel user)
-    {
-        return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, user.Name) }, TicTacToeAuthDefaults.AUTHENTICATION_SCHEME));
+        return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 }

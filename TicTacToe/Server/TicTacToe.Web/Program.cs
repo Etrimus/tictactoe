@@ -1,5 +1,7 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using TicTacToe.App;
 using TicTacToe.Dal;
 using TicTacToe.Web.Authentication;
@@ -12,13 +14,32 @@ builder.Services
     .AddAuthentication();
 
 builder.Services
-    .AddControllers();
+    .AddScoped<AuthService>()
+    .AddTransient<InjectUserMiddleware>()
+    .AddDal()
+    .AddApp();
 
 builder.Services
-    .AddTransient<InjectGameIdMiddleware>()
-    .AddDal()
-    .AddApp()
-    .AddTicTacToeAuthentication();
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateLifetime = true,
+
+            ValidateIssuer = true,
+            ValidIssuer = JwtOptions.ISSUER,
+
+            ValidateAudience = true,
+            ValidAudience = JwtOptions.AUDIENCE,
+
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = JwtOptions.GetSymmetricSecurityKey()
+        };
+    });
+
+builder.Services
+    .AddControllers();
 
 var app = builder.Build();
 
@@ -36,11 +57,11 @@ app
     .UseRouting();
 
 app
-    .UseMiddleware<InjectGameIdMiddleware>();
-
-app
     .UseAuthentication()
     .UseAuthorization();
+
+app
+    .UseMiddleware<InjectUserMiddleware>();
 
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

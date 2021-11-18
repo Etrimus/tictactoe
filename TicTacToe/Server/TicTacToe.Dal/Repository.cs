@@ -10,32 +10,39 @@ namespace TicTacToe.Dal
     {
         private readonly TicTacToeContext _context;
 
+        protected abstract Func<DbSet<T>, IQueryable<T>> DbSetToQuery { get; }
+
         protected Repository(TicTacToeContext context)
         {
             _context = context;
         }
 
-        protected IQueryable<T> QueryAsync()
+        protected IQueryable<T> Query()
         {
             return _context.Set<T>();
         }
 
         public Task<bool> ExistAsync(Guid id)
         {
-            return _context
-                .Set<T>().AnyAsync(x => x.Id == id);
+            return _context.Set<T>()
+                .AnyAsync(x => x.Id == id);
         }
 
-        public Task<T> GetAsync(Guid id)
+        public Task<T> GetAsync(Guid id, bool asNoTracking = false)
         {
-            return _context
-                .Set<T>()
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var dbSet = DbSetToQuery(_context.Set<T>());
+
+            if (asNoTracking)
+            {
+                dbSet = dbSet.AsNoTracking();
+            }
+
+            return dbSet.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public IQueryable<T> GetAllAsync()
         {
-            return _context.Set<T>();
+            return DbSetToQuery(_context.Set<T>());
         }
 
         public async Task<T> AddAsync(T entity)

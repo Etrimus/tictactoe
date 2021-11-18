@@ -2,12 +2,11 @@
 
 namespace TicTacToe.Domain
 {
-    // ReSharper disable once ClassNeverInstantiated.Global
     public class GameEntity : DbEntityBase
     {
-        public Guid? CrossId { get; set; }
+        public UserEntity CrossPlayer { get; set; }
 
-        public Guid? ZeroId { get; set; }
+        public UserEntity ZeroPlayer { get; set; }
 
         public CellType NextTurn { get; set; }
 
