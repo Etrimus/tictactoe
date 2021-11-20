@@ -65,7 +65,7 @@ internal static class Program
         {
             Template = TypeScriptTemplate.Angular,
             ClassName = "{controller}Client",
-            BaseUrlTokenName = "BASE_URL",
+            BaseUrlTokenName = "BASE_API_URL",
             GenerateClientInterfaces = false,
             GenerateClientClasses = false,
             GenerateDtoTypes = false,

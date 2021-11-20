@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
 
-namespace TicTacToe.Web.Spa
-{
-    [Route("")]
-    [AllowAnonymous]
-    public class SpaController : ControllerBase
-    {
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return Redirect("index.html");
-        }
-    }
-}
+//namespace TicTacToe.Web.Spa
+//{
+//    [Route("")]
+//    [AllowAnonymous]
+//    public class SpaController : ControllerBase
+//    {
+//        [HttpGet]
+//        public IActionResult Index()
+//        {
+//            return Redirect("/index.html");
+//        }
+//    }
+//}

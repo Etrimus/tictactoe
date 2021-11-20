@@ -2,6 +2,7 @@
   "name": "tic-tac-toe",
   "version": "0.0.1",
   "scripts": {
+    "serve": "ng serve --configuration development",
     "watch": "ng build --configuration development --progress --watch",
     "prod": "ng build --configuration production --progress"
   },

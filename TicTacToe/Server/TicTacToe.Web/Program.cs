@@ -1,6 +1,5 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using TicTacToe.App;
 using TicTacToe.Dal;
@@ -11,6 +10,7 @@ using TicTacToe.Web.Error;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddCors(setup => setup.AddDefaultPolicy(builder => builder.AllowAnyOrigin()))
     .AddAuthentication();
 
 builder.Services
@@ -50,11 +50,8 @@ app.Services.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigura
 
 app
     .UseHttpsRedirection()
-    .UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider($"{app.Services.GetRequiredService<IWebHostEnvironment>().ContentRootPath}/wwwroot/tic-tac-toe/dist/tic-tac-toe")
-    })
-    .UseRouting();
+    .UseRouting()
+    .UseCors();
 
 app
     .UseAuthentication()
@@ -63,6 +60,6 @@ app
 app
     .UseMiddleware<InjectUserMiddleware>();
 
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+app.MapControllers();
 
 app.Run();
