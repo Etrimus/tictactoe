@@ -7,7 +7,7 @@ namespace TicTacToe.Web.Game;
 
 [ApiController]
 [Route("[controller]")]
-//[Authorize]
+[Authorize]
 public class GameController : ControllerBase
 {
     private readonly GameService _gameService;

@@ -1,7 +1,7 @@
 <nav>
     <a routerLink="/home" routerLinkActive="active-link">Tic-Tac-Toe</a>
     <a routerLink="/user">user</a>
-    <a [routerLink]="[{ outlets: { popup: ['login'] } }]">login</a>
+    <a [routerLink]="[{ outlets: { popup: ['sign-in'] } }]">login</a>
 </nav>
 <router-outlet></router-outlet>
 <router-outlet name="popup"></router-outlet>

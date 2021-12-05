@@ -6,12 +6,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BASE_API_URL } from './generated/clients';
 import { HomeComponent } from './home/home.component';
-import { LoginCcomponent } from './login/login.component';
+import { SignInComponent } from './auth/sign-in/sign-in.component';
 import { UserBageComponent } from './user-bage/user-bage.component';
 
 @NgModule({
   declarations: [
-    AppComponent, HomeComponent, LoginCcomponent, UserBageComponent
+    AppComponent, HomeComponent, SignInComponent, UserBageComponent
   ],
   imports: [
     BrowserModule,
