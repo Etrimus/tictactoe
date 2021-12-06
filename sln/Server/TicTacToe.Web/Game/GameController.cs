@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TicTacToe.App.Game;
 using TicTacToe.Core;
 
@@ -7,7 +6,6 @@ namespace TicTacToe.Web.Game;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
 public class GameController : ControllerBase
 {
     private readonly GameService _gameService;
@@ -42,20 +40,20 @@ public class GameController : ControllerBase
     }
 
     [HttpPut("{id}/crossPlayer")]
-    public Task SetCrossPlayer([FromRoute] Guid id)
+    public Task<Guid> SetCrossPlayer([FromRoute] Guid id)
     {
-        return _gameService.SetPlayerAsync(id, CellType.Cross, HttpContext.GetUser());
+        return _gameService.SetPlayerAsync(id, CellType.Cross);
     }
 
     [HttpPut("{id}/zeroPlayer")]
-    public Task SetZeroPlayer([FromRoute] Guid id)
+    public Task<Guid> SetZeroPlayer([FromRoute] Guid id)
     {
-        return _gameService.SetPlayerAsync(id, CellType.Zero, HttpContext.GetUser());
+        return _gameService.SetPlayerAsync(id, CellType.Zero);
     }
 
-    [HttpPut("{id}/turn/{cellNumber}")]
-    public Task Turn([FromRoute] Guid id, [FromRoute] ushort cellNumber)
+    [HttpPut("{id}/turn")]
+    public Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort cellNumber)
     {
-        return _gameService.MakeTurn(id, HttpContext.GetUser(), cellNumber);
+        return _gameService.MakeTurnAsync(id, playerId, cellNumber);
     }
 }

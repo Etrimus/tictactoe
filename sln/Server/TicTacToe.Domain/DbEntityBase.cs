@@ -1,7 +1,6 @@
-﻿namespace TicTacToe.Domain
+﻿namespace TicTacToe.Domain;
+
+public class DbEntityBase
 {
-    public class DbEntityBase
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

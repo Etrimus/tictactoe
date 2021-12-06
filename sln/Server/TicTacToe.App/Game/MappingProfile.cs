@@ -13,10 +13,6 @@ namespace TicTacToe.App.Game
             CreateMap<GameEntity, GameModel>()
                 .ForMember(x => x.Board, opt => opt.MapFrom(entity => _getBoard(entity)))
                 .ReverseMap()
-                .Ignore(x => x.CrossPlayer)
-                .Ignore(x => x.ZeroPlayer)
-                .ForMember(x => x.CrossPlayerId, opt => opt.MapFrom(x => x.CrossPlayer.Id))
-                .ForMember(x => x.ZeroPlayerId, opt => opt.MapFrom(x => x.ZeroPlayer.Id))
                 .ForMember(x => x.NextTurn, opt => opt.MapFrom(model => model.Board.NextTurn))
                 .ForMember(x => x.Winner, opt => opt.MapFrom(model => model.Board.Winner))
                 .ForMember(x => x.Cells, opt => opt.MapFrom(model => _getCellsBytes(model.Board.Cells)));

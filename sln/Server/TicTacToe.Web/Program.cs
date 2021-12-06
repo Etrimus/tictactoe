@@ -1,10 +1,6 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using TicTacToe.App;
 using TicTacToe.Dal;
-using TicTacToe.Web;
-using TicTacToe.Web.Authentication;
 using TicTacToe.Web.Error;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,29 +10,8 @@ builder.Services
     .AddAuthentication();
 
 builder.Services
-    .AddScoped<AuthService>()
-    .AddTransient<InjectUserMiddleware>()
     .AddDal()
     .AddApp();
-
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt =>
-    {
-        opt.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateLifetime = true,
-
-            ValidateIssuer = true,
-            ValidIssuer = JwtOptions.ISSUER,
-
-            ValidateAudience = true,
-            ValidAudience = JwtOptions.AUDIENCE,
-
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = JwtOptions.GetSymmetricSecurityKey()
-        };
-    });
 
 builder.Services
     .AddControllers();
@@ -52,13 +27,6 @@ app
     .UseHttpsRedirection()
     .UseRouting()
     .UseCors();
-
-app
-    .UseAuthentication()
-    .UseAuthorization();
-
-app
-    .UseMiddleware<InjectUserMiddleware>();
 
 app.MapControllers();
 

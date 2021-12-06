@@ -1,5 +1,4 @@
-﻿using TicTacToe.App.User;
-using TicTacToe.Core.Models;
+﻿using TicTacToe.Core.Models;
 
 namespace TicTacToe.App.Game
 {
@@ -14,10 +13,10 @@ namespace TicTacToe.App.Game
             Board = board;
         }
 
-        public UserModel CrossPlayer { get; set; }
-
-        public UserModel ZeroPlayer { get; set; }
-
         public Board Board { get; set; }
+
+        public Guid? CrossPlayerId { get; set; }
+
+        public Guid? ZeroPlayerId { get; set; }
     }
 }
