@@ -11,7 +11,7 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass",
+          "style": "css",
           "skipTests": true
         },
         "@schematics/angular:class": {
@@ -45,13 +45,13 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           },
