@@ -2,7 +2,7 @@
 using TicTacToe.App.Game;
 using TicTacToe.Core;
 
-namespace TicTacToe.Web.Game;
+namespace TicTacToe.Web;
 
 [ApiController]
 [Route("[controller]")]

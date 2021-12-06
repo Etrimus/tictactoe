@@ -3,7 +3,7 @@ using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag;
 using NSwag.CodeGeneration.TypeScript;
 using NSwag.Generation.WebApi;
-using TicTacToe.Web.Game;
+using TicTacToe.Web;
 
 namespace TicTacToe.AngularClientGenerator;
 
