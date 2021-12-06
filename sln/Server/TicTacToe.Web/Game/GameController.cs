@@ -52,7 +52,7 @@ public class GameController : ControllerBase
     }
 
     [HttpPut("{id}/turn")]
-    public Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort cellNumber)
+    public Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort? cellNumber)
     {
         return _gameService.MakeTurnAsync(id, playerId, cellNumber);
     }

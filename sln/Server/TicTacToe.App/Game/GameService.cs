@@ -103,8 +103,13 @@ namespace TicTacToe.App.Game
             return getPlayerFn().Value;
         }
 
-        public async Task MakeTurnAsync(Guid gameId, Guid playerId, ushort cellNumber)
+        public async Task MakeTurnAsync(Guid gameId, Guid playerId, ushort? cellNumber)
         {
+            if (!cellNumber.HasValue)
+            {
+                throw new TicTacToeException("Не указан номер ячейки для хода.");
+            }
+
             var game = await GetAsync(gameId, true);
 
             if (game.Board.Winner != CellType.None)
@@ -134,7 +139,7 @@ namespace TicTacToe.App.Game
                 throw new TicTacToeException($"Ирок не может совершить ход, сейчас очередь другого игрока.");
             }
 
-            var turnResult = _boardManager.Turn(game.Board, cellNumber);
+            var turnResult = _boardManager.Turn(game.Board, cellNumber.Value);
             if (turnResult == TurnResult.Success)
             {
                 await UpdateAsync(game);

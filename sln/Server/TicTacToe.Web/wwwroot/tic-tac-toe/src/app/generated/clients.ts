@@ -340,7 +340,7 @@ export class GameClient {
         return _observableOf<string>(<any>null);
     }
 
-    turn(id: string, playerId: string | undefined, cellNumber: number | undefined) : Observable<void> {
+    turn(id: string, playerId: string | undefined, cellNumber: number | null | undefined) : Observable<void> {
         let url_ = this.baseUrl + "/Game/{id}/turn";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -352,9 +352,7 @@ export class GameClient {
             throw new Error("The parameter 'playerId' cannot be null.");
         else
             content_.append("playerId", playerId.toString());
-        if (cellNumber === null || cellNumber === undefined)
-            throw new Error("The parameter 'cellNumber' cannot be null.");
-        else
+        if (cellNumber !== null && cellNumber !== undefined)
             content_.append("cellNumber", cellNumber.toString());
 
         let options_ : any = {
