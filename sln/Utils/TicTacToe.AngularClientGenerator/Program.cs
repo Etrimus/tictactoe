@@ -9,7 +9,7 @@ namespace TicTacToe.AngularClientGenerator;
 
 internal static class Program
 {
-    private const string OUTPUT_PATH = "../../../../../Server/TicTacToe.Web/wwwroot/tic-tac-toe/src/app/generated";
+    private const string OUTPUT_PATH = "../../../../../../front-end/tic-tac-toe/src/app/generated";
     private const string DTO_CLASS_NAME = "dto";
 
     public static async Task Main()

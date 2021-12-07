@@ -4,11 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FreeGamesComponent } from './free-games/free-games.component';
 import { BASE_API_URL } from './generated/clients';
+import { MyGamesComponent } from './my-games/my-games.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent, FreeGamesComponent, MyGamesComponent
   ],
   imports: [
     BrowserModule,

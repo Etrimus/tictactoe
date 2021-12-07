@@ -15,10 +15,16 @@ public class GameController : ControllerBase
         _gameService = gameService;
     }
 
-    [HttpGet("all")]
-    public Task<GameModel[]> GetAll()
+    //[HttpGet("all")]
+    //public Task<GameModel[]> GetAll()
+    //{
+    //    return _gameService.GetAllAsync();
+    //}
+
+    [HttpGet]
+    public Task<GameModel[]> GetById([FromForm] Guid[] id)
     {
-        return _gameService.GetAllAsync();
+        return _gameService.GetFreeAsync();
     }
 
     [HttpGet("free")]

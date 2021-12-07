@@ -14,7 +14,12 @@ builder.Services
     .AddApp();
 
 builder.Services
-    .AddControllers();
+    .AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+;
 
 var app = builder.Build();
 
