@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { FreeGamesComponent } from './free-games/free-games.component';
+import { MyGamesComponent } from './my-games/my-games.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/home' }
+  { path: 'free', component: FreeGamesComponent },
+  { path: 'my', component: MyGamesComponent },
+  { path: '', redirectTo: '/free', pathMatch: 'full' },
+  { path: '**', redirectTo: '/free' }
 ];
 
 @NgModule({

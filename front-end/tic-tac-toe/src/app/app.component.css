@@ -1,9 +1,48 @@
 .header {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+.header a {
+    text-decoration: none;
+    height: 100%;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active-link {
+    background-color: #f0f0f0;
+}
+
+.header__link:hover {
+    background-color: #e4e4e4;
+}
+
+.header a:visited {
+    font-style: italic;
+    color: black;
 }
 
 .header__section {
     display: flex;
     align-items: center;
+}
+
+.header__logo {
+    background-image: url("/assets/logo.png");
+    background-repeat: no-repeat;
+    width: 65px;
+    height: 65px;
+}
+
+.header__create_game_img {
+    background-image: url("/assets/cross.png");
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
 }
