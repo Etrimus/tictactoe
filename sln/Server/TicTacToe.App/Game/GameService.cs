@@ -28,10 +28,18 @@ namespace TicTacToe.App.Game
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
+        public Task<GameModel[]> GetAsync(Guid[] id)
+        {
+            return _repository
+                .Query(false).Where(x => id.Contains(x.Id))
+                .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+        }
+
         public Task<GameModel[]> GetAllAsync()
         {
             return _repository
-                .GetAllAsync()
+                .GetAll()
                 .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
@@ -39,7 +47,7 @@ namespace TicTacToe.App.Game
         public Task<GameModel[]> GetFreeAsync()
         {
             return _repository
-                .GetAllAsync()
+                .GetAll()
                 .Where(x => !x.ZeroPlayerId.HasValue || !x.CrossPlayerId.HasValue)
                 .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
@@ -48,7 +56,7 @@ namespace TicTacToe.App.Game
         public Task<GameModel[]> GetByUserAsync(Guid playerId)
         {
             return _repository
-                .GetAllAsync()
+                .GetAll()
                 .Where(x => x.ZeroPlayerId == playerId || x.CrossPlayerId == playerId)
                 .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();

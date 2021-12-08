@@ -21,10 +21,10 @@ public class GameController : ControllerBase
     //    return _gameService.GetAllAsync();
     //}
 
-    [HttpGet]
+    [HttpPost("id")]
     public Task<GameModel[]> GetById([FromForm] Guid[] id)
     {
-        return _gameService.GetFreeAsync();
+        return _gameService.GetAsync(id);
     }
 
     [HttpGet("free")]

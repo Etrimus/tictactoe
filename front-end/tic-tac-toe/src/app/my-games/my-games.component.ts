@@ -15,7 +15,7 @@ export class MyGamesComponent {
     ) { }
 
     ngOnInit() {
-        this.gameClient.getById(['3D225EFE-AD5B-4675-BFDB-CB6E30283EF1', '3D225EFE-AD5B-4675-BFDB-CB6E30283EF1']).subscribe(games => {
+        this.gameClient.getById(['3D225EFE-AD5B-4675-BFDB-CB6E30283EF1', 'EFAEBFC6-723A-476B-88EB-FE7BECCF3DE7']).subscribe(games => {
             this.Games = games;
         });
     }
