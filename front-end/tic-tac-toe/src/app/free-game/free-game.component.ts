@@ -11,6 +11,9 @@ export class FreeGameComponent {
 
     @Input() Game: GameModel;
 
+    IsCrossFree: boolean;
+    IsZeroFree: boolean;
+
     constructor(
         private gameClient: GameClient
     ) { }
