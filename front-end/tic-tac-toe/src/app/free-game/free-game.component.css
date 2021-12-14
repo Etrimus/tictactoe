@@ -10,4 +10,11 @@
 
 .container::before {
     content: url("/assets/game-img.png");
+    margin-right: 15px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }

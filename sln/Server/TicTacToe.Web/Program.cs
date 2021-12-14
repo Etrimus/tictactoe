@@ -31,7 +31,7 @@ app.Services.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigura
 app
     .UseHttpsRedirection()
     .UseRouting()
-    .UseCors();
+    .UseCors(builder => builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
 app.MapControllers();
 

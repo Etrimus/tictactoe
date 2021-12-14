@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { GameClient } from '../generated/clients';
-import { GameModel } from '../generated/dto';
+import { CellType, GameModel } from '../generated/dto';
 
 @Component({
     selector: 't-free-game',
@@ -10,14 +10,41 @@ import { GameModel } from '../generated/dto';
 })
 export class FreeGameComponent {
 
-    @Input() Game: GameModel;
+    PlayerCrossName = 'Игрок 1';
+    PlayerZeroName = 'Игрок 2';
+    JoinText = 'Присоединиться';
 
-    IsCrossFree: boolean;
-    IsZeroFree: boolean;
+    @Input() Game: GameModel;
+    CellType = CellType;
 
     constructor(
         private gameClient: GameClient
     ) { }
 
-    ngOnInit() { }
+    public ngOnInit() { }
+
+    public joinButtonClick(cellType: CellType) {
+        switch (cellType) {
+            case CellType.Cross:
+                this.gameClient.setCrossPlayer(this.Game.id)
+                    .subscribe(x => {
+                        this.updateGame();
+                    }, error => {
+                        debugger;
+                    });
+                return;
+            case CellType.Zero:
+                this.gameClient.setZeroPlayer(this.Game.id)
+                    .subscribe(x => {
+                        this.updateGame();
+                    }, error => {
+                        debugger;
+                    });
+                return;
+        }
+    }
+
+    private updateGame() {
+        this.gameClient.get(this.Game.id).subscribe(game => this.Game = game);
+    }
 }

@@ -1,0 +1,4 @@
+<div class="player player-{{cellType}}">
+    <ng-container *ngIf="playerId else join">{{playerName}}</ng-container>
+    <ng-template #join><input type="button" value="{{joinText}}" (click)="joinButtonClick()"></ng-template>
+</div>

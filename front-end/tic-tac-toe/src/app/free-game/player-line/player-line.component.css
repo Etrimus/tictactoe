@@ -1,0 +1,23 @@
+.player {
+    font-size: 18px;
+}
+
+.player::before {
+    --size: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+    content: "";
+    width: var(--size);
+    height: var(--size);
+    background-image: url("/assets/game-img.png");
+    display: inline-block;
+}
+
+.player-1::before {
+    background-position: -2px -2px;
+}
+
+.player-2::before {
+    --background-position: -23px;
+    background-position: var(--background-position) var(--background-position);
+}
