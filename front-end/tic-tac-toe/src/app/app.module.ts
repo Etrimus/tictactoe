@@ -4,16 +4,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BadRequestIntercepter } from './errors/bad-request-interceptor';
 import { FreeGameComponent } from './free-game/free-game.component';
 import { PlayerLineComponent } from './free-game/player-line/player-line.component';
 import { FreeGamesComponent } from './free-games/free-games.component';
 import { BASE_API_URL } from './generated/clients';
+import { LoaderComponent } from './loader/loader.component';
 import { MyGamesComponent } from './my-games/my-games.component';
 
 @NgModule({
   declarations: [
-    AppComponent, FreeGamesComponent, MyGamesComponent, FreeGameComponent, PlayerLineComponent
+    AppComponent, FreeGamesComponent, MyGamesComponent, FreeGameComponent, PlayerLineComponent, LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +22,6 @@ import { MyGamesComponent } from './my-games/my-games.component';
   ],
   providers: [
     { provide: BASE_API_URL, useValue: 'https://localhost:5001' },
-    { provide: HTTP_INTERCEPTORS, useClass: BadRequestIntercepter, multi: true }
   ],
   bootstrap: [AppComponent]
 })

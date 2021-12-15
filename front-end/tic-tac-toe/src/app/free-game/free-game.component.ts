@@ -1,4 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { finalize } from 'rxjs/operators';
+import { ErrorService } from '../errors/error.service';
 import { GameClient } from '../generated/clients';
 import { CellType, GameModel } from '../generated/dto';
 
@@ -17,34 +19,40 @@ export class FreeGameComponent {
     @Input() Game: GameModel;
     CellType = CellType;
 
+    IsLoading = false;
+
     constructor(
-        private gameClient: GameClient
+        private gameClient: GameClient,
+        private errorService: ErrorService
     ) { }
 
     public ngOnInit() { }
 
     public joinButtonClick(cellType: CellType) {
+        this.IsLoading = true;
         switch (cellType) {
             case CellType.Cross:
                 this.gameClient.setCrossPlayer(this.Game.id)
-                    .subscribe(x => {
-                        this.updateGame();
-                    }, error => {
-                        debugger;
-                    });
+                    .pipe(finalize(() => this.updateGame()))
+                    .subscribe(() => { }, error => this.handleError(error));
                 return;
             case CellType.Zero:
                 this.gameClient.setZeroPlayer(this.Game.id)
-                    .subscribe(x => {
-                        this.updateGame();
-                    }, error => {
-                        debugger;
-                    });
+                    .pipe(finalize(() => this.updateGame()))
+                    .subscribe(() => { }, error => this.handleError(error));
                 return;
         }
     }
 
     private updateGame() {
-        this.gameClient.get(this.Game.id).subscribe(game => this.Game = game);
+        this.IsLoading = true;
+
+        this.gameClient.get(this.Game.id)
+            .pipe(finalize(() => this.IsLoading = false))
+            .subscribe(game => this.Game = game, error => this.handleError(error));
+    }
+
+    private handleError(error: any) {
+        alert(this.errorService.Parse(error));
     }
 }

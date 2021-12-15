@@ -1,20 +1,39 @@
+* {
+    --content-width: 250px;
+    --content-height: 65px;
+    --content-padding: 10px;
+}
+
 .container {
+    display: inline-flex;
+    width: var(--content-width);
+    height: calc(var(--content-height) + var(--content-padding) * 2);
+    margin: 5px;
+}
+
+.content {
+    width: 100%;
     display: inline-flex;
     border-color: #e5e5e5;
     border-style: solid;
     border-width: 1px;
-    margin: 5px;
-    padding: 10px;
-    width: 250px;
+    padding: var(--content-padding);
 }
 
-.container::before {
-    content: url("/assets/game-img.png");
+.game__image {
     margin-right: 15px;
 }
 
-.content {
+.players {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+.overlay {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.700);
+    width: var(--content-width);
+    height: calc(var(--content-height) + var(--content-padding) * 2);
+    z-index: 100000
 }

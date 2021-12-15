@@ -10,7 +10,9 @@ import { GameModel } from '../generated/dto';
 })
 export class FreeGamesComponent {
 
-    public Games: GameModel[];
+    public Games: GameModel[] = [];
+
+    public IsAnyGames = true;
 
     constructor(
         private gameClient: GameClient
@@ -19,6 +21,7 @@ export class FreeGamesComponent {
     ngOnInit() {
         this.gameClient.getFree().subscribe(games => {
             this.Games = games;
+            this.IsAnyGames = this.Games && this.Games.length > 0;
         });
     }
 }
