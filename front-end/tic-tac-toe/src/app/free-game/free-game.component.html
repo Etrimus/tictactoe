@@ -1,14 +1,9 @@
-<div class="container">
-    <div class="content">
-        <img class="game__image" src="/assets/game-img.png">
-        <div class="players">
-            <t-player-line [gameId]="Game.id" [cellType]="CellType.Cross" [playerId]="Game.crossPlayerId"
-                [playerName]="PlayerCrossName" (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
-            <t-player-line [gameId]="Game.id" [cellType]="CellType.Zero" [playerId]="Game.zeroPlayerId"
-                [playerName]="PlayerZeroName" (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
-        </div>
+<t-item-rectangle>
+    <img class="game__image" src="/assets/game-img.png">
+    <div class="players">
+        <t-player-line [gameId]="Game.id" [cellType]="CellType.Cross" [playerId]="Game.crossPlayerId"
+            [playerName]="PlayerCrossName" (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
+        <t-player-line [gameId]="Game.id" [cellType]="CellType.Zero" [playerId]="Game.zeroPlayerId"
+            [playerName]="PlayerZeroName" (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
     </div>
-    <div class="overlay" *ngIf="IsLoading">
-        <t-loader></t-loader>
-    </div>
-</div>
+</t-item-rectangle>

@@ -1,0 +1,29 @@
+* {
+    --content-width: 250px;
+    --content-height: 65px;
+    --content-padding: 10px;
+}
+
+.container {
+    display: inline-flex;
+    width: var(--content-width);
+    height: calc(var(--content-height) + var(--content-padding) * 2);
+    margin: 5px;
+}
+
+.content {
+    display: flex;
+    width: 100%;
+    border-color: #e5e5e5;
+    border-style: solid;
+    border-width: 1px;
+    padding: var(--content-padding);
+}
+
+.overlay {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.700);
+    width: var(--content-width);
+    height: calc(var(--content-height) + var(--content-padding) * 2);
+    z-index: 100000
+}

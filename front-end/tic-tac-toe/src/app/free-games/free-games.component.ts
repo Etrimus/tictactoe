@@ -14,9 +14,7 @@ export class FreeGamesComponent {
 
     public IsAnyGames = true;
 
-    constructor(
-        private gameClient: GameClient
-    ) { }
+    constructor(private gameClient: GameClient) { }
 
     ngOnInit() {
         this.gameClient.getFree().subscribe(games => {

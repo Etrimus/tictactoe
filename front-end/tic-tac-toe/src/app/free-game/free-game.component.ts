@@ -3,6 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
 import { GameClient } from '../generated/clients';
 import { CellType, GameModel } from '../generated/dto';
+import { ItemRectangleComponent } from './item-rectangle/item-rectangle.component';
 
 @Component({
     selector: 't-free-game',
@@ -10,7 +11,7 @@ import { CellType, GameModel } from '../generated/dto';
     styleUrls: ['./free-game.component.css'],
     encapsulation: ViewEncapsulation.ShadowDom
 })
-export class FreeGameComponent {
+export class FreeGameComponent extends ItemRectangleComponent {
 
     PlayerCrossName = 'Игрок 1';
     PlayerZeroName = 'Игрок 2';
@@ -19,12 +20,12 @@ export class FreeGameComponent {
     @Input() Game: GameModel;
     CellType = CellType;
 
-    IsLoading = false;
-
     constructor(
         private gameClient: GameClient,
         private errorService: ErrorService
-    ) { }
+    ) {
+        super();
+    }
 
     public ngOnInit() { }
 
