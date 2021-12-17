@@ -1,4 +1,5 @@
-import { Component, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { Component, EventEmitter, Output, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { finalize } from "rxjs/operators";
 import { ErrorService } from "src/app/errors/error.service";
 import { GameClient } from "src/app/generated/clients";
 
@@ -13,13 +14,16 @@ export class AddGameComponent {
     IsLoading = false;
     StyleSheets: Node[];
 
-    constructor(
-        private gameClient: GameClient,
-        private errorService: ErrorService,
-        private viewContainer: ViewContainerRef
-    ) { }
+    @Output() AddGameEvent = new EventEmitter<any>();
+
+    constructor(private viewContainer: ViewContainerRef) { }
 
     public ngOnInit() {
         this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
     }
+
+    public addGame() {
+        this.AddGameEvent.emit();
+    }
+
 }

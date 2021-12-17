@@ -4,15 +4,14 @@
     --content-padding: 10px;
 }
 
-.container {
+.item-rectangle-container {
     display: inline-flex;
     width: var(--content-width);
     height: calc(var(--content-height) + var(--content-padding) * 2);
     margin: 5px;
 }
 
-.content {
-    display: flex;
+.item-rectangle-content {
     width: 100%;
     border-color: #e5e5e5;
     border-style: solid;
@@ -20,7 +19,7 @@
     padding: var(--content-padding);
 }
 
-.overlay {
+.item-rectangle-overlay {
     position: absolute;
     background-color: rgba(255, 255, 255, 0.700);
     width: var(--content-width);
