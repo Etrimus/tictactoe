@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
 import { GameClient } from '../generated/clients';
@@ -8,7 +8,8 @@ import { ItemRectangleComponent } from './item-rectangle/item-rectangle.componen
 @Component({
     selector: 't-free-game',
     templateUrl: './free-game.component.html',
-    styleUrls: ['./free-game.component.css']
+    styleUrls: ['./free-game.component.css'],
+    encapsulation: ViewEncapsulation.ShadowDom
 })
 export class FreeGameComponent extends ItemRectangleComponent {
 
