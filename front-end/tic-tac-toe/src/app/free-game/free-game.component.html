@@ -1,4 +1,4 @@
-<t-item-rectangle>
+<t-item-rectangle [IsLoading]="IsLoading" [StyleNodes]="StyleSheets">
     <img class="game__image" src="/assets/game-img.png">
     <div class="players">
         <t-player-line [gameId]="Game.id" [cellType]="CellType.Cross" [playerId]="Game.crossPlayerId"

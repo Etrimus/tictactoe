@@ -1,9 +1,8 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
 import { GameClient } from '../generated/clients';
 import { CellType, GameModel } from '../generated/dto';
-import { ItemRectangleComponent } from './item-rectangle/item-rectangle.component';
 
 @Component({
     selector: 't-free-game',
@@ -11,23 +10,26 @@ import { ItemRectangleComponent } from './item-rectangle/item-rectangle.componen
     styleUrls: ['./free-game.component.css'],
     encapsulation: ViewEncapsulation.ShadowDom
 })
-export class FreeGameComponent extends ItemRectangleComponent {
+export class FreeGameComponent {
 
     PlayerCrossName = 'Игрок 1';
     PlayerZeroName = 'Игрок 2';
     JoinText = 'Присоединиться';
+    IsLoading = false;
 
     @Input() Game: GameModel;
     CellType = CellType;
+    StyleSheets: Node[];
 
     constructor(
         private gameClient: GameClient,
-        private errorService: ErrorService
-    ) {
-        super();
-    }
+        private errorService: ErrorService,
+        private viewContainer: ViewContainerRef
+    ) { }
 
-    public ngOnInit() { }
+    public ngOnInit() {
+        this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
+    }
 
     public joinButtonClick(cellType: CellType) {
         this.IsLoading = true;
