@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
+import { GameService } from '../game.service';
 import { GameClient } from '../generated/clients';
 import { GameModel } from '../generated/dto';
 
@@ -18,7 +19,8 @@ export class FreeGamesComponent {
 
     constructor(
         private errorService: ErrorService,
-        private gameClient: GameClient
+        private gameClient: GameClient,
+        private gameService: GameService
     ) { }
 
     ngOnInit() {
@@ -27,9 +29,9 @@ export class FreeGamesComponent {
 
     public addGameButtonClick() {
         this.IsLoading = true;
-        this.gameClient.add()
+        this.gameService.Add()
             .pipe(finalize(() => this.updateGames()))
-            .subscribe(gameId => { }, error => this.handleError(error));
+            .subscribe(_ => { }, error => this.handleError(error));
     }
 
     private updateGames() {

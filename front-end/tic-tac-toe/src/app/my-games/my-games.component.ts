@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { GameService } from '../game.service';
 import { GameClient } from '../generated/clients';
 import { GameModel } from '../generated/dto';
 
@@ -9,15 +10,20 @@ import { GameModel } from '../generated/dto';
     encapsulation: ViewEncapsulation.ShadowDom
 })
 export class MyGamesComponent {
+
+    public IsAnyGames = false;
+
     public Games: GameModel[];
 
     constructor(
-        private gameClient: GameClient
+        private gameClient: GameClient,
+        private gameService: GameService
     ) { }
 
     ngOnInit() {
-        this.gameClient.getById(['3D225EFE-AD5B-4675-BFDB-CB6E30283EF1', 'EFAEBFC6-723A-476B-88EB-FE7BECCF3DE7']).subscribe(games => {
+        this.gameService.GetMy().subscribe(games => {
             this.Games = games;
+            this.IsAnyGames = games.length > 0;
         });
     }
 }

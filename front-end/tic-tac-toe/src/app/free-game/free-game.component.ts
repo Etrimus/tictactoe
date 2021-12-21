@@ -1,6 +1,7 @@
 import { Component, Input, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
+import { GameService } from '../game.service';
 import { GameClient } from '../generated/clients';
 import { CellType, GameModel } from '../generated/dto';
 
@@ -23,6 +24,7 @@ export class FreeGameComponent {
 
     constructor(
         private gameClient: GameClient,
+        private gameService: GameService,
         private errorService: ErrorService,
         private viewContainer: ViewContainerRef
     ) { }
@@ -35,12 +37,12 @@ export class FreeGameComponent {
         this.IsLoading = true;
         switch (cellType) {
             case CellType.Cross:
-                this.gameClient.setCrossPlayer(this.Game.id)
+                this.gameService.SetCrossPlayer(this.Game.id)
                     .pipe(finalize(() => this.updateGame()))
                     .subscribe(() => { }, error => this.handleError(error));
                 return;
             case CellType.Zero:
-                this.gameClient.setZeroPlayer(this.Game.id)
+                this.gameService.SetZeroPlayer(this.Game.id)
                     .pipe(finalize(() => this.updateGame()))
                     .subscribe(() => { }, error => this.handleError(error));
                 return;

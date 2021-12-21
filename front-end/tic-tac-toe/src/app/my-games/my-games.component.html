@@ -1,1 +1,12 @@
 <div *ngFor="let game of Games">{{game.id}}</div>
+<ng-template #empty></ng-template>
+
+<span class="container">
+    <ng-container *ngIf="IsAnyGames else no_games">
+        <t-free-game *ngFor="let game of Games" [Game]="game"></t-free-game>
+    </ng-container>
+    <!-- <t-add-game (AddGameEvent)="addGameButtonClick()"></t-add-game> -->
+    <ng-template #no_games>
+        No games
+    </ng-template>
+</span>
