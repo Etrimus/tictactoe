@@ -14,15 +14,22 @@ export class GameService {
     private myGamesStorageKey = 'my_games';
     private myGamesStorageValueSeparator = ';'
 
+    private guidLetterExp = '[0-9A-Fa-f]';
+    private guidRegExp = new RegExp(`^(${this.guidLetterExp}{8}[-]${this.guidLetterExp}{4}[-]${this.guidLetterExp}{4}[-]${this.guidLetterExp}{4}[-]${this.guidLetterExp}{12})$`);
+
     public Add(): Observable<string> {
-        return this.gameClient.add().pipe(
-            tap(guid => this.addMyGame(guid))
-        )
+        return this.gameClient.add();
     }
 
     public GetMy(): Observable<GameModel[]> {
 
-        const myGames = localStorage.getItem(this.myGamesStorageKey)?.split(this.myGamesStorageValueSeparator);
+        const myGames = localStorage
+            .getItem(this.myGamesStorageKey)
+            ?.split(this.myGamesStorageValueSeparator)
+            .filter(x => {
+                let isTrue = this.guidRegExp.test(x) === true;
+                return isTrue;
+            });
 
         return !myGames || myGames.length < 1
             ? from<Array<GameModel>[]>([])

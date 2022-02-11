@@ -1,7 +1,4 @@
 import { Component, EventEmitter, Output, ViewContainerRef, ViewEncapsulation } from "@angular/core";
-import { finalize } from "rxjs/operators";
-import { ErrorService } from "src/app/errors/error.service";
-import { GameClient } from "src/app/generated/clients";
 
 @Component({
     selector: 't-add-game',
