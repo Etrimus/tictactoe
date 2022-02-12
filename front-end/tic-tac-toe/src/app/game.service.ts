@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { from, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { CommonService } from "./common.service";
 import { GameClient } from "./generated/clients";
 import { GameModel } from "./generated/dto";
 
@@ -9,13 +10,10 @@ import { GameModel } from "./generated/dto";
 })
 export class GameService {
 
-    constructor(private gameClient: GameClient) { }
+    constructor(private gameClient: GameClient, private commonService: CommonService) { }
 
     private myGamesStorageKey = 'my_games';
     private myGamesStorageValueSeparator = ';'
-
-    private guidLetterExp = '[0-9A-Fa-f]';
-    private guidRegExp = new RegExp(`^(${this.guidLetterExp}{8}[-]${this.guidLetterExp}{4}[-]${this.guidLetterExp}{4}[-]${this.guidLetterExp}{4}[-]${this.guidLetterExp}{12})$`);
 
     public Add(): Observable<string> {
         return this.gameClient.add();
@@ -27,7 +25,7 @@ export class GameService {
             .getItem(this.myGamesStorageKey)
             ?.split(this.myGamesStorageValueSeparator)
             .filter(x => {
-                let isTrue = this.guidRegExp.test(x) === true;
+                let isTrue = this.commonService.GuidRegExp.test(x) === true;
                 return isTrue;
             });
 
@@ -40,15 +38,15 @@ export class GameService {
             );
     }
 
-    public SetCrossPlayer(gameId: string): Observable<string> {
-        return this.gameClient.setCrossPlayer(gameId).pipe(
-            tap(playerId => this.addMyGame(gameId))
+    public SetCrossPlayer(gameId: string, playerId: string): Observable<void> {
+        return this.gameClient.setCrossPlayer(gameId, playerId).pipe(
+            tap(() => this.addMyGame(gameId))
         );
     }
 
-    public SetZeroPlayer(gameId: string): Observable<string> {
-        return this.gameClient.setZeroPlayer(gameId).pipe(
-            tap(playerId => this.addMyGame(gameId))
+    public SetZeroPlayer(gameId: string, playerId: string): Observable<void> {
+        return this.gameClient.setZeroPlayer(gameId, playerId).pipe(
+            tap(() => this.addMyGame(gameId))
         );
     }
 

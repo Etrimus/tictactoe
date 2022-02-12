@@ -27,13 +27,19 @@ public class GameController : ControllerBase
         return _gameService.GetAsync(id);
     }
 
+    [HttpPost("playerId")]
+    public Task<GameModel[]> GetByPlayerId([FromForm] Guid playerId)
+    {
+        return _gameService.GetByPlayerIdAsync(playerId);
+    }
+
     [HttpGet("free")]
     public Task<GameModel[]> GetFree()
     {
         return _gameService.GetFreeAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public Task<GameModel> Get([FromRoute] Guid id)
     {
         return _gameService.GetAsync(id, true);
@@ -45,19 +51,19 @@ public class GameController : ControllerBase
         return _gameService.CreateNewAsync().ContinueWith(x => x.Result.Id);
     }
 
-    [HttpPut("{id}/crossPlayer")]
-    public Task<Guid> SetCrossPlayer([FromRoute] Guid id)
+    [HttpPut("{id:guid}/crossPlayer")]
+    public Task SetCrossPlayer([FromRoute] Guid id, [FromForm] Guid playerId)
     {
-        return _gameService.SetPlayerAsync(id, CellType.Cross);
+        return _gameService.SetPlayerAsync(id, playerId, CellType.Cross);
     }
 
-    [HttpPut("{id}/zeroPlayer")]
-    public Task<Guid> SetZeroPlayer([FromRoute] Guid id)
+    [HttpPut("{id:guid}/zeroPlayer")]
+    public Task SetZeroPlayer([FromRoute] Guid id, [FromForm] Guid playerId)
     {
-        return _gameService.SetPlayerAsync(id, CellType.Zero);
+        return _gameService.SetPlayerAsync(id, playerId, CellType.Zero);
     }
 
-    [HttpPut("{id}/turn")]
+    [HttpPut("{id:guid}/turn")]
     public Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort? cellNumber)
     {
         return _gameService.MakeTurnAsync(id, playerId, cellNumber);

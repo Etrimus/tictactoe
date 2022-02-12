@@ -4,6 +4,7 @@ import { ErrorService } from '../errors/error.service';
 import { GameService } from '../game.service';
 import { GameClient } from '../generated/clients';
 import { CellType, GameModel } from '../generated/dto';
+import { UserService } from '../user.service';
 
 @Component({
     selector: 't-free-game',
@@ -23,6 +24,7 @@ export class FreeGameComponent {
     StyleSheets: Node[];
 
     constructor(
+        private userService: UserService,
         private gameClient: GameClient,
         private gameService: GameService,
         private errorService: ErrorService,
@@ -37,12 +39,12 @@ export class FreeGameComponent {
         this.IsLoading = true;
         switch (cellType) {
             case CellType.Cross:
-                this.gameService.SetCrossPlayer(this.Game.id)
+                this.gameService.SetCrossPlayer(this.Game.id, this.userService.GetUserId())
                     .pipe(finalize(() => this.updateGame()))
                     .subscribe(() => { }, error => this.handleError(error));
                 return;
             case CellType.Zero:
-                this.gameService.SetZeroPlayer(this.Game.id)
+                this.gameService.SetZeroPlayer(this.Game.id, this.userService.GetUserId())
                     .pipe(finalize(() => this.updateGame()))
                     .subscribe(() => { }, error => this.handleError(error));
                 return;

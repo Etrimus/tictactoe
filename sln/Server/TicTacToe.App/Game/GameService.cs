@@ -53,7 +53,7 @@ namespace TicTacToe.App.Game
                 .ToArrayAsync();
         }
 
-        public Task<GameModel[]> GetByUserAsync(Guid playerId)
+        public Task<GameModel[]> GetByPlayerIdAsync(Guid playerId)
         {
             return _repository
                 .GetAll()
@@ -74,7 +74,7 @@ namespace TicTacToe.App.Game
                 .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
         }
 
-        public async Task<Guid> SetPlayerAsync(Guid gameId, CellType cellType)
+        public async Task SetPlayerAsync(Guid gameId, Guid playerId, CellType cellType)
         {
             var game = await _repository.GetAsync(gameId);
             if (game == null)
@@ -89,11 +89,11 @@ namespace TicTacToe.App.Game
             {
                 case CellType.Zero:
                     getPlayerFn = () => game.ZeroPlayerId;
-                    setPlayerAction = playerId => game.ZeroPlayerId = playerId;
+                    setPlayerAction = zeroPlayerId => game.ZeroPlayerId = zeroPlayerId;
                     break;
                 case CellType.Cross:
                     getPlayerFn = () => game.CrossPlayerId;
-                    setPlayerAction = playerId => game.CrossPlayerId = playerId;
+                    setPlayerAction = crossPlayerId => game.CrossPlayerId = crossPlayerId;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
@@ -104,11 +104,9 @@ namespace TicTacToe.App.Game
                 throw new TicTacToeException($"К игре уже присоединился {cellType}-участник.");
             }
 
-            setPlayerAction(Guid.NewGuid());
+            setPlayerAction(playerId);
 
             await _repository.UpdateAsync(game);
-
-            return getPlayerFn().Value;
         }
 
         public async Task MakeTurnAsync(Guid gameId, Guid playerId, ushort? cellNumber)

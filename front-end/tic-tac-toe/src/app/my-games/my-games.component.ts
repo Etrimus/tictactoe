@@ -2,7 +2,9 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
 import { GameService } from '../game.service';
+import { GameClient } from '../generated/clients';
 import { GameModel } from '../generated/dto';
+import { UserService } from '../user.service';
 
 @Component({
     selector: 't-my-games',
@@ -18,7 +20,8 @@ export class MyGamesComponent {
 
     constructor(
         private errorService: ErrorService,
-        private gameService: GameService
+        private userService: UserService,
+        private gameClient: GameClient
     ) { }
 
     ngOnInit() {
@@ -27,7 +30,7 @@ export class MyGamesComponent {
 
     private updateGames() {
         this.IsLoading = true;
-        this.gameService.GetMy().subscribe(games => {
+        this.gameClient.getByPlayerId(this.userService.GetUserId()).subscribe(games => {
             this.Games = games;
             this.IsAnyGames = games.length > 0;
         });
