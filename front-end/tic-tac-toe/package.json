@@ -7,24 +7,24 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "12",
-    "@angular/compiler": "12",
-    "@angular/core": "12",
-    "@angular/forms": "12",
-    "@angular/platform-browser": "12",
-    "@angular/platform-browser-dynamic": "12",
-    "@angular/router": "12",
-    "normalize.css": "^8.0.1",
+    "@angular/common": "13",
+    "@angular/compiler": "13",
+    "@angular/core": "13",
+    "@angular/forms": "13",
+    "@angular/platform-browser": "13",
+    "@angular/platform-browser-dynamic": "13",
+    "@angular/router": "13",
+    "normalize.css": "8",
     "rxjs": "6",
     "zone.js": "0.11",
     "uuid": "8"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "12",
-    "@angular/cli": "12",
-    "@angular/compiler-cli": "12",
+    "@angular-devkit/build-angular": "13",
+    "@angular/cli": "13",
+    "@angular/compiler-cli": "13",
     "@types/node": "16",
-    "@types/uuid": "8.3.4",
+    "@types/uuid": "8",
     "typescript": "4"
   }
 }

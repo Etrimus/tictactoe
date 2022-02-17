@@ -1,9 +1,0 @@
-*.user
-
-.vs
-[Bb]in
-[Oo]bj
-
-dist
-
-node_modules
