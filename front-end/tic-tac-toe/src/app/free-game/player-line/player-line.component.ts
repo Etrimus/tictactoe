@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CellType } from 'src/app/generated/dto';
+import { UserService } from 'src/app/user.service';
 
 @Component({
     selector: 't-player-line',
@@ -9,12 +10,26 @@ import { CellType } from 'src/app/generated/dto';
 })
 export class PlayerLineComponent {
 
+    constructor(private userService: UserService) { }
+
     joinText = 'Присоединиться';
+
+    private _playerId: string;
 
     @Input() gameId: string;
     @Input() cellType: CellType;
-    @Input() playerId: string;
-    @Input() playerName: string;
+    playerName: string;
+
+    get playerId(): string {
+        return this._playerId;
+    }
+
+    @Input() set playerId(value: string) {
+        this._playerId = value;
+
+        const isPlayerIdIsYour = value === this.userService.GetUserId();
+        this.playerName = isPlayerIdIsYour ? "Вы" : "Оппонет";
+    }
 
     @Output() JoinButtonEvent = new EventEmitter<CellType>();
 

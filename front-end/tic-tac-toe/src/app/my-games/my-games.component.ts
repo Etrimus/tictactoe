@@ -1,7 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
-import { GameService } from '../game.service';
 import { GameClient } from '../generated/clients';
 import { GameModel } from '../generated/dto';
 import { UserService } from '../user.service';
@@ -24,7 +22,7 @@ export class MyGamesComponent {
         private gameClient: GameClient
     ) { }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.updateGames();
     }
 

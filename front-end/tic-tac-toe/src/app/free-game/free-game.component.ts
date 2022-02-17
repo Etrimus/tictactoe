@@ -1,4 +1,4 @@
-import { Component, Input, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
 import { GameService } from '../game.service';
@@ -14,12 +14,12 @@ import { UserService } from '../user.service';
 })
 export class FreeGameComponent {
 
-    PlayerCrossName = 'Игрок 1';
-    PlayerZeroName = 'Игрок 2';
     JoinText = 'Присоединиться';
     IsLoading = false;
 
     @Input() Game: GameModel;
+    @Output() GameChange = new EventEmitter<GameModel>();
+
     CellType = CellType;
     StyleSheets: Node[];
 
@@ -56,7 +56,7 @@ export class FreeGameComponent {
 
         this.gameClient.get(this.Game.id)
             .pipe(finalize(() => this.IsLoading = false))
-            .subscribe(game => this.Game = game, error => this.handleError(error));
+            .subscribe(game => { this.Game = game; this.GameChange.emit(game) }, error => this.handleError(error));
     }
 
     private handleError(error: any) {

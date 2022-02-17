@@ -1,0 +1,4 @@
+<t-free-game [Game]="Game" (GameChange)="GameChanged($event)" *ngIf="IsGameIsFree else my_game"></t-free-game>
+<ng-template #my_game>
+    <t-my-game [Game]="Game"></t-my-game>
+</ng-template>

@@ -1,6 +1,6 @@
 <span class="container">
     <ng-container *ngIf="IsAnyGames else no_games">
-        <t-my-game *ngFor="let game of Games" [Game]="game"></t-my-game>
+        <t-my-game-wrap *ngFor="let game of Games" [Game]="game"></t-my-game-wrap>
     </ng-container>
     <ng-template #no_games>
         No games

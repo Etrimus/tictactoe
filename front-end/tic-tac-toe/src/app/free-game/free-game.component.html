@@ -3,9 +3,9 @@
         <img class="game__image" src="/assets/game-img.png">
         <div class="players">
             <t-player-line [gameId]="Game.id" [cellType]="CellType.Cross" [playerId]="Game.crossPlayerId"
-                [playerName]="PlayerCrossName" (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
+                (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
             <t-player-line [gameId]="Game.id" [cellType]="CellType.Zero" [playerId]="Game.zeroPlayerId"
-                [playerName]="PlayerZeroName" (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
+                (JoinButtonEvent)="joinButtonClick($event)"></t-player-line>
         </div>
     </div>
 </t-item-rectangle>
