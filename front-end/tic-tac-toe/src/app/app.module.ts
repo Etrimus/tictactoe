@@ -14,10 +14,11 @@ import { MyGamesComponent } from './my-games/my-games.component';
 import { ItemRectangleComponent } from './free-game/item-rectangle/item-rectangle.component';
 import { MyGameComponent } from './my-game/my-game.component';
 import { MyGameWrapComponent } from './my-game-wrap/my-game-wrap.component';
+import { BoardComponent } from './board/board.component';
 
 @NgModule({
   declarations: [
-    AppComponent, FreeGamesComponent, MyGamesComponent, FreeGameComponent, MyGameComponent, MyGameWrapComponent, PlayerLineComponent, LoaderComponent, AddGameComponent, ItemRectangleComponent
+    AppComponent, FreeGamesComponent, MyGamesComponent, FreeGameComponent, MyGameComponent, MyGameWrapComponent, PlayerLineComponent, LoaderComponent, AddGameComponent, ItemRectangleComponent, BoardComponent
   ],
   imports: [
     BrowserModule,

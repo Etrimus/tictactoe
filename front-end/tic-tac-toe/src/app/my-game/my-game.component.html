@@ -1,6 +1,6 @@
 <t-item-rectangle [IsLoading]="IsLoading" [StyleNodes]="StyleSheets">
     <div class="container">
-        <img class="game__image" src="/assets/game-img.png">
+        <t-board [Board]="Game.board" [IsInteractive]="true"></t-board>
         <div class="players">
             {{Note}}
         </div>
