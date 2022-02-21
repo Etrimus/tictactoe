@@ -2,7 +2,7 @@ import { Component, Input, ViewContainerRef, ViewEncapsulation } from "@angular/
 import { ErrorService } from "../errors/error.service";
 import { GameService } from "../game.service";
 import { GameClient } from "../generated/clients";
-import { CellType, GameModel } from "../generated/dto";
+import { Cell, CellType, GameModel } from "../generated/dto";
 import { UserService } from "../user.service";
 
 @Component({
@@ -49,4 +49,7 @@ export class MyGameComponent {
         this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
     }
 
+    public cellClicked(cell: Cell) {
+        debugger;
+    }
 }

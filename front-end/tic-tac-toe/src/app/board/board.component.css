@@ -1,12 +1,21 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: 1px;
 
-    background-color: black;
+    padding: 1px;
+    background-color: #666666;
 }
 
 .grid-container div {
     background-color: aquamarine;
-    aspect-ratio: 1;
+
+    cursor: default;
+
+    margin: auto;
+    text-align: center;
+
+    --size: 20px;
+    width: var(--size);
+    height: var(--size);
 }

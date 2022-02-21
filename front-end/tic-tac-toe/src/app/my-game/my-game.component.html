@@ -1,8 +1,8 @@
 <t-item-rectangle [IsLoading]="IsLoading" [StyleNodes]="StyleSheets">
     <div class="container">
-        <t-board [Board]="Game.board" [IsInteractive]="true"></t-board>
-        <div class="players">
+        <t-board [Board]="Game.board" [IsInteractive]="true" (CellClicked)="cellClicked($event)"></t-board>
+        <span class="players">
             {{Note}}
-        </div>
+        </span>
     </div>
 </t-item-rectangle>

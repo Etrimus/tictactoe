@@ -1,11 +1,11 @@
 <div class="grid-container">
-    <div>{{Board.cells[0].number}}</div>
-    <div>{{Board.cells[1].number}}</div>
-    <div>{{Board.cells[2].number}}</div>
-    <div>{{Board.cells[3].number}}</div>
-    <div>{{Board.cells[4].number}}</div>
-    <div>{{Board.cells[5].number}}</div>
-    <div>{{Board.cells[6].number}}</div>
-    <div>{{Board.cells[7].number}}</div>
-    <div>{{Board.cells[8].number}}</div>
+    <div (click)="this.CellClicked.emit(Board.cells[0])">{{Board.cells[0]}}</div>
+    <div>{{Board.cells[1]}}</div>
+    <div>{{Board.cells[2]}}</div>
+    <div>{{Board.cells[3]}}</div>
+    <div>{{Board.cells[4]}}</div>
+    <div>{{Board.cells[5]}}</div>
+    <div>{{Board.cells[6]}}</div>
+    <div>{{Board.cells[7]}}</div>
+    <div>{{Board.cells[8]}}</div>
 </div>

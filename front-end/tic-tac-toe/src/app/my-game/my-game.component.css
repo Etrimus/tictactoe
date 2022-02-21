@@ -3,12 +3,6 @@
     flex-wrap: wrap;
 }
 
-.game__image {
-    margin-right: 15px;
-}
-
 .players {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    margin: auto;
 }

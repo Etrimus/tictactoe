@@ -11,10 +11,10 @@ import { FreeGamesComponent } from './free-games/free-games.component';
 import { BASE_API_URL } from './generated/clients';
 import { LoaderComponent } from './loader/loader.component';
 import { MyGamesComponent } from './my-games/my-games.component';
-import { ItemRectangleComponent } from './free-game/item-rectangle/item-rectangle.component';
 import { MyGameComponent } from './my-game/my-game.component';
 import { MyGameWrapComponent } from './my-game-wrap/my-game-wrap.component';
 import { BoardComponent } from './board/board.component';
+import { ItemRectangleComponent } from './item-rectangle/item-rectangle.component';
 
 @NgModule({
   declarations: [
