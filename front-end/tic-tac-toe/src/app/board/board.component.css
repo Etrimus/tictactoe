@@ -1,0 +1,12 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+
+    background-color: black;
+}
+
+.grid-container div {
+    background-color: aquamarine;
+    aspect-ratio: 1;
+}
