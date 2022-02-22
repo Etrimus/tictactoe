@@ -13,5 +13,11 @@ export class BoardComponent {
     @Input() Board: Board;
     @Input() IsInteractive = true;
 
-    @Output() CellClicked = new EventEmitter<Cell>();
+    @Output() CellClickedEvent = new EventEmitter<Cell>();
+
+    public CellClicked(cell: Cell) {
+        if (this.IsInteractive) {
+            this.CellClickedEvent.emit(cell);
+        }
+    }
 }

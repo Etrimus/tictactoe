@@ -1,4 +1,6 @@
 import { Component, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { finalize } from "rxjs/operators";
+import { CellCaptionPipe } from "../board/cell-caption.pipe";
 import { ErrorService } from "../errors/error.service";
 import { GameService } from "../game.service";
 import { GameClient } from "../generated/clients";
@@ -19,12 +21,14 @@ export class MyGameComponent {
         private userService: UserService,
         private gameClient: GameClient,
         private gameService: GameService,
+        private cellCaptionPipe: CellCaptionPipe,
         private errorService: ErrorService,
         private viewContainer: ViewContainerRef
     ) { }
 
     StyleSheets: Node[];
     IsLoading = false;
+    IsBoardInteractive = true;
     Note: string;
 
     get Game(): GameModel {
@@ -34,15 +38,25 @@ export class MyGameComponent {
     @Input() set Game(value: GameModel) {
         this._game = value;
 
-        const playerCellType = value.crossPlayerId === this.userService.GetUserId()
-            ? CellType.Cross
-            : value.zeroPlayerId == this.userService.GetUserId()
-                ? CellType.Zero
-                : CellType.None;
+        if (this.Game.board.winner !== CellType.None) {
+            this.Note = `Победитель ${this.cellCaptionPipe.transform(this.Game.board.winner)}`;
+            this.IsBoardInteractive = false;
+        } else {
+            const playerCellType = value.crossPlayerId === this.userService.GetUserId()
+                ? CellType.Cross
+                : value.zeroPlayerId == this.userService.GetUserId()
+                    ? CellType.Zero
+                    : CellType.None;
 
-        this.Note = this.Game.board.nextTurn === playerCellType
-            ? "Ваш ход!"
-            : "Ход оппонента."
+            if (this.Game.board.nextTurn === CellType.None) {
+                this.Note = "Ничья.";
+                this.IsBoardInteractive = false;
+            } else {
+                this.Note = this.Game.board.nextTurn === playerCellType
+                    ? `Ваш ход! ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`
+                    : `Ход оппонента. ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`
+            }
+        }
     }
 
     public ngOnInit() {
@@ -50,6 +64,20 @@ export class MyGameComponent {
     }
 
     public cellClicked(cell: Cell) {
-        debugger;
+        this.gameClient.turn(this.Game.id, this.userService.GetUserId(), cell.number)
+            .pipe(finalize(() => this.updateGame()))
+            .subscribe(() => { }, error => this.handleError(error));
+    }
+
+    private updateGame() {
+        this.IsLoading = true;
+
+        this.gameClient.get(this.Game.id)
+            .pipe(finalize(() => this.IsLoading = false))
+            .subscribe(game => this.Game = game, error => this.handleError(error));
+    }
+
+    private handleError(error: any) {
+        alert(this.errorService.Parse(error));
     }
 }

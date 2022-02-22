@@ -1,11 +1,11 @@
 <div class="grid-container">
-    <div (click)="this.CellClicked.emit(Board.cells[0])">{{Board.cells[0]}}</div>
-    <div>{{Board.cells[1]}}</div>
-    <div>{{Board.cells[2]}}</div>
-    <div>{{Board.cells[3]}}</div>
-    <div>{{Board.cells[4]}}</div>
-    <div>{{Board.cells[5]}}</div>
-    <div>{{Board.cells[6]}}</div>
-    <div>{{Board.cells[7]}}</div>
-    <div>{{Board.cells[8]}}</div>
+    <div (click)="this.CellClicked(Board.cells[0])">{{Board.cells[0] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[1])">{{Board.cells[1] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[2])">{{Board.cells[2] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[3])">{{Board.cells[3] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[4])">{{Board.cells[4] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[5])">{{Board.cells[5] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[6])">{{Board.cells[6] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[7])">{{Board.cells[7] | cellCaption}}</div>
+    <div (click)="this.CellClicked(Board.cells[8])">{{Board.cells[8] | cellCaption}}</div>
 </div>

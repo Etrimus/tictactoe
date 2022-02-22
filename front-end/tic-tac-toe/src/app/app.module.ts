@@ -15,10 +15,22 @@ import { MyGameComponent } from './my-game/my-game.component';
 import { MyGameWrapComponent } from './my-game-wrap/my-game-wrap.component';
 import { BoardComponent } from './board/board.component';
 import { ItemRectangleComponent } from './item-rectangle/item-rectangle.component';
+import { CellCaptionPipe } from './board/cell-caption.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent, FreeGamesComponent, MyGamesComponent, FreeGameComponent, MyGameComponent, MyGameWrapComponent, PlayerLineComponent, LoaderComponent, AddGameComponent, ItemRectangleComponent, BoardComponent
+    AppComponent,
+    FreeGamesComponent,
+    MyGamesComponent,
+    FreeGameComponent,
+    MyGameComponent,
+    MyGameWrapComponent,
+    PlayerLineComponent,
+    LoaderComponent,
+    AddGameComponent,
+    ItemRectangleComponent,
+    BoardComponent,
+    CellCaptionPipe
   ],
   imports: [
     BrowserModule,
@@ -27,6 +39,7 @@ import { ItemRectangleComponent } from './item-rectangle/item-rectangle.componen
   ],
   providers: [
     { provide: BASE_API_URL, useValue: 'https://localhost:5001' },
+    CellCaptionPipe
   ],
   bootstrap: [AppComponent]
 })

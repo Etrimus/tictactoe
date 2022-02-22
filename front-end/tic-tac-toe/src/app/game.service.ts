@@ -32,21 +32,19 @@ export class GameService {
         return !myGames || myGames.length < 1
             ? from<Array<GameModel>[]>([])
             : this.gameClient.getById(myGames).pipe(
-                tap(games => {
-                    localStorage.setItem(this.myGamesStorageKey, games.map(game => game.id).join(this.myGamesStorageValueSeparator));
-                })
+                tap({ next: games => localStorage.setItem(this.myGamesStorageKey, games.map(game => game.id).join(this.myGamesStorageValueSeparator)) })
             );
     }
 
     public SetCrossPlayer(gameId: string, playerId: string): Observable<void> {
         return this.gameClient.setCrossPlayer(gameId, playerId).pipe(
-            tap(() => this.addMyGame(gameId))
+            tap({ complete: () => this.addMyGame(gameId) })
         );
     }
 
     public SetZeroPlayer(gameId: string, playerId: string): Observable<void> {
         return this.gameClient.setZeroPlayer(gameId, playerId).pipe(
-            tap(() => this.addMyGame(gameId))
+            tap({ complete: () => this.addMyGame(gameId) })
         );
     }
 
