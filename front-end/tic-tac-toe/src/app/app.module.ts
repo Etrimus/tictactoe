@@ -16,6 +16,7 @@ import { MyGameWrapComponent } from './my-game-wrap/my-game-wrap.component';
 import { BoardComponent } from './board/board.component';
 import { ItemRectangleComponent } from './item-rectangle/item-rectangle.component';
 import { CellCaptionPipe } from './board/cell-caption.pipe';
+import { InfoRectangleComponent } from './item-rectangle/info-rectangle/info-rectangle.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { CellCaptionPipe } from './board/cell-caption.pipe';
     LoaderComponent,
     AddGameComponent,
     ItemRectangleComponent,
+    InfoRectangleComponent,
     BoardComponent,
     CellCaptionPipe
   ],

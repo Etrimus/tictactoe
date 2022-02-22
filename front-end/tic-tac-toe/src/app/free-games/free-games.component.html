@@ -4,6 +4,6 @@
     </ng-container>
     <t-add-game (AddGameEvent)="addGameButtonClick()"></t-add-game>
     <ng-template #no_games>
-        No games
+        <t-info-rectangle Text="Нет свободных игр"></t-info-rectangle>
     </ng-template>
 </span>

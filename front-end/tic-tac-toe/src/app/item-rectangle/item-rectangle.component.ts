@@ -16,6 +16,6 @@ export class ItemRectangleComponent {
         value.forEach(node => this.viewContainer.element.nativeElement.shadowRoot.appendChild(node));
     }
 
-    constructor(private viewContainer: ViewContainerRef) { }
+    constructor(protected viewContainer: ViewContainerRef) { }
 
 }

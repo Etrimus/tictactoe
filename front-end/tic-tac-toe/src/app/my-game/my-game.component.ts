@@ -42,19 +42,19 @@ export class MyGameComponent {
             this.Note = `Победитель ${this.cellCaptionPipe.transform(this.Game.board.winner)}`;
             this.IsBoardInteractive = false;
         } else {
-            const playerCellType = value.crossPlayerId === this.userService.GetUserId()
-                ? CellType.Cross
-                : value.zeroPlayerId == this.userService.GetUserId()
-                    ? CellType.Zero
-                    : CellType.None;
+            const playerCellTypes: CellType[] = [];
+            if (value.crossPlayerId == this.userService.GetUserId()) {
+                playerCellTypes.push(CellType.Cross)
+            }
+            if (value.zeroPlayerId == this.userService.GetUserId()) {
+                playerCellTypes.push(CellType.Zero)
+            }
 
             if (this.Game.board.nextTurn === CellType.None) {
                 this.Note = "Ничья.";
                 this.IsBoardInteractive = false;
             } else {
-                this.Note = this.Game.board.nextTurn === playerCellType
-                    ? `Ваш ход! ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`
-                    : `Ход оппонента. ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`
+                this.Note = `${playerCellTypes.includes(this.Game.board.nextTurn) ? 'Ваш ход' : 'Ход оппонента'} ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`;
             }
         }
     }

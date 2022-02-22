@@ -3,6 +3,6 @@
         <t-my-game-wrap *ngFor="let game of Games" [Game]="game"></t-my-game-wrap>
     </ng-container>
     <ng-template #no_games>
-        No games
+        <t-info-rectangle Text="Нет игр"></t-info-rectangle>
     </ng-template>
 </span>
