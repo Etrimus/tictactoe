@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from "@angular/core";
-import { Board, Cell } from "../generated/dto";
+import { Board, Cell, CellType } from "../generated/dto";
 
 @Component({
     selector: 't-board',
@@ -16,7 +16,7 @@ export class BoardComponent {
     @Output() CellClickedEvent = new EventEmitter<Cell>();
 
     public CellClicked(cell: Cell) {
-        if (this.IsInteractive) {
+        if (this.IsInteractive && cell.state === CellType.None) {
             this.CellClickedEvent.emit(cell);
         }
     }

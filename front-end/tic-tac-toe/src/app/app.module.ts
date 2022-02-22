@@ -15,8 +15,9 @@ import { MyGameComponent } from './my-game/my-game.component';
 import { MyGameWrapComponent } from './my-game-wrap/my-game-wrap.component';
 import { BoardComponent } from './board/board.component';
 import { ItemRectangleComponent } from './item-rectangle/item-rectangle.component';
-import { CellCaptionPipe } from './board/cell-caption.pipe';
+import { CellCaptionPipe } from './cell/cell-caption.pipe';
 import { InfoRectangleComponent } from './item-rectangle/info-rectangle/info-rectangle.component';
+import { CellComponent } from './cell/cell.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { InfoRectangleComponent } from './item-rectangle/info-rectangle/info-rec
     ItemRectangleComponent,
     InfoRectangleComponent,
     BoardComponent,
+    CellComponent,
     CellCaptionPipe
   ],
   imports: [

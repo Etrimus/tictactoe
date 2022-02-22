@@ -4,10 +4,15 @@
     gap: 1px;
 
     padding: 1px;
+
+    background-color: #c7c7c7;
+}
+
+.grid-container.enabled {
     background-color: #666666;
 }
 
-.grid-container div {
+t-cell {
     background-color: #f9f9f9;
 
     cursor: default;
@@ -15,7 +20,13 @@
     margin: auto;
     text-align: center;
 
+    color: #b8b8b8;
+
     --size: 20px;
     width: var(--size);
     height: var(--size);
+}
+
+t-cell.enabled {
+    color: black;
 }

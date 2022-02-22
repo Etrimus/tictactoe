@@ -6,8 +6,7 @@ using TicTacToe.Web.Error;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddCors(setup => setup.AddDefaultPolicy(builder => builder.AllowAnyOrigin()))
-    .AddAuthentication();
+    .AddCors(setup => setup.AddDefaultPolicy(corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()));
 
 builder.Services
     .AddDal()
@@ -15,15 +14,11 @@ builder.Services
 
 builder.Services
     .AddControllers()
-    .AddJsonOptions(opt =>
-    {
-        opt.JsonSerializerOptions.PropertyNamingPolicy = null;
-    });
-;
+    .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
 var app = builder.Build();
 
-app.UseExceptionHandler(builder => { builder.Run(ExceptionHandler.HandleAsync); });
+app.UseExceptionHandler(applicationBuilder => { applicationBuilder.Run(ExceptionHandler.HandleAsync); });
 
 app.Services.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
 //var executionPlan = app.Services.GetRequiredService<IMapper>().ConfigurationProvider.BuildExecutionPlan(typeof(ProfileEntry), typeof(ProfileModel));
@@ -31,7 +26,7 @@ app.Services.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigura
 app
     .UseHttpsRedirection()
     .UseRouting()
-    .UseCors(builder => builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+    .UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
 app.MapControllers();
 

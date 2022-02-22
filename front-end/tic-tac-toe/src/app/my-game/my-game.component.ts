@@ -1,6 +1,6 @@
 import { Component, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
 import { finalize } from "rxjs/operators";
-import { CellCaptionPipe } from "../board/cell-caption.pipe";
+import { CellCaptionPipe } from "../cell/cell-caption.pipe";
 import { ErrorService } from "../errors/error.service";
 import { GameService } from "../game.service";
 import { GameClient } from "../generated/clients";

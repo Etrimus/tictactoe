@@ -1,11 +1,4 @@
-<div class="grid-container">
-    <div (click)="this.CellClicked(Board.cells[0])">{{Board.cells[0] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[1])">{{Board.cells[1] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[2])">{{Board.cells[2] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[3])">{{Board.cells[3] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[4])">{{Board.cells[4] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[5])">{{Board.cells[5] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[6])">{{Board.cells[6] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[7])">{{Board.cells[7] | cellCaption}}</div>
-    <div (click)="this.CellClicked(Board.cells[8])">{{Board.cells[8] | cellCaption}}</div>
+<div class="grid-container" [class]="{enabled: IsInteractive}">
+    <t-cell *ngFor="let cell of Board.cells" [Cell]="cell" [NextTurn]="Board.nextTurn" [IsEnabled]="IsInteractive"
+        [class]="{enabled: IsInteractive}" (ClickedEvent)="this.CellClicked($event)"></t-cell>
 </div>
