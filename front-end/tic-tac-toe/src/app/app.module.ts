@@ -42,7 +42,7 @@ import { CellComponent } from './cell/cell.component';
     AppRoutingModule
   ],
   providers: [
-    { provide: BASE_API_URL, useValue: 'https://localhost:5001' },
+    { provide: BASE_API_URL, useValue: 'http://localhost:5000' },
     CellCaptionPipe
   ],
   bootstrap: [AppComponent]

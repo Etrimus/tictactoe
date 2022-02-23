@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "serve": "ng serve --configuration development",
-    "prod": "ng build --configuration production --progress"
+    "build": "ng build --configuration development"
   },
   "private": true,
   "dependencies": {

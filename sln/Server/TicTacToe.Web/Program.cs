@@ -24,7 +24,7 @@ app.Services.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigura
 //var executionPlan = app.Services.GetRequiredService<IMapper>().ConfigurationProvider.BuildExecutionPlan(typeof(ProfileEntry), typeof(ProfileModel));
 
 app
-    .UseHttpsRedirection()
+    //.UseHttpsRedirection()
     .UseRouting()
     .UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
