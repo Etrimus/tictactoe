@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using TicTacToe.App.Game;
 using TicTacToe.Core;
 
-namespace TicTacToe.Web;
+namespace TicTacToe.Web.Game;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController: ControllerBase
+public class GameController : ControllerBase
 {
     private readonly GameService _gameService;
+    private readonly IHubContext<GameHub> _hubContext;
 
-    public GameController(GameService gameService)
+    public GameController(GameService gameService, IHubContext<GameHub> hubContext)
     {
         _gameService = gameService;
+        _hubContext = hubContext;
     }
 
     //[HttpGet("all")]
@@ -64,8 +67,9 @@ public class GameController: ControllerBase
     }
 
     [HttpPut("{id:guid}/turn")]
-    public Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort? cellNumber)
+    public async Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort? cellNumber)
     {
-        return _gameService.MakeTurnAsync(id, playerId, cellNumber);
+        await _gameService.MakeTurnAsync(id, playerId, cellNumber);
+        await _hubContext.Clients.All.SendAsync("turn");
     }
 }

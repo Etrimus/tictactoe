@@ -1,11 +1,12 @@
-import { Component, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
 import { finalize } from "rxjs/operators";
 import { CellCaptionPipe } from "../cell/cell-caption.pipe";
 import { ErrorService } from "../errors/error.service";
 import { GameService } from "../game.service";
-import { GameClient } from "../generated/clients";
+import { GameClient, BASE_API_URL } from "../generated/clients";
 import { Cell, CellType, GameModel } from "../generated/dto";
 import { UserService } from "../user.service";
+import * as signalR from "@microsoft/signalr";
 
 @Component({
     selector: 't-my-game',
@@ -15,6 +16,7 @@ import { UserService } from "../user.service";
 })
 export class MyGameComponent {
 
+    private _baseApiUrl: string;
     private _game: GameModel;
 
     constructor(
@@ -23,8 +25,11 @@ export class MyGameComponent {
         private gameService: GameService,
         private cellCaptionPipe: CellCaptionPipe,
         private errorService: ErrorService,
+        @Inject(BASE_API_URL) baseApiUrl: string,
         private viewContainer: ViewContainerRef
-    ) { }
+    ) {
+        this._baseApiUrl = baseApiUrl;
+    }
 
     StyleSheets: Node[];
     IsLoading = false;
@@ -36,6 +41,9 @@ export class MyGameComponent {
     }
 
     @Input() set Game(value: GameModel) {
+
+        //todo Отписаться от Хаба перед заменой игры.
+
         this._game = value;
 
         if (this.Game.board.winner !== CellType.None) {
@@ -55,6 +63,18 @@ export class MyGameComponent {
                 this.IsBoardInteractive = false;
             } else {
                 this.Note = `${playerCellTypes.includes(this.Game.board.nextTurn) ? 'Ваш ход' : 'Ход оппонента'} ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`;
+
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl(`${this._baseApiUrl}/game-hub`)
+                    .build();
+
+                connection.on('turn', () => {
+                    this.updateGame();
+                });
+
+                connection.start().catch(err => {
+                    debugger;
+                });
             }
         }
     }

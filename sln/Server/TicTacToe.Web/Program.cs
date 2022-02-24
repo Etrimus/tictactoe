@@ -1,13 +1,17 @@
 using AutoMapper;
 using TicTacToe.App;
 using TicTacToe.Dal;
-using TicTacToe.Web;
 using TicTacToe.Web.Error;
+using TicTacToe.Web.Game;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddCors(setup => setup.AddDefaultPolicy(corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()))
+    .AddCors(setup => setup.AddDefaultPolicy(corsPolicyBuilder => corsPolicyBuilder
+        // .AllowAnyOrigin()
+        .WithOrigins("http://localhost:4200").AllowCredentials()
+        .AllowAnyMethod()
+        .AllowAnyHeader()))
     .AddSignalR();
 
 builder.Services
@@ -27,7 +31,7 @@ app.Services.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigura
 
 app
     //.UseHttpsRedirection()
-    .UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin())
+    .UseCors()
     .UseRouting()
     .UseEndpoints(endpoints => { endpoints.MapHub<GameHub>("/game-hub"); });
 

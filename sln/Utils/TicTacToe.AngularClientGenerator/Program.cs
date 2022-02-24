@@ -4,6 +4,7 @@ using NSwag;
 using NSwag.CodeGeneration.TypeScript;
 using NSwag.Generation.WebApi;
 using TicTacToe.Web;
+using TicTacToe.Web.Game;
 
 namespace TicTacToe.AngularClientGenerator;
 
