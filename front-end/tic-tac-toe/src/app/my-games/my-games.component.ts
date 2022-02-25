@@ -31,7 +31,7 @@ export class MyGamesComponent {
         this.gameClient.getByPlayerId(this.userService.GetUserId()).subscribe(games => {
             this.Games = games;
             this.IsAnyGames = games.length > 0;
-        });
+        }, error => alert(error));
     }
 
     private handleError(error: any) {

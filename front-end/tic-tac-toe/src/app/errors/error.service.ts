@@ -6,6 +6,8 @@ import { Injectable } from "@angular/core";
 export class ErrorService {
 
     public Parse(error: any): string {
-        return JSON.parse(error.response).message;
+        return error.response
+            ? JSON.parse(error.response).message
+            : error;
     }
 }

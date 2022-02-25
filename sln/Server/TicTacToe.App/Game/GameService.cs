@@ -118,6 +118,11 @@ namespace TicTacToe.App.Game
 
             var game = await GetAsync(gameId, true);
 
+            if (game == null)
+            {
+                throw new TicTacToeException($"Игра с указанным {nameof(gameId)} не существует.");
+            }
+
             if (game.Board.Winner != CellType.None)
             {
                 throw new TicTacToeException("Игра уже закончилась.");

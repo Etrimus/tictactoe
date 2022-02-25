@@ -7,7 +7,7 @@ namespace TicTacToe.Web.Game;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController : ControllerBase
+public class GameController: ControllerBase
 {
     private readonly GameService _gameService;
     private readonly IHubContext<GameHub> _hubContext;
@@ -70,6 +70,6 @@ public class GameController : ControllerBase
     public async Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort? cellNumber)
     {
         await _gameService.MakeTurnAsync(id, playerId, cellNumber);
-        await _hubContext.Clients.All.SendAsync("turn");
+        await _hubContext.Clients.All.SendAsync("turn", id);
     }
 }

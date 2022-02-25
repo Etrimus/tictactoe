@@ -41,40 +41,26 @@ export class MyGameComponent {
     }
 
     @Input() set Game(value: GameModel) {
-
-        //todo Отписаться от Хаба перед заменой игры.
-
         this._game = value;
 
+        const playerCellTypes: CellType[] = [];
+        if (value.crossPlayerId == this.userService.GetUserId()) {
+            playerCellTypes.push(CellType.Cross)
+        }
+        if (value.zeroPlayerId == this.userService.GetUserId()) {
+            playerCellTypes.push(CellType.Zero)
+        }
+
         if (this.Game.board.winner !== CellType.None) {
-            this.Note = `Победитель ${this.cellCaptionPipe.transform(this.Game.board.winner)}`;
+            this.Note = playerCellTypes.includes(this.Game.board.winner) ? 'Вы победили' : `Победил оппонент ${this.cellCaptionPipe.transform(this.Game.board.winner)}`;
             this.IsBoardInteractive = false;
         } else {
-            const playerCellTypes: CellType[] = [];
-            if (value.crossPlayerId == this.userService.GetUserId()) {
-                playerCellTypes.push(CellType.Cross)
-            }
-            if (value.zeroPlayerId == this.userService.GetUserId()) {
-                playerCellTypes.push(CellType.Zero)
-            }
-
             if (this.Game.board.nextTurn === CellType.None) {
                 this.Note = "Ничья.";
                 this.IsBoardInteractive = false;
             } else {
                 this.Note = `${playerCellTypes.includes(this.Game.board.nextTurn) ? 'Ваш ход' : 'Ход оппонента'} ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`;
-
-                const connection = new signalR.HubConnectionBuilder()
-                    .withUrl(`${this._baseApiUrl}/game-hub`)
-                    .build();
-
-                connection.on('turn', () => {
-                    this.updateGame();
-                });
-
-                connection.start().catch(err => {
-                    debugger;
-                });
+                this.setupSignalRConnection();
             }
         }
     }
@@ -85,7 +71,9 @@ export class MyGameComponent {
 
     public cellClicked(cell: Cell) {
         this.gameClient.turn(this.Game.id, this.userService.GetUserId(), cell.number)
-            .pipe(finalize(() => this.updateGame()))
+            .pipe(finalize(() => {
+                this.updateGame();
+            }))
             .subscribe(() => { }, error => this.handleError(error));
     }
 
@@ -93,8 +81,35 @@ export class MyGameComponent {
         this.IsLoading = true;
 
         this.gameClient.get(this.Game.id)
-            .pipe(finalize(() => this.IsLoading = false))
+            .pipe(finalize(() => {
+                this.IsLoading = false;
+            }))
             .subscribe(game => this.Game = game, error => this.handleError(error));
+    }
+
+    private async setupSignalRConnection(): Promise<void> {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl(`${this._baseApiUrl}/game-hub`)
+            .withAutomaticReconnect()
+            .build();
+
+        connection.onreconnecting(err => {
+            this.IsBoardInteractive = false;
+        });
+
+        connection.onreconnected(err => {
+            this.IsBoardInteractive = true;
+        });
+
+        connection.on('turn', (gameId) => {
+            this.updateGame();
+        });
+
+        try {
+            return await connection.start();
+        } catch (err) {
+            alert(`WebSocket connection.start error: ${err}`);
+        }
     }
 
     private handleError(error: any) {

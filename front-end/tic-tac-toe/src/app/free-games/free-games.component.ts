@@ -39,7 +39,7 @@ export class FreeGamesComponent {
         this.gameClient.getFree().subscribe(games => {
             this.Games = games;
             this.IsAnyGames = this.Games && this.Games.length > 0;
-        });
+        }, error => this.handleError(error));
     }
 
     private handleError(error: any) {
