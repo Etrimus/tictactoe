@@ -43,6 +43,7 @@ import { CellComponent } from './cell/cell.component';
   ],
   providers: [
     { provide: BASE_API_URL, useValue: 'http://localhost:5000' },
+    // { provide: BASE_API_URL, useValue: 'http://192.168.3.43:3000' },
     CellCaptionPipe
   ],
   bootstrap: [AppComponent]
