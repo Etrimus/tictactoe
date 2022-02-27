@@ -7,12 +7,12 @@ namespace TicTacToe.Web.Game;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController: ControllerBase
+public class GameController : ControllerBase
 {
     private readonly GameService _gameService;
-    private readonly IHubContext<GameHub> _hubContext;
+    private readonly IHubContext<GameHub, IGameHubClient> _hubContext;
 
-    public GameController(GameService gameService, IHubContext<GameHub> hubContext)
+    public GameController(GameService gameService, IHubContext<GameHub, IGameHubClient> hubContext)
     {
         _gameService = gameService;
         _hubContext = hubContext;
@@ -49,27 +49,31 @@ public class GameController: ControllerBase
     }
 
     [HttpPost]
-    public Task<Guid> Add()
+    public async Task<Guid> Add()
     {
-        return _gameService.CreateNewAsync().ContinueWith(x => x.Result.Id);
+        var result = await _gameService.CreateNewAsync();
+        await _hubContext.Clients.All.GameAdded(result.Id);
+        return result.Id;
     }
 
     [HttpPut("{id:guid}/crossPlayer")]
-    public Task SetCrossPlayer([FromRoute] Guid id, [FromForm] Guid playerId)
+    public async Task SetCrossPlayer([FromRoute] Guid id, [FromForm] Guid playerId)
     {
-        return _gameService.SetPlayerAsync(id, playerId, CellType.Cross);
+        await _gameService.SetPlayerAsync(id, playerId, CellType.Cross);
+        await _hubContext.Clients.All.GameUpdated(id);
     }
 
     [HttpPut("{id:guid}/zeroPlayer")]
-    public Task SetZeroPlayer([FromRoute] Guid id, [FromForm] Guid playerId)
+    public async Task SetZeroPlayer([FromRoute] Guid id, [FromForm] Guid playerId)
     {
-        return _gameService.SetPlayerAsync(id, playerId, CellType.Zero);
+        await _gameService.SetPlayerAsync(id, playerId, CellType.Zero);
+        await _hubContext.Clients.All.GameUpdated(id);
     }
 
     [HttpPut("{id:guid}/turn")]
     public async Task Turn([FromRoute] Guid id, [FromForm] Guid playerId, [FromForm] ushort? cellNumber)
     {
         await _gameService.MakeTurnAsync(id, playerId, cellNumber);
-        await _hubContext.Clients.All.SendAsync("turn", id);
+        await _hubContext.Clients.All.GameUpdated(id);
     }
 }

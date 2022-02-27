@@ -2,15 +2,17 @@ import { Injectable } from "@angular/core";
 import { from, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { CommonService } from "./common.service";
+import { GameState } from "./game-state";
 import { GameClient } from "./generated/clients";
-import { GameModel } from "./generated/dto";
+import { CellType, GameModel } from "./generated/dto";
+import { UserService } from "./user.service";
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameService {
 
-    constructor(private gameClient: GameClient, private commonService: CommonService) { }
+    constructor(private gameClient: GameClient, private commonService: CommonService, private userService: UserService) { }
 
     private myGamesStorageKey = 'my_games';
     private myGamesStorageValueSeparator = ';'
@@ -46,6 +48,27 @@ export class GameService {
         return this.gameClient.setZeroPlayer(gameId, playerId).pipe(
             tap({ complete: () => this.addMyGame(gameId) })
         );
+    }
+
+    public GetState(game: GameModel): GameState {
+        const playerCellTypes: CellType[] = [];
+
+        if (game.crossPlayerId == this.userService.GetUserId()) {
+            playerCellTypes.push(CellType.Cross)
+        }
+        if (game.zeroPlayerId == this.userService.GetUserId()) {
+            playerCellTypes.push(CellType.Zero)
+        }
+
+        if (game.board.winner !== CellType.None) {
+            return playerCellTypes.includes(game.board.winner) ? GameState.YouWin : GameState.YouLose;
+        } else {
+            if (game.board.nextTurn === CellType.None) {
+                return GameState.Draw;
+            } else {
+                return playerCellTypes.includes(game.board.nextTurn) ? GameState.YourTurn : GameState.OpponentTurn;
+            }
+        }
     }
 
     private addMyGame(gameId: string): void {

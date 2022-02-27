@@ -1,12 +1,12 @@
 import { Component, Inject, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
 import { finalize } from "rxjs/operators";
-import { CellCaptionPipe } from "../cell/cell-caption.pipe";
 import { ErrorService } from "../errors/error.service";
 import { GameService } from "../game.service";
 import { GameClient, BASE_API_URL } from "../generated/clients";
-import { Cell, CellType, GameModel } from "../generated/dto";
+import { Cell, GameModel } from "../generated/dto";
 import { UserService } from "../user.service";
 import * as signalR from "@microsoft/signalr";
+import { GameState } from "../game-state";
 
 @Component({
     selector: 't-my-game',
@@ -17,13 +17,13 @@ import * as signalR from "@microsoft/signalr";
 export class MyGameComponent {
 
     private _baseApiUrl: string;
+    private _hubConnection: signalR.HubConnection;
     private _game: GameModel;
 
     constructor(
         private userService: UserService,
         private gameClient: GameClient,
         private gameService: GameService,
-        private cellCaptionPipe: CellCaptionPipe,
         private errorService: ErrorService,
         @Inject(BASE_API_URL) baseApiUrl: string,
         private viewContainer: ViewContainerRef
@@ -41,39 +41,49 @@ export class MyGameComponent {
     }
 
     @Input() set Game(value: GameModel) {
+
         this._game = value;
 
-        const playerCellTypes: CellType[] = [];
-        if (value.crossPlayerId == this.userService.GetUserId()) {
-            playerCellTypes.push(CellType.Cross)
-        }
-        if (value.zeroPlayerId == this.userService.GetUserId()) {
-            playerCellTypes.push(CellType.Zero)
-        }
+        const gameState = this.gameService.GetState(value);
 
-        if (this.Game.board.winner !== CellType.None) {
-            this.Note = playerCellTypes.includes(this.Game.board.winner) ? 'Вы победили' : `Победил оппонент ${this.cellCaptionPipe.transform(this.Game.board.winner)}`;
-            this.IsBoardInteractive = false;
-        } else {
-            if (this.Game.board.nextTurn === CellType.None) {
-                this.Note = "Ничья.";
+        switch (gameState) {
+            case GameState.YouWin:
+                this.Note = 'Вы победили';
                 this.IsBoardInteractive = false;
-            } else {
-                this.Note = `${playerCellTypes.includes(this.Game.board.nextTurn) ? 'Ваш ход' : 'Ход оппонента'} ${this.cellCaptionPipe.transform(this.Game.board.nextTurn)}`;
-                this.setupSignalRConnection();
-            }
+                break;
+            case GameState.YouLose:
+                this.Note = 'Вы проиграли';
+                this.IsBoardInteractive = false;
+                break;
+            case GameState.Draw:
+                this.Note = 'Ничья';
+                this.IsBoardInteractive = false;
+                break;
+            case GameState.YourTurn:
+                this.Note = 'Ваш ход';
+                this.IsBoardInteractive = true;
+                break;
+            case GameState.OpponentTurn:
+                this.Note = 'Ход оппонента';
+                this.IsBoardInteractive = false;
+                break;
         }
     }
 
     public ngOnInit() {
         this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
+        this.setupSignalRConnection();
+    }
+
+    public async ngOnDestroy() {
+        await this.stopSignalRConnection();
     }
 
     public cellClicked(cell: Cell) {
         this.gameClient.turn(this.Game.id, this.userService.GetUserId(), cell.number)
-            .pipe(finalize(() => {
-                this.updateGame();
-            }))
+            // .pipe(finalize(() => {
+            //     this.updateGame();
+            // }))
             .subscribe(() => { }, error => this.handleError(error));
     }
 
@@ -88,28 +98,34 @@ export class MyGameComponent {
     }
 
     private async setupSignalRConnection(): Promise<void> {
-        const connection = new signalR.HubConnectionBuilder()
+        this._hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(`${this._baseApiUrl}/game-hub`)
             .withAutomaticReconnect()
             .build();
 
-        connection.onreconnecting(err => {
+        this._hubConnection.onreconnecting(err => {
             this.IsBoardInteractive = false;
         });
 
-        connection.onreconnected(err => {
+        this._hubConnection.onreconnected(err => {
             this.IsBoardInteractive = true;
         });
 
-        connection.on('turn', (gameId) => {
-            this.updateGame();
+        this._hubConnection.on('game-updated', (gameId) => {
+            if (this._game.id === gameId) {
+                this.updateGame();
+            }
         });
 
         try {
-            return await connection.start();
+            return await this._hubConnection.start();
         } catch (err) {
             alert(`WebSocket connection.start error: ${err}`);
         }
+    }
+
+    private stopSignalRConnection(): Promise<void> {
+        return this._hubConnection.stop();
     }
 
     private handleError(error: any) {

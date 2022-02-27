@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
 import { GameService } from '../game.service';
-import { GameClient } from '../generated/clients';
+import { BASE_API_URL, GameClient } from '../generated/clients';
 import { GameModel } from '../generated/dto';
+import * as signalR from "@microsoft/signalr";
 
 @Component({
     selector: 't-free-games',
@@ -13,25 +14,61 @@ import { GameModel } from '../generated/dto';
 })
 export class FreeGamesComponent {
 
-    IsLoading = false;
+    private _hubConnection: signalR.HubConnection;
+    private _baseApiUrl: string;
+
+    public IsLoading = false;
     public Games: GameModel[] = [];
     public IsAnyGames = true;
 
     constructor(
         private errorService: ErrorService,
         private gameClient: GameClient,
-        private gameService: GameService
-    ) { }
+        private gameService: GameService,
+        @Inject(BASE_API_URL) baseApiUrl: string,
+    ) {
+        this._baseApiUrl = baseApiUrl;
+    }
 
-    ngOnInit() {
+    public async ngOnInit() {
         this.updateGames();
+        await this.setupSignalRConnection();
+    }
+
+    public async ngOnDestroy() {
+        await this.stopSignalRConnection();
     }
 
     public addGameButtonClick() {
         this.IsLoading = true;
         this.gameService.Add()
-            .pipe(finalize(() => this.updateGames()))
+            // .pipe(finalize(() => this.updateGames()))
             .subscribe(_ => { }, error => this.handleError(error));
+    }
+
+    private async setupSignalRConnection(): Promise<void> {
+        this._hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl(`${this._baseApiUrl}/game-hub`)
+            .withAutomaticReconnect()
+            .build();
+
+        this._hubConnection.onreconnecting(err => { });
+
+        this._hubConnection.onreconnected(err => { });
+
+        this._hubConnection.on('game-added', (gameId) => {
+            this.updateGames();
+        });
+
+        try {
+            return await this._hubConnection.start();
+        } catch (err) {
+            alert(`WebSocket connection.start error: ${err}`);
+        }
+    }
+
+    private stopSignalRConnection(): Promise<void> {
+        return this._hubConnection.stop();
     }
 
     private updateGames() {
