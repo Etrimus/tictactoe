@@ -1,4 +1,9 @@
-<div class="player player-{{cellType}}">
-    <ng-container *ngIf="playerId else join">{{playerName}}</ng-container>
-    <ng-template #join><input type="button" value="{{joinText}}" (click)="joinButtonClick()"></ng-template>
+<div class="player">
+    <div class="cellType cellType-{{cellType}}"></div>
+    <ng-container *ngIf="playerId else join">
+        <span class="playerName">{{playerName}}</span>
+    </ng-container>
+    <ng-template #join>
+        <input type="button" value="{{joinText}}" (click)="joinButtonClick()">
+    </ng-template>
 </div>

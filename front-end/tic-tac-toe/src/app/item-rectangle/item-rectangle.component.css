@@ -2,12 +2,15 @@
     --content-width: 250px;
     --content-height: 65px;
     --content-padding: 10px;
+
+    box-sizing: border-box;
 }
 
 .item-rectangle-container {
     display: flex;
     height: calc(var(--content-height) + var(--content-padding) * 2);
     margin: 5px;
+    max-width: 100%;
 }
 
 @media (min-width: 900px) {

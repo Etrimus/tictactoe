@@ -7,7 +7,6 @@
 }
 
 .players {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    display: grid;
+    width: 100%;
 }

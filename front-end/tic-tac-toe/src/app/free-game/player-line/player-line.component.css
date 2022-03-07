@@ -1,9 +1,14 @@
+* {
+    --same-padding-left: 5px;
+}
+
 .player {
     display: flex;
     align-items: center;
+    height: 100%;
 }
 
-.player::before {
+.cellType {
     --size: 18px;
     margin-right: 5px;
     vertical-align: middle;
@@ -14,11 +19,31 @@
     display: inline-block;
 }
 
-.player-1::before {
+.cellType-1 {
     background-position: -2px -2px;
 }
 
-.player-2::before {
+.cellType-2 {
     --background-position: -23px;
     background-position: var(--background-position) var(--background-position);
+}
+
+input[type=button] {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
+    cursor: pointer;
+    user-select: none;
+    text-align: left;
+    padding-left: var(--same-padding-left);
+}
+
+input[type=button]:hover {
+    background-color: rgba(0, 0, 0, 0.030);
+}
+
+.playerName {
+    padding-left: var(--same-padding-left);
 }
