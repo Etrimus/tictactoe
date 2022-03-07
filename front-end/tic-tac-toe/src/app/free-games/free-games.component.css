@@ -1,4 +1,10 @@
 .container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+@media (min-width: 900px) {
+    .container {
+        flex-direction: row;
+    }
 }

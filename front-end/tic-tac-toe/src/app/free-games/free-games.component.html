@@ -1,8 +1,8 @@
 <span class="container">
+    <t-add-game (AddGameEvent)="addGameButtonClick()"></t-add-game>
     <ng-container *ngIf="IsAnyGames else no_games">
         <t-free-game *ngFor="let game of Games" [Game]="game"></t-free-game>
     </ng-container>
-    <t-add-game (AddGameEvent)="addGameButtonClick()"></t-add-game>
     <ng-template #no_games>
         <t-info-rectangle Text="Нет свободных игр"></t-info-rectangle>
     </ng-template>

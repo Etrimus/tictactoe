@@ -5,10 +5,15 @@
 }
 
 .item-rectangle-container {
-    display: inline-flex;
-    width: var(--content-width);
+    display: flex;
     height: calc(var(--content-height) + var(--content-padding) * 2);
     margin: 5px;
+}
+
+@media (min-width: 900px) {
+    .item-rectangle-container {
+        min-width: var(--content-width);
+    }
 }
 
 .item-rectangle-content {
