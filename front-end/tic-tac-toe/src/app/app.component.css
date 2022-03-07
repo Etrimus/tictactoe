@@ -1,18 +1,8 @@
-:root {
-    --media-min-width: 1200px;
-}
-
 nav {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     background-color: #f9f9f9;
-}
-
-@media (min-width: 900px) {
-    nav {
-        flex-direction: row;
-    }
 }
 
 a {
@@ -26,6 +16,10 @@ a {
 }
 
 @media (min-width: 900px) {
+    nav {
+        flex-direction: row;
+    }
+
     a {
         width: 150px;
     }
