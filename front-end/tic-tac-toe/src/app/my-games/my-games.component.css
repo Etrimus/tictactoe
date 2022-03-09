@@ -1,6 +1,11 @@
 .container {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
+}
+
+.container * {
+    max-width: 100%;
 }
 
 @media (min-width: 900px) {
