@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Cell, CellType } from "../generated/dto";
 import { CellCaptionPipe } from "./cell-caption.pipe";
 
 @Component({
     selector: 't-cell',
     templateUrl: './cell.component.html',
-    styleUrls: ['./cell.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./cell.component.css']
 })
 export class CellComponent {
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { finalize } from 'rxjs/operators';
 import { ErrorService } from '../errors/error.service';
@@ -10,8 +10,7 @@ import { UserService } from '../user.service';
 @Component({
     selector: 't-free-game',
     templateUrl: './free-game.component.html',
-    styleUrls: ['./free-game.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./free-game.component.css']
 })
 export class FreeGameComponent {
 
@@ -32,14 +31,12 @@ export class FreeGameComponent {
         private gameClient: GameClient,
         private gameService: GameService,
         private errorService: ErrorService,
-        @Inject(BASE_API_URL) baseApiUrl: string,
-        private viewContainer: ViewContainerRef
+        @Inject(BASE_API_URL) baseApiUrl: string
     ) {
         this._baseApiUrl = baseApiUrl;
     }
 
     public ngOnInit() {
-        this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
         this.setupSignalRConnection();
     }
 

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, Input } from "@angular/core";
 import { finalize } from "rxjs/operators";
 import { ErrorService } from "../errors/error.service";
 import { GameService } from "../game.service";
@@ -11,8 +11,7 @@ import { GameState } from "../game-state";
 @Component({
     selector: 't-my-game',
     templateUrl: './my-game.component.html',
-    styleUrls: ['./my-game.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./my-game.component.css']
 })
 export class MyGameComponent {
 
@@ -25,8 +24,7 @@ export class MyGameComponent {
         private gameClient: GameClient,
         private gameService: GameService,
         private errorService: ErrorService,
-        @Inject(BASE_API_URL) baseApiUrl: string,
-        private viewContainer: ViewContainerRef
+        @Inject(BASE_API_URL) baseApiUrl: string
     ) {
         this._baseApiUrl = baseApiUrl;
     }
@@ -71,7 +69,6 @@ export class MyGameComponent {
     }
 
     public ngOnInit() {
-        this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
         this.setupSignalRConnection();
     }
 

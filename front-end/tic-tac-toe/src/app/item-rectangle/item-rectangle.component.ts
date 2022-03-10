@@ -1,21 +1,12 @@
-import { Component, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
     selector: 't-item-rectangle',
     templateUrl: './item-rectangle.component.html',
-    styleUrls: ['./item-rectangle.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./item-rectangle.component.css']
 })
 export class ItemRectangleComponent {
 
     @Input()
     IsLoading = false;
-
-    @Input()
-    set StyleNodes(value: Node[]) {
-        value.forEach(node => this.viewContainer.element.nativeElement.shadowRoot.appendChild(node));
-    }
-
-    constructor(protected viewContainer: ViewContainerRef) { }
-
 }

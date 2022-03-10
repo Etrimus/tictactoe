@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Board, Cell, CellType } from "../generated/dto";
 
 @Component({
     selector: 't-board',
     templateUrl: './board.component.html',
-    styleUrls: ['./board.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./board.component.css']
 })
 export class BoardComponent {
     constructor() { }

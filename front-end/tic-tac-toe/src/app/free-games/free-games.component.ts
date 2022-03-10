@@ -1,5 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { finalize } from 'rxjs/operators';
+import { Component, Inject } from '@angular/core';
 import { ErrorService } from '../errors/error.service';
 import { GameService } from '../game.service';
 import { BASE_API_URL, GameClient } from '../generated/clients';
@@ -9,8 +8,7 @@ import * as signalR from "@microsoft/signalr";
 @Component({
     selector: 't-free-games',
     templateUrl: './free-games.component.html',
-    styleUrls: ['./free-games.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./free-games.component.css']
 })
 export class FreeGamesComponent {
 

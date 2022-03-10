@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CellType } from 'src/app/generated/dto';
 import { UserService } from 'src/app/user.service';
 
 @Component({
     selector: 't-player-line',
     templateUrl: './player-line.component.html',
-    styleUrls: ['./player-line.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./player-line.component.css']
 })
 export class PlayerLineComponent {
 

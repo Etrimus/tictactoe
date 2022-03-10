@@ -1,19 +1,14 @@
-import { Component, Input, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { GameModel } from "../generated/dto";
 
 @Component({
     selector: 't-my-game-wrap',
     templateUrl: './my-game-wrap.component.html',
-    styleUrls: ['./my-game-wrap.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./my-game-wrap.component.css']
 })
 export class MyGameWrapComponent {
 
     private _game: GameModel;
-
-    constructor(
-        private viewContainer: ViewContainerRef
-    ) { }
 
     StyleSheets: Node[];
     IsGameIsFree = false;
@@ -26,10 +21,6 @@ export class MyGameWrapComponent {
         this.IsGameIsFree = !value.crossPlayerId || !value.zeroPlayerId;
 
         this._game = value;
-    }
-
-    public ngOnInit() {
-        this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
     }
 
     public GameChanged(value: GameModel) {

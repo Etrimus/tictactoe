@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Output, ViewContainerRef, ViewEncapsulation } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
     selector: 't-add-game',
     templateUrl: './add-game.component.html',
-    styleUrls: ['./add-game.component.css'],
-    encapsulation: ViewEncapsulation.ShadowDom
+    styleUrls: ['./add-game.component.css']
 })
 export class AddGameComponent {
 
@@ -12,12 +11,6 @@ export class AddGameComponent {
     StyleSheets: Node[];
 
     @Output() AddGameEvent = new EventEmitter<any>();
-
-    constructor(private viewContainer: ViewContainerRef) { }
-
-    public ngOnInit() {
-        this.StyleSheets = Array.from(this.viewContainer.element.nativeElement.shadowRoot.querySelectorAll('style'));
-    }
 
     public addGame() {
         this.AddGameEvent.emit();
