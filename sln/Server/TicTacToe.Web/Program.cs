@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddCors(setup => setup.AddDefaultPolicy(corsPolicyBuilder => corsPolicyBuilder
         // .AllowAnyOrigin()
-        .WithOrigins("http://localhost:4200", "http://137.74.150.72")
+        .WithOrigins("http://localhost:4200", "http://137.74.150.72:19883")
         .AllowCredentials()
         .AllowAnyMethod()
         .AllowAnyHeader()))
