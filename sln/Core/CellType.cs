@@ -1,9 +1,8 @@
-﻿namespace TicTacToe.Core
+﻿namespace TicTacToe.Core;
+
+public enum CellType : byte
 {
-    public enum CellType : byte
-    {
-        None = 0,
-        Zero = 1,
-        Cross = 2
-    }
+    None = 0,
+    Zero = 1,
+    Cross = 2
 }

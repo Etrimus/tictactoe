@@ -1,16 +1,15 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 
-namespace TicTacToe.App
+namespace TicTacToe.App;
+
+internal static class AutoMapperExtensions
 {
-    internal static class AutoMapperExtensions
+    public static IMappingExpression<TSource, TDestination> Ignore<TSource, TDestination, TMember>(
+        this IMappingExpression<TSource, TDestination> expression,
+        Expression<Func<TDestination, TMember>> destinationMember)
     {
-        public static IMappingExpression<TSource, TDestination> Ignore<TSource, TDestination, TMember>(
-            this IMappingExpression<TSource, TDestination> expression,
-            Expression<Func<TDestination, TMember>> destinationMember)
-        {
-            return expression
-                .ForMember(destinationMember, opt => opt.Ignore());
-        }
+        return expression
+            .ForMember(destinationMember, opt => opt.Ignore());
     }
 }

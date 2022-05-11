@@ -1,7 +1,6 @@
-﻿namespace TicTacToe.Web.Error
+﻿namespace TicTacToe.Web.Error;
+
+public class ErrorDto
 {
-    public class ErrorDto
-    {
-        public string Message { get; set; }
-    }
+    public string Message { get; set; }
 }

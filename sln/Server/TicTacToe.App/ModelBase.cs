@@ -1,7 +1,6 @@
-﻿namespace TicTacToe.App
+﻿namespace TicTacToe.App;
+
+public abstract class ModelBase
 {
-    public abstract class ModelBase
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }
