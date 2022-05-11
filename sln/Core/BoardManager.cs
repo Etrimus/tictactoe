@@ -1,6 +1,6 @@
 ﻿using TicTacToe.Core.Models;
 
-namespace TicTacToe.Core.Services;
+namespace TicTacToe.Core;
 
 public class BoardManager
 {

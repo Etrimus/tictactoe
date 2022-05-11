@@ -1,19 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TicTacToe.Core.Services;
-using TicTacToe.Domain;
 
 namespace TicTacToe.Dal;
 
-public class TicTacToeContext : DbContext
+public class TicTacToeContext: DbContext
 {
-    private readonly BoardManager _boardManager = new();
+    //private readonly BoardManager _boardManager = new();
 
     public TicTacToeContext()
     {
         Database.EnsureCreated();
     }
 
-    public DbSet<GameEntity> Game { get; set; }
+    //public DbSet<GameEntity> Game { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder opt)
     {

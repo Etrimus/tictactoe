@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TicTacToe.App.Game;
-using TicTacToe.Core.Services;
+using TicTacToe.Core;
 
 namespace TicTacToe.App;
 

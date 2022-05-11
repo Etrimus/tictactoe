@@ -2,13 +2,12 @@
 using System.Text.RegularExpressions;
 using TicTacToe.Core;
 using TicTacToe.Core.Models;
-using TicTacToe.Core.Services;
 
 namespace TicTacToe.ClientNative.Console;
 
 public static class Program
 {
-    private const ushort BoardSize = 3;
+    private const ushort BOARD_SIZE = 3;
 
     private static void Main()
     {
@@ -27,7 +26,7 @@ public static class Program
 
                 System.Console.WriteLine($"{Environment.NewLine}Введите номер ячейки для хода.{Environment.NewLine}");
 
-                board = boardManager.CreateBoard(BoardSize);
+                board = boardManager.CreateBoard(BOARD_SIZE);
             }
             catch (Exception e)
             {
@@ -126,9 +125,9 @@ public static class Program
 
     private static void _printBoard(Board board)
     {
-        for (var x = 0; x < BoardSize; x++)
+        for (var x = 0; x < BOARD_SIZE; x++)
         {
-            for (var y = 0; y < BoardSize; y++)
+            for (var y = 0; y < BOARD_SIZE; y++)
             {
                 _getCellText(board.Cells[x, y], out var text, out var color);
 

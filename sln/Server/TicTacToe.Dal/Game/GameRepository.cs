@@ -3,10 +3,9 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.Dal.Game;
 
-public class GameRepository : Repository<GameEntity>
+public class GameRepository: Repository<GameEntity>
 {
-    public GameRepository(TicTacToeContext context) : base(context)
-    { }
+    public GameRepository(TicTacToeContext context): base(context) { }
 
-    protected override Func<DbSet<GameEntity>, IQueryable<GameEntity>> DbSetToQuery => (dbSet) => dbSet;
+    protected override Func<DbSet<GameEntity>, IQueryable<GameEntity>> DbSetToQuery => dbSet => dbSet;
 }

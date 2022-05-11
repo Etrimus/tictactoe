@@ -2,7 +2,6 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Core;
-using TicTacToe.Core.Services;
 using TicTacToe.Dal.Game;
 using TicTacToe.Domain;
 
@@ -31,7 +30,7 @@ public class GameService
     public Task<GameModel[]> GetAsync(Guid[] id)
     {
         return _repository
-            .Query(false).Where(x => id.Contains(x.Id))
+            .Query().Where(x => id.Contains(x.Id))
             .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
             .ToArrayAsync();
     }
@@ -130,12 +129,12 @@ public class GameService
 
         if (!game.ZeroPlayerId.HasValue || !game.CrossPlayerId.HasValue)
         {
-            throw new TicTacToeException($"К игре не присоединились оба участника.");
+            throw new TicTacToeException("К игре не присоединились оба участника.");
         }
 
         if (playerId != game.ZeroPlayerId && playerId != game.CrossPlayerId)
         {
-            throw new TicTacToeException($"Пользователь не участвует в данной игре и не может совершать ходы.");
+            throw new TicTacToeException("Пользователь не участвует в данной игре и не может совершать ходы.");
         }
 
         var expectedPlayer = game.Board.NextTurn switch
@@ -147,7 +146,7 @@ public class GameService
 
         if (expectedPlayer != playerId)
         {
-            throw new TicTacToeException($"Ирок не может совершить ход, сейчас очередь другого игрока.");
+            throw new TicTacToeException("Ирок не может совершить ход, сейчас очередь другого игрока.");
         }
 
         var turnResult = _boardManager.Turn(game.Board, cellNumber.Value);
