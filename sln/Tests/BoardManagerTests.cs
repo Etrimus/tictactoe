@@ -7,7 +7,7 @@ namespace TicTacToe.Tests;
 [TestFixture]
 public class BoardManagerTests
 {
-    private BoardManager _boardManager;
+    private BoardManager _boardManager = null!;
 
     [SetUp]
     public void Setup()

@@ -5,7 +5,7 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.App.Game;
 
-public class MappingProfile : Profile
+public class MappingProfile: Profile
 {
     public MappingProfile()
     {

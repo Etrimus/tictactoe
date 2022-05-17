@@ -11,9 +11,9 @@ public class GameService
 {
     private readonly GameRepository _repository;
     private readonly IMapper _mapper;
-    private readonly BoardManager _boardManager;
+    private readonly IBoardManager _boardManager;
 
-    public GameService(GameRepository repository, IMapper mapper, BoardManager boardManager)
+    public GameService(GameRepository repository, IMapper mapper, IBoardManager boardManager)
     {
         _repository = repository;
         _mapper = mapper;

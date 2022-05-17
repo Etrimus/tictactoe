@@ -2,7 +2,16 @@
 
 namespace TicTacToe.Core;
 
-public class BoardManager
+public interface IBoardManager
+{
+    Board CreateBoard(ushort gridSize);
+
+    Board CreateBoard(CellType nextTurn, CellType winner, CellType[,] cells);
+
+    TurnResult Turn(Board board, ushort cellNumber);
+}
+
+public class BoardManager: IBoardManager
 {
     public Board CreateBoard(ushort gridSize)
     {

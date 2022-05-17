@@ -9,8 +9,8 @@ public static class AppExtensions
     public static IServiceCollection AddApp(this IServiceCollection serviceCollection)
     {
         return serviceCollection
+            .AddTicTacToeCore()
             .AddAutoMapper(typeof(AppExtensions))
-            .AddScoped<BoardManager>()
             .AddScoped<GameService>();
     }
 }

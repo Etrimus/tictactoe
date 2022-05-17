@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
+using TicTacToe.Domain;
 
 namespace TicTacToe.Dal;
 
@@ -11,7 +13,8 @@ public class TicTacToeContext: DbContext
         Database.EnsureCreated();
     }
 
-    //public DbSet<GameEntity> Game { get; set; }
+    [UsedImplicitly]
+    public DbSet<GameEntity> Game { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder opt)
     {
