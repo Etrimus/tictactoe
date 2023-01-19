@@ -16,14 +16,6 @@ public class TicTacToeContext: DbContext
     [UsedImplicitly]
     public DbSet<GameEntity> Game { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder opt)
-    {
-        opt
-            .UseInMemoryDatabase("TicTacToeDb")
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors();
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         //var cells = _boardManager.CreateBoard(3).Cells.Select(x => (byte)x.State).ToArray();
