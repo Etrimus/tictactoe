@@ -13,6 +13,8 @@ public interface IBoardManager
 
 public class BoardManager: IBoardManager
 {
+    #region IBoardManager
+
     public Board CreateBoard(ushort gridSize)
     {
         return new Board(_createCells(gridSize));
@@ -26,18 +28,20 @@ public class BoardManager: IBoardManager
     public TurnResult Turn(Board board, ushort cellNumber)
     {
         if (board == null)
+        {
             throw new ArgumentNullException(nameof(board));
+        }
 
         if (board.Winner != CellType.None)
         {
-            return TurnResult.AlreadeyHaveWinner;
+            return TurnResult.AlreadyHaveWinner;
         }
 
         var cell = board.Cells.FirstOrDefault(x => x.Number == cellNumber);
 
         if (cell == null)
         {
-            return TurnResult.CellDoesNotExist;
+            return TurnResult.CellDoesNotExists;
         }
 
         if (cell.State != CellType.None)
@@ -50,12 +54,15 @@ public class BoardManager: IBoardManager
         _inspectCells(board.Cells, out var winner, out var isAnyFreeCells);
 
         board.Winner = winner;
+
         board.NextTurn = winner == CellType.None && isAnyFreeCells
             ? _getNextTurn(board.NextTurn)
             : CellType.None;
 
         return TurnResult.Success;
     }
+
+    #endregion
 
     private static Cell[,] _createCells(ushort gridSize)
     {
@@ -147,15 +154,20 @@ public class BoardManager: IBoardManager
             diagonal2[i] = cells[i, size - i - 1].State;
         }
 
-        static bool Predicate(CellType[] x) => x[0] != CellType.None && x.Distinct().Count() == 1;
+        static bool Predicate(CellType[] x)
+        {
+            return x[0] != CellType.None && x.Distinct().Count() == 1;
+        }
 
         var horizontalWinner = horizontal.FirstOrDefault(Predicate);
+
         if (horizontalWinner != null)
         {
             winner = horizontalWinner[0];
         }
 
         var verticalWinner = vertical.FirstOrDefault(Predicate);
+
         if (verticalWinner != null)
         {
             winner = verticalWinner[0];

@@ -7,75 +7,66 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.App.Game;
 
-public class GameService
+public class GameService(GameRepository repository, IMapper mapper, IBoardManager boardManager)
 {
-    private readonly GameRepository _repository;
-    private readonly IMapper _mapper;
-    private readonly IBoardManager _boardManager;
-
-    public GameService(GameRepository repository, IMapper mapper, IBoardManager boardManager)
-    {
-        _repository = repository;
-        _mapper = mapper;
-        _boardManager = boardManager;
-    }
-
     public Task<GameModel> GetAsync(Guid id, bool asNoTracking)
     {
-        return _repository
+        return repository
             .GetAsync(id, asNoTracking)
-            .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
+            .ContinueWith(x => mapper.Map<GameEntity, GameModel>(x.Result));
     }
 
     public Task<GameModel[]> GetAsync(Guid[] id)
     {
-        return _repository
-            .Query().Where(x => id.Contains(x.Id))
-            .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+        return repository
+            .Query()
+            .Where(x => id.Contains(x.Id))
+            .ProjectTo<GameModel>(mapper.ConfigurationProvider)
             .ToArrayAsync();
     }
 
     public Task<GameModel[]> GetAllAsync()
     {
-        return _repository
+        return repository
             .GetAll()
-            .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+            .ProjectTo<GameModel>(mapper.ConfigurationProvider)
             .ToArrayAsync();
     }
 
     public Task<GameModel[]> GetFreeAsync()
     {
-        return _repository
+        return repository
             .GetAll()
             .Where(x => !x.ZeroPlayerId.HasValue || !x.CrossPlayerId.HasValue)
-            .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+            .ProjectTo<GameModel>(mapper.ConfigurationProvider)
             .ToArrayAsync();
     }
 
     public Task<GameModel[]> GetByPlayerIdAsync(Guid playerId)
     {
-        return _repository
+        return repository
             .GetAll()
             .Where(x => x.ZeroPlayerId == playerId || x.CrossPlayerId == playerId)
-            .ProjectTo<GameModel>(_mapper.ConfigurationProvider)
+            .ProjectTo<GameModel>(mapper.ConfigurationProvider)
             .ToArrayAsync();
     }
 
     public Task UpdateAsync(GameModel game)
     {
-        return _repository.UpdateAsync(_mapper.Map<GameModel, GameEntity>(game));
+        return repository.UpdateAsync(mapper.Map<GameModel, GameEntity>(game));
     }
 
     public Task<GameModel> CreateNewAsync()
     {
-        return _repository
-            .AddAsync(_mapper.Map<GameModel, GameEntity>(new GameModel(_boardManager.CreateBoard(3))))
-            .ContinueWith(x => _mapper.Map<GameEntity, GameModel>(x.Result));
+        return repository
+            .AddAsync(mapper.Map<GameModel, GameEntity>(new GameModel(boardManager.CreateBoard(3))))
+            .ContinueWith(x => mapper.Map<GameEntity, GameModel>(x.Result));
     }
 
     public async Task SetPlayerAsync(Guid gameId, Guid playerId, CellType cellType)
     {
-        var game = await _repository.GetAsync(gameId);
+        var game = await repository.GetAsync(gameId);
+
         if (game == null)
         {
             throw new TicTacToeException("Указанная игра не существует.");
@@ -105,7 +96,7 @@ public class GameService
 
         setPlayerAction(playerId);
 
-        await _repository.UpdateAsync(game);
+        await repository.UpdateAsync(game);
     }
 
     public async Task MakeTurnAsync(Guid gameId, Guid playerId, ushort? cellNumber)
@@ -149,7 +140,8 @@ public class GameService
             throw new TicTacToeException("Ирок не может совершить ход, сейчас очередь другого игрока.");
         }
 
-        var turnResult = _boardManager.Turn(game.Board, cellNumber.Value);
+        var turnResult = boardManager.Turn(game.Board, cellNumber.Value);
+
         if (turnResult == TurnResult.Success)
         {
             await UpdateAsync(game);

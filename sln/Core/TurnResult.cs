@@ -1,9 +1,9 @@
 ﻿namespace TicTacToe.Core;
 
-public enum TurnResult : byte
+public enum TurnResult: byte
 {
     Success = 0,
-    CellDoesNotExist = 2,
+    CellDoesNotExists = 2,
     CellIsAlreadyTaken = 3,
-    AlreadeyHaveWinner = 4
+    AlreadyHaveWinner = 4
 }

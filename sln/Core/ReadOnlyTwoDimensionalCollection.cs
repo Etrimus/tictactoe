@@ -2,7 +2,7 @@
 
 namespace TicTacToe.Core;
 
-public class ReadOnlyTwoDimensionalCollection<T> : ICollection<T>, ICollection
+public class ReadOnlyTwoDimensionalCollection<T>: ICollection<T>, ICollection
 {
     private readonly T[,] _array;
     private readonly IEnumerable<T> _collection;
@@ -25,29 +25,20 @@ public class ReadOnlyTwoDimensionalCollection<T> : ICollection<T>, ICollection
 
     public object SyncRoot => _array.SyncRoot;
 
-    public int GetLength(int dimension)
-    {
-        return _array.GetLength(dimension);
-    }
-
-    public IEnumerator<T> GetEnumerator()
-    {
-        return _collection.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    public bool Contains(T item)
-    {
-        return _collection.Contains(item);
-    }
+    #region ICollection
 
     public void CopyTo(Array array, int index)
     {
         _array.CopyTo(array, index);
+    }
+
+    #endregion
+
+    #region ICollection<T>
+
+    public bool Contains(T item)
+    {
+        return _collection.Contains(item);
     }
 
     public void CopyTo(T[] array, int arrayIndex)
@@ -68,5 +59,30 @@ public class ReadOnlyTwoDimensionalCollection<T> : ICollection<T>, ICollection
     public bool Remove(T item)
     {
         throw new NotSupportedException();
+    }
+
+    #endregion
+
+    #region IEnumerable
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    #endregion
+
+    #region IEnumerable<T>
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return _collection.GetEnumerator();
+    }
+
+    #endregion
+
+    public int GetLength(int dimension)
+    {
+        return _array.GetLength(dimension);
     }
 }

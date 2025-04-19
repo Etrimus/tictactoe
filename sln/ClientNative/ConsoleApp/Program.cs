@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using TicTacToe.Core;
 using TicTacToe.Core.Models;
 
-namespace TicTacToe.ClientNative.Console;
+namespace TicTacToe.ClientNative.ConsoleApp;
 
 public static class Program
 {
@@ -11,7 +11,7 @@ public static class Program
 
     private static void Main()
     {
-        System.Console.OutputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
 
         var boardManager = new BoardManager();
 
@@ -24,13 +24,13 @@ public static class Program
             {
                 players = _setPlayers();
 
-                System.Console.WriteLine($"{Environment.NewLine}Введите номер ячейки для хода.{Environment.NewLine}");
+                Console.WriteLine($"{Environment.NewLine}Введите номер ячейки для хода.{Environment.NewLine}");
 
                 board = boardManager.CreateBoard(BOARD_SIZE);
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);
                 continue;
             }
 
@@ -42,23 +42,24 @@ public static class Program
                 var playerTurnCellNumber = players[board.NextTurn].Invoke(board.Cells) - 1;
 
                 var turnResult = boardManager.Turn(board, (ushort)playerTurnCellNumber);
+
                 if (turnResult != TurnResult.Success)
                 {
-                    System.Console.ForegroundColor = ConsoleColor.Red;
-                    System.Console.WriteLine(turnResult);
-                    System.Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(turnResult);
+                    Console.ResetColor();
                     continue;
                 }
 
-                System.Console.WriteLine();
+                Console.WriteLine();
             }
 
             _printBoard(board);
 
-            System.Console.ForegroundColor = _cellTypeToColor(board.Winner);
-            System.Console.WriteLine(board.Winner != CellType.None ? $"Победили {_cellTypeToString(board.Winner)}." : "Ничья.");
-            System.Console.ResetColor();
-            System.Console.ReadLine();
+            Console.ForegroundColor = _cellTypeToColor(board.Winner);
+            Console.WriteLine(board.Winner != CellType.None ? $"Победили {_cellTypeToString(board.Winner)}." : "Ничья.");
+            Console.ResetColor();
+            Console.ReadLine();
         }
 
         // ReSharper disable once FunctionNeverReturns
@@ -68,15 +69,16 @@ public static class Program
     {
         var result = new Dictionary<CellType, Func<ReadOnlyTwoDimensionalCollection<Cell>, ushort>>
         {
-            {CellType.Zero, null},
-            {CellType.Cross, null}
+            { CellType.Zero, null },
+            { CellType.Cross, null }
         };
 
-        System.Console.WriteLine($"{Environment.NewLine}Выберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
-        System.Console.WriteLine($"{_cellTypeToString(CellType.Cross)} - {(int)CellType.Cross}");
-        System.Console.WriteLine($"{_cellTypeToString(CellType.Zero)} - {(int)CellType.Zero}");
+        Console.WriteLine($"{Environment.NewLine}Выберите, что вы будете ставить. {_cellTypeToString(CellType.Cross)} начинают игру первые:");
+        Console.WriteLine($"{_cellTypeToString(CellType.Cross)} - {(int)CellType.Cross}");
+        Console.WriteLine($"{_cellTypeToString(CellType.Zero)} - {(int)CellType.Zero}");
 
-        var selectedType = (CellType)Convert.ToInt32(System.Console.ReadLine());
+        var selectedType = (CellType)Convert.ToInt32(Console.ReadLine());
+
         if (selectedType == CellType.None || !Enum.IsDefined(typeof(CellType), selectedType))
         {
             throw new TicTacToeException("Введенное значение некорректно.");
@@ -92,13 +94,13 @@ public static class Program
     {
         Thread.Sleep(1000);
         var result = Bot.RandomTurn.RandomTurnBot.Turn(cells);
-        System.Console.WriteLine(result);
+        Console.WriteLine(result);
         return result;
     }
 
     private static ushort _getPlayerTurn(ReadOnlyTwoDimensionalCollection<Cell> cells)
     {
-        var input = System.Console.ReadLine();
+        var input = Console.ReadLine();
 
         if (input == null)
         {
@@ -117,10 +119,10 @@ public static class Program
 
     private static void _printHeader(Board board)
     {
-        System.Console.Write("Ходят ");
-        System.Console.ForegroundColor = _cellTypeToColor(board.NextTurn);
-        System.Console.Write($"{_cellTypeToString(board.NextTurn)}{Environment.NewLine}");
-        System.Console.ResetColor();
+        Console.Write("Ходят ");
+        Console.ForegroundColor = _cellTypeToColor(board.NextTurn);
+        Console.Write($"{_cellTypeToString(board.NextTurn)}{Environment.NewLine}");
+        Console.ResetColor();
     }
 
     private static void _printBoard(Board board)
@@ -131,14 +133,14 @@ public static class Program
             {
                 _getCellText(board.Cells[x, y], out var text, out var color);
 
-                System.Console.Write("[");
-                System.Console.ForegroundColor = color;
-                System.Console.Write(text);
-                System.Console.ResetColor();
-                System.Console.Write("]");
+                Console.Write("[");
+                Console.ForegroundColor = color;
+                Console.Write(text);
+                Console.ResetColor();
+                Console.Write("]");
             }
 
-            System.Console.WriteLine();
+            Console.WriteLine();
         }
     }
 

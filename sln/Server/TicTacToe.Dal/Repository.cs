@@ -3,23 +3,16 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.Dal;
 
-public abstract class Repository
-{ }
+public abstract class Repository;
 
-public abstract class Repository<T> : Repository where T : DbEntityBase
+public abstract class Repository<T>(TicTacToeContext context): Repository
+    where T: DbEntityBase
 {
-    private readonly TicTacToeContext _context;
-
     protected abstract Func<DbSet<T>, IQueryable<T>> DbSetToQuery { get; }
-
-    protected Repository(TicTacToeContext context)
-    {
-        _context = context;
-    }
 
     public IQueryable<T> Query(bool asNoTracking = false)
     {
-        var dbSet = DbSetToQuery(_context.Set<T>());
+        var dbSet = DbSetToQuery(context.Set<T>());
 
         if (asNoTracking)
         {
@@ -31,14 +24,15 @@ public abstract class Repository<T> : Repository where T : DbEntityBase
 
     public Task<bool> ExistAsync(Guid id)
     {
-        return _context.Set<T>()
+        return context
+            .Set<T>()
             .AsNoTracking()
             .AnyAsync(x => x.Id == id);
     }
 
     public Task<T> GetAsync(Guid id, bool asNoTracking = false)
     {
-        var dbSet = DbSetToQuery(_context.Set<T>());
+        var dbSet = DbSetToQuery(context.Set<T>());
 
         if (asNoTracking)
         {
@@ -50,25 +44,25 @@ public abstract class Repository<T> : Repository where T : DbEntityBase
 
     public IQueryable<T> GetAll()
     {
-        return DbSetToQuery(_context.Set<T>());
+        return DbSetToQuery(context.Set<T>());
     }
 
     public async Task<T> AddAsync(T entity)
     {
-        var result = await _context.AddAsync(entity).ConfigureAwait(false);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        var result = await context.AddAsync(entity).ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
         return result.Entity;
     }
 
     public Task<int> UpdateAsync(T entity)
     {
-        _context.Update(entity);
-        return _context.SaveChangesAsync();
+        context.Update(entity);
+        return context.SaveChangesAsync();
     }
 
     public Task RemoveAsync(T entity)
     {
-        _context.Remove(entity);
-        return _context.SaveChangesAsync();
+        context.Remove(entity);
+        return context.SaveChangesAsync();
     }
 }

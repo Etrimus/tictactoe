@@ -6,20 +6,25 @@ using TicTacToe.Web.Game;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
+builder
+    .Services
     .AddCors(setup => setup.AddDefaultPolicy(corsPolicyBuilder => corsPolicyBuilder
-        // .AllowAnyOrigin()
-        .WithOrigins("http://localhost:4200", "http://137.74.150.72:19883")
-        .AllowCredentials()
-        .AllowAnyMethod()
-        .AllowAnyHeader()))
+            // .AllowAnyOrigin()
+            .WithOrigins("http://localhost:4200", "http://137.74.150.72:19883")
+            .AllowCredentials()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+        )
+    )
     .AddSignalR();
 
-builder.Services
+builder
+    .Services
     .AddDal()
     .AddApp();
 
-builder.Services
+builder
+    .Services
     .AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
 

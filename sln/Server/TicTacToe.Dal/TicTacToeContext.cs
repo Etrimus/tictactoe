@@ -8,7 +8,7 @@ public class TicTacToeContext: DbContext
 {
     //private readonly BoardManager _boardManager = new();
 
-    public TicTacToeContext()
+    public TicTacToeContext(DbContextOptions<TicTacToeContext> contextOptions): base(contextOptions)
     {
         Database.EnsureCreated();
     }

@@ -2,7 +2,7 @@
 
 namespace TicTacToe.Web.Game;
 
-public class GameHub : Hub<IGameHubClient>
+public class GameHub: Hub<IGameHubClient>
 {
     public Task GameAdded(Guid addedGmeId)
     {

@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace TicTacToe.Dal;
 
@@ -17,7 +17,8 @@ public static class DalExtensions
             .AddDbContext<TicTacToeContext>(builder => builder
                 .UseInMemoryDatabase("TicTacToeDb")
                 .EnableSensitiveDataLogging()
-                .EnableDetailedErrors());
+                .EnableDetailedErrors()
+            );
     }
 
     private static IEnumerable<Type> _getRepositories()

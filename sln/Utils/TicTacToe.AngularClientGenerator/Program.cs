@@ -22,7 +22,8 @@ internal static class Program
             IsAspNetCore = true
         };
 
-        var controllers = typeof(GameController).Assembly.GetTypes()
+        var controllers = typeof(GameController)
+            .Assembly.GetTypes()
             .Where(t => typeof(ControllerBase).IsAssignableFrom(t) && !t.IsAbstract)
             .ToArray();
 
@@ -52,6 +53,7 @@ internal static class Program
         else
         {
             var directory = new DirectoryInfo(OUTPUT_PATH);
+
             foreach (var file in directory.GetFiles())
             {
                 file.Delete();
@@ -61,7 +63,7 @@ internal static class Program
 
     private static TypeScriptClientGeneratorSettings CreateTypeScriptSettings()
     {
-        return new()
+        return new TypeScriptClientGeneratorSettings
         {
             Template = TypeScriptTemplate.Angular,
             ClassName = "{controller}Client",
@@ -73,13 +75,13 @@ internal static class Program
             UseSingletonProvider = true,
             RxJsVersion = (decimal)6.6,
             TypeScriptGeneratorSettings =
-                {
-                    //DateTimeType = TypeScriptDateTimeType.Date,
-                    NullValue = TypeScriptNullValue.Undefined,
-                    TypeStyle = TypeScriptTypeStyle.Class,
-                    TypeScriptVersion = 4,
-                    //MarkOptionalProperties = false
-                },
+            {
+                //DateTimeType = TypeScriptDateTimeType.Date,
+                NullValue = TypeScriptNullValue.Undefined,
+                TypeStyle = TypeScriptTypeStyle.Class,
+                TypeScriptVersion = 4
+                //MarkOptionalProperties = false
+            }
         };
     }
 

@@ -2,7 +2,7 @@
 
 namespace TicTacToe.Domain;
 
-public class GameEntity : DbEntityBase
+public class GameEntity: DbEntityBase
 {
     public Guid? CrossPlayerId { get; set; }
 

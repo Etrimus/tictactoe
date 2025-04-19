@@ -2,7 +2,7 @@
 
 namespace TicTacToe.App.Game;
 
-public class GameModel : ModelBase
+public class GameModel: ModelBase
 {
     [Obsolete("For Automapper only.", true)]
     public GameModel()

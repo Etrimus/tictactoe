@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace TicTacToe.Core
+namespace TicTacToe.Core;
+
+public static class TicTacToeServiceCollectionExtensions
 {
-    public static class TicTacToeServiceCollectionExtensions
+    public static IServiceCollection AddTicTacToeCore(this IServiceCollection serviceCollection)
     {
-        public static IServiceCollection AddTicTacToeCore(this IServiceCollection serviceCollection)
-        {
-            return serviceCollection
-                .AddScoped<IBoardManager, BoardManager>();
-        }
+        return serviceCollection
+            .AddScoped<IBoardManager, BoardManager>();
     }
 }
